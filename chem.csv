@@ -1,3 +1,4 @@
-,Abundance,Half-Life
-182-Hf,100,9.00E+06
-182-W,0,7.70E+21
+,Abundance,Half-Life,Daughter,Decay Mode
+182-Hf,100,9.00E+06,182-Ta,B-
+182-W,0,7.70E+21,NONE,STABLE
+182-Ta,0,3.18E-01,182-W,B-
