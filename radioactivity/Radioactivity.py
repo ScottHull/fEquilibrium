@@ -9,6 +9,8 @@ class decay:
     """
     Models decay of of a radioactive isotope family tree.  Takes arbitrary primordial isotope as parameter self, then
     models decay into daughter products based on the information provided in the passed isotope dataframe.
+    Be sure that isotope_df follows the formatting of 'chem.csv' if using a custom isotope table.
+    Abundances of radioactive isotopes given in ppm.
     """
 
     pd.options.mode.chained_assignment = None # turns off Pandas warning about dataframe overwrites
@@ -22,7 +24,7 @@ class decay:
         except:
             return np.nan
 
-    def rad_energy(self): # energy produced by
+    def rad_energy(self): # energy produced by radioactivity
         pass
 
     def rad_decay(self, isotope_df, time_resolution):

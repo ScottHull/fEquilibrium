@@ -1,2 +1,3 @@
-from radioactivity import Radioactivity
-from thermodynamics import Thermodynamics
+from radioactivity import *
+from thermodynamics import *
+from dynamics import *

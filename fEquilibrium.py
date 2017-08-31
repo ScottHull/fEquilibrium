@@ -1,5 +1,6 @@
 import pandas as pd
 from radioactivity.Radioactivity import decay
+from thermodynamics.Thermodynamics import partition
 
 
 isotopes = pd.read_csv('chem.csv', index_col=0) # loads isotope data from a local source

@@ -1,6 +1,6 @@
-import pandas as pd
 
-class partition:
+
+class Viscosity:
 
     def __init__(self):
         pass
