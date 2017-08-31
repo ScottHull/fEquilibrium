@@ -3,7 +3,7 @@ from radioactivity.Radioactivity import decay
 from thermodynamics.Thermodynamics import partition
 
 
-isotopes = pd.read_csv('chem.csv', index_col=0) # loads isotope data from a local source
+isotopes = pd.read_csv('isotopes.csv', index_col=0) # loads isotope data from a local source
 time = 0 # time, in years
 time_resolution = 1000000.0 # time resolution, in years (i.e. the time increment between model updates)
 time_limit = (4.5 * 10**9) # limits the time evolution to the age of the Earth
