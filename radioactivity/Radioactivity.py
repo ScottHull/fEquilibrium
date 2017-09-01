@@ -11,6 +11,8 @@ class decay:
     models decay into daughter products based on the information provided in the passed isotope dataframe.
     Be sure that isotope_df follows the formatting of 'chem.csv' if using a custom isotope table.
     Abundances of radioactive isotopes given in ppm.
+    Abundances should reflect solar system initial abundances or initial Earth abundances, depending on how one adjusts
+        time/time resolution/T0 for the model.
     """
 
     pd.options.mode.chained_assignment = None # turns off Pandas warning about dataframe overwrites
@@ -20,9 +22,9 @@ class decay:
 
     def int_to_float(self, x):  # converts integer values into floats in a Pandas dataframe
         try:
-            return np.float(x)
+            return np.float(x) # if a number, it is converted to a float
         except:
-            return np.nan
+            return np.nan # if not a number, it is NaN
 
     def rad_energy(self): # energy produced by radioactivity
         pass
@@ -56,3 +58,20 @@ class decay:
         else: # no daughters, doesn't decay into daughter products
             pass
         return isotope_df # returns the updated isotope dataframe for one iteration
+
+
+
+
+class isotopeconvert:
+
+    """
+    Converts isotopes from popular notation to abundances in ppm.
+    """
+
+    def __init__(self, isotope):
+        self.isotope = isotope
+
+    def epilon_tungsten(self, epislon_w):
+        pass
+
+
