@@ -26,6 +26,8 @@ while time < 55000000:
 print("\nIsotope Dataframe:")
 print(isotopes)
 print("Time: {}, Iterations: {}".format(time, iteration))
+# print("\nSolution:")
+# print(solution)
 
 
 

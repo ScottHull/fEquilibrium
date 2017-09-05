@@ -37,8 +37,8 @@ class decay:
         if isotope_df['Daughter'][self.element] != 'NONE': # checks to see that isotope has a daughter
             daughter = str(isotope_df['Daughter'][self.element])
             while daughter != 'NONE': # adds daughters to list in stepwise fashion
-                daughters.append(daughter)
-                daughter = str(isotope_df['Daughter'][daughter])
+                daughters.append(daughter) # adds daughter to the list
+                daughter = str(isotope_df['Daughter'][daughter]) # finds the next daughter and repeats the loop
         if len(daughters) > 1: # check to see that primordial isotope has daughters, i.e. is radioactive
             iterdaughters = iter(reversed(daughters)) # now stable isotope is first in list, primordial parent last
             next(iterdaughters) # skips the stable isotope
