@@ -18,6 +18,9 @@ class decay:
     pd.options.mode.chained_assignment = None # turns off Pandas warning about dataframe overwrites
 
     def __init__(self, element):
+        """
+        :param element:
+        """
         self.element = element
 
     def int_to_float(self, x):  # converts integer values into floats in a Pandas dataframe
@@ -30,6 +33,11 @@ class decay:
         pass
 
     def rad_decay(self, isotope_df, time_resolution):
+        """
+        :param isotope_df:
+        :param time_resolution:
+        :return: isotope_df
+        """
         isotope_df["Abundance"] = isotope_df['Abundance'].apply(self.int_to_float)  # convert 'Abundance' column to floats or NaN
         # Note that all chemical abundance data is given in ppm due to trace nature of Hf-Ta-W system
         daughters = [] # first element will be the primordial parent, all else daughters in descending order

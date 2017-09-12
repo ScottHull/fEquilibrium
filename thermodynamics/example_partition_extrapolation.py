@@ -1,51 +1,51 @@
-import matplotlib as mpl
-mpl.use("Qt4Agg")
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
-import pandas as pd
-import sys, os
-import scipy.linalg as linalg
-os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from stats.regression import ls_regression, mult_lin_regression
-from mayavi import mlab
-
-
-
-w_df = pd.read_csv('w_partitioning_play.csv')
-temperature = w_df['Temperature']
-pressure = w_df['Pressure']
-fO2 = w_df['Corrected_fO2']
-D = w_df['Corrected_logD']
-
-w_df_isoT = pd.read_csv('w_partitioning_isoT.csv')
-w_df_isoP = pd.read_csv('w_partitioning_isoP.csv')
-w_df_isofO2 = pd.read_csv('w_partitioning_isofO2.csv')
-
-isoT_pressure = w_df_isoT['Pressure']
-isoT_fO2 = w_df_isofO2['Corrected_fO2']
-isoT_D = w_df_isoT['Corrected_logD']
-isoP_T = w_df_isoP['Temperature']
-isoP_fO2 = w_df_isoP['Corrected_fO2']
-isoP_D = w_df_isoP['Corrected_logD']
-isofO2_T = w_df_isofO2['Temperature']
-isofO2_P = w_df_isofO2['Pressure']
-isofO2_D = w_df_isofO2['Corrected_logD']
-
-# fig = plt.figure()
-# ax = fig.add_subplot(111)
-# x = [1,2,3,4,5]
-# y = [2,4,5,4,5]
-# ax.scatter(x,y)
-# thing = ls_regression(x=x, y=y)
-# sloper, intercepter, = thing.lin_ls_regression()
-# x_min1, x_max1 = ax.get_xlim()
-# y_min1, y_max1 = intercepter, intercepter + sloper*(x_max1)
-# ax.plot([0, x_max1], [y_min1, y_max1])
-# ax.axvline(np.mean(x), c='g')
-# ax.axhline(np.mean(y), c='g')
-
-# plt.show()
-# plt.close()
+# import matplotlib as mpl
+# mpl.use("Qt4Agg")
+# import matplotlib.pyplot as plt
+# from mpl_toolkits.mplot3d import Axes3D
+# import numpy as np
+# import pandas as pd
+# import sys, os
+# import scipy.linalg as linalg
+# os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from stats.regression import ls_regression, mult_lin_regression
+# from mayavi import mlab
+#
+#
+#
+# w_df = pd.read_csv('w_partitioning_play.csv')
+# temperature = w_df['Temperature']
+# pressure = w_df['Pressure']
+# fO2 = w_df['Corrected_fO2']
+# D = w_df['Corrected_logD']
+#
+# w_df_isoT = pd.read_csv('w_partitioning_isoT.csv')
+# w_df_isoP = pd.read_csv('w_partitioning_isoP.csv')
+# w_df_isofO2 = pd.read_csv('w_partitioning_isofO2.csv')
+#
+# isoT_pressure = w_df_isoT['Pressure']
+# isoT_fO2 = w_df_isofO2['Corrected_fO2']
+# isoT_D = w_df_isoT['Corrected_logD']
+# isoP_T = w_df_isoP['Temperature']
+# isoP_fO2 = w_df_isoP['Corrected_fO2']
+# isoP_D = w_df_isoP['Corrected_logD']
+# isofO2_T = w_df_isofO2['Temperature']
+# isofO2_P = w_df_isofO2['Pressure']
+# isofO2_D = w_df_isofO2['Corrected_logD']
+#
+# # fig = plt.figure()
+# # ax = fig.add_subplot(111)
+# # x = [1,2,3,4,5]
+# # y = [2,4,5,4,5]
+# # ax.scatter(x,y)
+# # thing = ls_regression(x=x, y=y)
+# # sloper, intercepter, = thing.lin_ls_regression()
+# # x_min1, x_max1 = ax.get_xlim()
+# # y_min1, y_max1 = intercepter, intercepter + sloper*(x_max1)
+# # ax.plot([0, x_max1], [y_min1, y_max1])
+# # ax.axvline(np.mean(x), c='g')
+# # ax.axhline(np.mean(y), c='g')
+# #
+# # plt.show()
+# # plt.close()
 #
 #
 #
@@ -182,28 +182,28 @@ isofO2_D = w_df_isofO2['Corrected_logD']
 #
 # plt.show()
 # plt.close()
-
-x = isofO2_T
-y = isofO2_P
-z = isofO2_D
-fig5 = plt.figure()
-ax7 = fig5.add_subplot(111)
-ax7.scatter(x, z)
-ax7_regress = ls_regression(x=x, y=z)
-ax7_slope, ax7_intercept = ax7_regress.lin_ls_regression()
-x_min3, x_max3 = ax7.get_xlim()
-y_min3, y_max3 = ax7_intercept, ax7_intercept + ax7_slope*(x_max3)
-ax7.plot([0, x_max3], [y_min3, y_max3])
-ax7.axvline(np.mean(x), c='g')
-ax7.axhline(np.mean(z), c='g')
-
-plt.show()
-plt.close()
-
-
-
-
-
+#
+# x = isofO2_T
+# y = isofO2_P
+# z = isofO2_D
+# fig5 = plt.figure()
+# ax7 = fig5.add_subplot(111)
+# ax7.scatter(x, z)
+# ax7_regress = ls_regression(x=x, y=z)
+# ax7_slope, ax7_intercept = ax7_regress.lin_ls_regression()
+# x_min3, x_max3 = ax7.get_xlim()
+# y_min3, y_max3 = ax7_intercept, ax7_intercept + ax7_slope*(x_max3)
+# ax7.plot([0, x_max3], [y_min3, y_max3])
+# ax7.axvline(np.mean(x), c='g')
+# ax7.axhline(np.mean(z), c='g')
+#
+# plt.show()
+# plt.close()
+#
+#
+#
+#
+#
 # reg = mult_lin_regression(temperature=temperature, pressure=pressure, fO2=fO2, partitioncoeff=D)
 # fit = reg.mult_lin_regress()
 # print(fit)

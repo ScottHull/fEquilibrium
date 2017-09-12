@@ -5,8 +5,8 @@ import pandas as pd
 class create_solution:
 
     """
-    Describes species in solution at a given point in time.
+    Manages solution chemistry and phases in variable dataframes.
     """
 
-    def __init__(self):
+    def __init__(self, *args):
         pass
