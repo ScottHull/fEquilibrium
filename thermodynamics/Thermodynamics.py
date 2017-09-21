@@ -1,6 +1,10 @@
 import pandas as pd
 from math import exp
 import numpy as np
+import os
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from stats.Regression import ls_regression, mult_lin_regression
+import re
+
 
 
 class partition:
@@ -37,8 +41,7 @@ class partition:
 
         # Note that this is the pressure-volume dependent relationship
         gas_const = 8.312 #J/mol*k
-        D = exp(-(deltaH - pressure * deltaV) / gas_const * temperature) # Henry's Law: D = exp(-deltaG/RT)
-        phase_df['Phase Fraction'][self.phase] = float(phase_df['Phase Fraction'][self.phase])
+
 
 
 

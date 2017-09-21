@@ -1,21 +1,26 @@
-# import matplotlib as mpl
-# mpl.use("Qt4Agg")
-# import matplotlib.pyplot as plt
-# from mpl_toolkits.mplot3d import Axes3D
-# import numpy as np
-# import pandas as pd
-# import sys, os
-# import scipy.linalg as linalg
-# os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from stats.regression import ls_regression, mult_lin_regression
-# from mayavi import mlab
-#
-#
-#
-# w_df = pd.read_csv('w_partitioning_play.csv')
-# temperature = w_df['Temperature']
-# pressure = w_df['Pressure']
-# fO2 = w_df['Corrected_fO2']
-# D = w_df['Corrected_logD']
+import matplotlib as mpl
+mpl.use("Qt4Agg")
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+import pandas as pd
+import sys, os
+import scipy.linalg as linalg
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from stats.Regression import ls_regression, mult_lin_regression
+from mayavi import mlab
+from thermodynamics.Thermodynamics import partition
+
+
+
+w_df = pd.read_csv('w_partitioning_isoP.csv')
+temperature = w_df['Temperature']
+pressure = w_df['Pressure']
+fO2 = w_df['Corrected_fO2']
+D = w_df['Corrected_logD']
+
+w_df_2 = pd.read_csv('w_partitioning_isoP_2.csv')
+temperature2 = w_df_2['Temperature']
+D2 = w_df_2['Corrected_logD']
 #
 # w_df_isoT = pd.read_csv('w_partitioning_isoT.csv')
 # w_df_isoP = pd.read_csv('w_partitioning_isoP.csv')
@@ -207,3 +212,29 @@
 # reg = mult_lin_regression(temperature=temperature, pressure=pressure, fO2=fO2, partitioncoeff=D)
 # fit = reg.mult_lin_regress()
 # print(fit)
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+ax.scatter([1/i for i in temperature.tolist()], D, color='b', label='2.2 GPa')
+ax.scatter([1/i for i in temperature2.tolist()], D2, color='r', label='6.0 GPa')
+fig_regress = ls_regression(x=[1/i for i in temperature.tolist()], y=D)
+fig_regress2 = ls_regression(x=[1/i for i in temperature2.tolist()], y=D2)
+fig1_slope, fig1_intercept = fig_regress.lin_ls_regression()
+fig1_slope2, fig1_intercept2 = fig_regress2.lin_ls_regression()
+x_min1, x_max1 = ax.get_xlim()
+y_min1, y_max1 = fig1_intercept, fig1_intercept + fig1_slope*(x_max1)
+ymin2, ymax2 = fig1_intercept2, fig1_intercept2 + fig1_slope2*(x_max1)
+ax.plot([0, x_max1], [y_min1, y_max1], label='2.2 GPa LS Regression')
+ax.plot([0, x_max1], [ymin2, ymax2], label='6.0 GPa LS Regression')
+print("{}, {}".format(fig1_slope / 8.314, fig1_slope2 / 8.314))
+# ax.axvline(np.mean([1/i for i in temperature.tolist()]), c='g')
+# ax.axhline(np.mean(D), c='g')
+
+plt.legend(loc='upper right')
+plt.xlabel('1/T')
+plt.ylabel('log(D)')
+plt.grid()
+plt.show()
+plt.close()
+
+
