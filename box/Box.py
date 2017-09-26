@@ -8,22 +8,23 @@ os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movemen
 
 class box:
 
-    def __init__(self, length, width, height, resolution, model_time):
+    def __init__(self, length, width, height, space_resolution, model_time, initial_time, visualize_system=False):
         self.length = length
         self.width = width
         self.height = height
-        self.time_resolution = resolution
+        self.space_resolution = space_resolution
         self.model_time = model_time
-        self.time_not = model_time
-        self.x_coords = np.linspace(0, self.length, endpoint=True, retstep=self.time_resolution)
-        self.y_coords = np.linspace(0, self.width, endpoint=True, retstep=self.time_resolution)
-        self.z_coords = np.linspace(0, self.height, endpoint=True, retstep=self.time_resolution)
+        self.initial_time = initial_time
+        self.visualize_system = visualize_system
+        self.x_coords = np.linspace(0, self.length, endpoint=True, retstep=self.space_resolution)
+        self.y_coords = np.linspace(0, self.width, endpoint=True, retstep=self.space_resolution)
+        self.z_coords = np.linspace(0, self.height, endpoint=True, retstep=self.space_resolution)
         self.space = pd.DataFrame({
-            'x_coords': self.x_coords.tolist(), 'y_coords': self.y_coords.tolist(),
-            'z_coords': self.z_coords.tolist(), 'object': [], 'object_id': [], 'object_size': [], 'temperature': [],
-            'pressure': [],
+            'object_id': [].append(self.generate_obj_id(matrix=True) for i in list(range(len(self.x_coords.tolist())))),
+            'object': [], 'x_coords': self.x_coords.tolist(), 'y_coords': self.y_coords.tolist(),
+            'z_coords': self.z_coords.tolist(), 'object_size': [], 'temperature': [], 'pressure': [],
             'object_velocity': {'x_direct': [], 'y_direct': [], 'z_direct': []},
-        })
+        }, index='object_id')
         self.mov_frames = []
 
     def check_coords(self, x_coord, y_coord, z_coord):
@@ -62,32 +63,41 @@ class box:
                             self.space['object'][row] = object
                             self.space['object_id'][row] = self.generate_obj_id(matrix=matrix) # generates object ID
                             self.space['object_size'] = object_size
+                            self.space['object_velocity']['z_direct'] = move_particle(body_type='fe alloy',
+                                                                        system_params=self.space).stokes_settling()
 
 
     def visualize_box(self):
-        mlab.clf()
-        for row in self.space.index:
-            if str(self.space['object_id'][row][0]) == '0':
-                x = self.space['x_coords'][row]
-                y = self.space['x_coords'][row]
-                z = self.space['x_coords'][row]
-                object_size = self.space['object_size'][row]
-                mlab.points3d(x, y, z, object_size, scale_factor=1)
-                mlab.view(distance=12)
-                self.mov_frames.append(mlab.screenshot(antialiased=True))
-                
-
-    def update_system(self):
-        if self.model_time == self.time_not:
-            self.visualize_box()
-        elif self.model_time <= 0:
-            animation = mpy.ImageSequenceClip(self.mov_frames, fps=30)
-            animation.write_videofile('fEquilibrium_animation.mp4', fps=30, audio=False)
-        else:
-            self.model_time = self.model_time - self.time_resolution
+        if self.visualize_system != False:
+            mlab.clf()
             for row in self.space.index:
-                if str(self.space['object_id'][row][0]) == 1:
+                if str(self.space['object_id'][row][0]) == '0':
+                    x = self.space['x_coords'][row]
+                    y = self.space['x_coords'][row]
+                    z = self.space['x_coords'][row]
+                    object_size = self.space['object_size'][row]
+                    mlab.points3d(x, y, z, object_size, scale_factor=1)
+                    mlab.view(distance=12)
+                    self.mov_frames.append(mlab.screenshot(antialiased=True))
 
-            self.visualize_box()
+
+    def update_system(self, deltaTime):
+
+            update_space = self.space
+            if self.model_time == self.initial_time:
+                self.visualize_box()
+            elif self.model_time <= 0:
+                animation = mpy.ImageSequenceClip(self.mov_frames, fps=30)
+                animation.write_videofile('fEquilibrium_animation.mp4', fps=30, audio=False)
+            else:
+                self.model_time = self.model_time - deltaTime
+                for row in self.space.index:
+                    row_object = self.space.index[row]
+                    if str(self.space['object_id'][row][0]) == '1':
+                        z_dis_obj_travel = (move_particle(body_type='fe alloy',
+                                            system_params=self.space).stokes_settling()) * deltaTime
+                        updated_z_cords = z_dis_obj_travel.round(len(str(self.space_resolution)))
+
+                self.visualize_box()
 
 

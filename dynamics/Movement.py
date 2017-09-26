@@ -56,7 +56,8 @@ class move_particle:
             (density_matrix / matrix_viscosity)**2 * (grav_constant * diameter_body*3)
         return f
 
-    def stokes_settling(self, density_body, density_matrix, diameter_body, matrix_viscosity, drag_coeff=0.2):
+    # def stokes_settling(self, density_body, density_matrix, diameter_body, matrix_viscosity, drag_coeff=0.2):
+    def stokes_settling(self):
         """
         If friction coefficient, F, is <10 or >10, the modes of Stoke's settling are described as below as a result of
             differences in laminar versus turbulent flow.
@@ -67,6 +68,11 @@ class move_particle:
         :param drag_coeff: asymptotic value of 0.2 at high frictional coefficients
         :return: v, settling velocity
         """
+        density_body = 7800
+        density_matrix = 3750
+        drag_coeff = 0.2
+        matrix_viscosity = self.viscosity(material='Silicate Liquid', pressure=10000, temperature=1800)
+        diameter_body = 0.1
         grav_constant = 9.81 # m/s^2
         f = self.friction_coefficient(density_body=density_body, density_matrix=density_matrix,
                                       diameter_body=diameter_body, matrix_viscosity=matrix_viscosity)
