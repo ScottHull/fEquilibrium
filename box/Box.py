@@ -30,8 +30,8 @@ class box:
         self.visualize_system = visualize_system
         self.space = pd.DataFrame({
             'object_id': ['NaN' for i in list(range(len(self.coords)))], 'object': ['NaN' for i in list(range(len(self.coords)))],
-            'x_coords': [i[0] for i in self.coords], 'y_coords': [i[0] for i in self.coords],
-            'z_coords': [i[0] for i in self.coords], 'object_size': [np.NAN for i in list(range(len(self.coords)))],
+            'x_coords': [i[0] for i in self.coords], 'y_coords': [i[1] for i in self.coords],
+            'z_coords': [i[2] for i in self.coords], 'object_size': [np.NAN for i in list(range(len(self.coords)))],
             'density': [0 for i in list(range(len(self.coords)))], 'temperature': [0 for i in list(range(len(self.coords)))],
             'pressure': [0 for i in list(range(len(self.coords)))],
             'object_velocity': [0 for i in list(range(len(self.coords)))],
@@ -68,15 +68,11 @@ class box:
         return coords
 
 
-
-
-
-
     def check_coords(self, x_coord, y_coord, z_coord):
         print("Checking if coordinates are valid...")
-        x_min, x_max = self.space['x_coords'][0], self.space['x_coords'][len(self.coords)]
-        y_min, y_max = self.space['y_coords'][0], self.space['y_coords'][len(self.coords)]
-        z_min, z_max = self.space['z_coords'][0], self.space['z_coords'][len(self.coords)]
+        x_min, x_max = self.space['x_coords'][0], self.space['x_coords'][len(self.coords) - 1]
+        y_min, y_max = self.space['y_coords'][0], self.space['y_coords'][len(self.coords) -1]
+        z_min, z_max = self.space['z_coords'][0], self.space['z_coords'][len(self.coords) -1]
         if x_coord >= x_min and x_coord <= x_max and y_coord >= y_min and y_coord <= y_max and \
                         z_coord >= z_min and z_coord <= z_max:
             print("Coordinates validated!")
@@ -86,7 +82,7 @@ class box:
             return False
 
     def generate_object_id(self, matrix):
-        unref_object_id = randint(0, 999999999999999999999999)
+        unref_object_id = randint(0, 99999999999999999999999)
         str_unref_object_id = str(unref_object_id)
         if matrix is True:
             object_id = 'B' + str_unref_object_id # matrix material objects begin with a B
@@ -120,6 +116,7 @@ class box:
         for row in self.space.index:
             self.space['object_id'][row] = self.generate_object_id(matrix=True)
             self.space['object'][row] = matrix_material
+            print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
         print("Matrix inserted!")
 
 
@@ -168,33 +165,36 @@ class box:
 
     # TODO: update x and y coords
     def update_system(self, deltaTime):
-
-            update_space = self.space
-            if self.model_time == self.initial_time:
-                self.visualize_box()
-            elif self.model_time <= 0:
+        self.model_time -= deltaTime
+        print("Model time at: {}")
+        update_space = self.space
+        if self.model_time == self.initial_time:
+            self.visualize_box()
+        elif self.model_time <= 0:
+            print(self.space)
+            if self.visualize_system == True:
                 animation = mpy.ImageSequenceClip(self.mov_frames, fps=30)
                 animation.write_videofile('fEquilibrium_animation.mp4', fps=30, audio=False)
-            else:
-                self.model_time = self.model_time - deltaTime
-                for row in self.space.index:
-                    row_object = self.space.index[row]
-                    if str(self.space['object_id'][row][0]) == 'A':
-                        z_dis_obj_travel = (move_particle(body_type='fe alloy',
-                                            system_params=self.space).stokes_settling()) * deltaTime
-                        # updated_x_coords = 0
-                        # updated_y_coords = 0
-                        updated_z_coords = round(z_dis_obj_travel, -len(str(self.space_resolution)))
-                        from_row_index = self.grab_row_index_by_coord(system_data=self.space, x_coord=self.space['x_coords'][row],
-                                                                        y_coord=self.space['y_coords'][row],
-                                                                        z_coord=self.space['z_coords'][row])
-                        to_row_index = self.grab_row_index_by_coord(system_data=update_space, x_coord=self.space['x_coords'][row],
-                                                                        y_coord=self.space['y_coords'][row],
-                                                                        z_coord=updated_z_coords)
-                        update_space = self.swap_rows(system_data=self.space, updated_system_data=update_space,
-                                                      from_row_index=from_row_index, to_row_index=to_row_index)
-                        self.visualize_box()
-                self.visualize_box()
-            self.space = update_space
+        else:
+            for row in self.space.index:
+                row_object = self.space.index[row]
+                if str(self.space['object_id'][row][0]) == 'A':
+                    z_dis_obj_travel = (move_particle(body_type='fe alloy',
+                                        system_params=self.space).stokes_settling()) * deltaTime
+                    # updated_x_coords = 0
+                    # updated_y_coords = 0
+                    updated_z_coords = round(z_dis_obj_travel, -len(str(self.space_resolution)))
+                    from_row_index = self.grab_row_index_by_coord(system_data=self.space, x_coord=self.space['x_coords'][row],
+                                                                    y_coord=self.space['y_coords'][row],
+                                                                    z_coord=self.space['z_coords'][row])
+                    to_row_index = self.grab_row_index_by_coord(system_data=update_space, x_coord=self.space['x_coords'][row],
+                                                                    y_coord=self.space['y_coords'][row],
+                                                                    z_coord=updated_z_coords)
+                    update_space = self.swap_rows(system_data=self.space, updated_system_data=update_space,
+                                                  from_row_index=from_row_index, to_row_index=to_row_index)
+                    self.visualize_box()
+            self.visualize_box()
+        self.space = update_space
+        return self.model_time
 
 
