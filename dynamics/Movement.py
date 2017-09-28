@@ -37,7 +37,7 @@ class move_particle:
         D_not = material_properties['D_not'][material] # diffusion equation param, the diffusion coefficient
         H_star = material_properties['H*'][material] # diffusion equation param, the activation enthalpy
         V_star = material_properties['V*'][material] # diffusion equation param, the activation volume
-        lambda_ = material_properties # viscosity param, the jump distance for diffusing ions
+        lambda_ = material_properties['Lambda_O'][material] # viscosity param, the jump distance for diffusing ions
         D = D_not * exp(-(H_star + (pressure * V_star)) / (gas_const * temperature)) # the diffusion equation, D=D_not*exp(-(H*+PV*)/R*T)
         viscosity = (boltzmann_const * temperature) / (D * lambda_) # reworked from D_(Si,O)=(boltzmann*T)/(D*lambda)
         return viscosity

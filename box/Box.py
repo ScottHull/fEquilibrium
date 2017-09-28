@@ -73,16 +73,17 @@ class box:
         x_min, x_max = self.space['x_coords'][0], self.space['x_coords'][len(self.coords) - 1]
         y_min, y_max = self.space['y_coords'][0], self.space['y_coords'][len(self.coords) -1]
         z_min, z_max = self.space['z_coords'][0], self.space['z_coords'][len(self.coords) -1]
-        if x_coord >= x_min and x_coord <= x_max and y_coord >= y_min and y_coord <= y_max and \
-                        z_coord >= z_min and z_coord <= z_max:
-            print("Coordinates validated!")
-            return True
+        if x_coord >= x_min and x_coord <= x_max:
+            if y_coord >= y_min and y_coord <= y_max:
+                if z_coord >= z_min and z_coord <= z_max:
+                    print("Coordinates validated!")
+                    return True
         else:
             print("Coordinates invalid!")
             return False
 
     def generate_object_id(self, matrix):
-        unref_object_id = randint(0, 99999999999999999999999)
+        unref_object_id = randint(0, len(self.coords))
         str_unref_object_id = str(unref_object_id)
         if matrix is True:
             object_id = 'B' + str_unref_object_id # matrix material objects begin with a B
@@ -101,9 +102,9 @@ class box:
         print("Inserting object...")
         if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
             for row in self.space.index:
-                if self.space['x_coord'][row] == x_coord:
-                    if self.space['y_coord'][row] == y_coord:
-                        if self.space['z_coord'][row] == z_coord: # verifies that coordinates match to Dataframe
+                if self.space['x_coords'][row] == x_coord:
+                    if self.space['y_coords'][row] == y_coord:
+                        if self.space['z_coords'][row] == z_coord: # verifies that coordinates match to Dataframe
                             self.space['object'][row] = object
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_size'] = object_size
@@ -124,18 +125,19 @@ class box:
         if self.visualize_system != False:
             mlab.clf()
             for row in self.space.index:
+                x = self.space['x_coords'][row]
+                y = self.space['x_coords'][row]
+                z = self.space['x_coords'][row]
+                object_size = self.space['object_size'][row]
                 if str(self.space['object_id'][row][0]) == 'A':
-                    x = self.space['x_coords'][row]
-                    y = self.space['x_coords'][row]
-                    z = self.space['x_coords'][row]
-                    object_size = self.space['object_size'][row]
-                    mlab.points3d(x, y, z, object_size, scale_factor=1)
+                    mlab.points3d(x, y, z, object_size, scale_factor=8)
                     mlab.view(distance=12)
-                    self.mov_frames.append(mlab.screenshot(antialiased=True))
+                else:
+                    mlab.points3d(x, y, z, scale_factor=1)
+            self.mov_frames.append(mlab.screenshot(antialiased=True))
 
 
-    @staticmethod
-    def grab_row_index_by_coord(system_data, x_coord, y_coord, z_coord):
+    def grab_row_index_by_coord(self, system_data, x_coord, y_coord, z_coord):
         """
         Returns the index of the row in the instance's Pandas dataframe by associating with x, y, and z coordinates stored
             in the dataframe.
@@ -145,7 +147,7 @@ class box:
         :param z_coord:
         :return: row, the index
         """
-        for row in system_data.index():
+        for row in system_data.index:
             if system_data['x_coords'][row] == x_coord:
                 if system_data['y_coords'][row] == y_coord:
                     if system_data['z_coords'][row] == z_coord:
@@ -160,21 +162,20 @@ class box:
         return updated_system
 
 
-
-
-
     # TODO: update x and y coords
     def update_system(self, deltaTime):
-        self.model_time -= deltaTime
-        print("Model time at: {}")
+        print("Model time at: {}".format(self.model_time))
         update_space = self.space
         if self.model_time == self.initial_time:
             self.visualize_box()
         elif self.model_time <= 0:
-            print(self.space)
+            self.visualize_box()
+            print("Model at minimum time!")
             if self.visualize_system == True:
-                animation = mpy.ImageSequenceClip(self.mov_frames, fps=30)
-                animation.write_videofile('fEquilibrium_animation.mp4', fps=30, audio=False)
+                print("length of frame dict: {}".format(len(self.mov_frames)))
+                animation = mpy.ImageSequenceClip(self.mov_frames, fps=1)
+                # animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
+                animation.write_gif('Equilibrium_animation.gif', fps=1)
         else:
             for row in self.space.index:
                 row_object = self.space.index[row]
@@ -192,9 +193,9 @@ class box:
                                                                     z_coord=updated_z_coords)
                     update_space = self.swap_rows(system_data=self.space, updated_system_data=update_space,
                                                   from_row_index=from_row_index, to_row_index=to_row_index)
-                    self.visualize_box()
             self.visualize_box()
         self.space = update_space
+        self.model_time -= deltaTime
         return self.model_time
 
 
