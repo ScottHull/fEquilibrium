@@ -291,7 +291,7 @@ class box:
                 self.space.to_csv('space.csv')
                 self.mov_frames.append(i for i in os.listdir(os.getcwd()+'/mpl_pics'))
                 os.chdir(os.getcwd()+'/mpl_pics')
-                animation = mpy.ImageSequenceClip(list(reversed([z for z in os.listdir(os.getcwd())])).sort(key=self.natural_keys), fps=round((self.model_time)/15), load_images=True)
+                animation = mpy.ImageSequenceClip(list(reversed([z for z in os.listdir(os.getcwd())].sort(key=self.natural_keys))), fps=round((self.model_time)/15), load_images=True)
                 os.chdir('..')
                 animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
                 animation.write_gif('Equilibrium_animation.gif', fps=round((self.model_time)/20))
