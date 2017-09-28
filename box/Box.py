@@ -9,6 +9,7 @@ os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movemen
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
+import re
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -267,6 +268,16 @@ class box:
                                               from_row_index=from_row_index, to_row_index=to_row_index)
         return update_space_copy
 
+    def atof(self, text):
+        try:
+            retval = float(text)
+        except ValueError:
+            retval = text
+        return retval
+
+    def natural_keys(self, text):
+        return [self.atof(c) for c in re.split(r'[+-]?([0-9]+(?:[.][0-9]*)?|[.][0-9]+)', text)]
+
     # TODO: update x and y coords
     def update_system(self, deltaTime):
         print("Model time at: {}".format(self.model_time))
@@ -280,10 +291,10 @@ class box:
                 self.space.to_csv('space.csv')
                 self.mov_frames.append(i for i in os.listdir(os.getcwd()+'/mpl_pics'))
                 os.chdir(os.getcwd()+'/mpl_pics')
-                animation = mpy.ImageSequenceClip(list(reversed([z for z in os.listdir(os.getcwd())])), fps=1, load_images=True)
+                animation = mpy.ImageSequenceClip(list(reversed([z for z in os.listdir(os.getcwd())])).sort(key=self.natural_keys), fps=round((self.model_time)/15), load_images=True)
                 os.chdir('..')
                 animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
-                # animation.write_gif('Equilibrium_animation.gif', fps=1)
+                animation.write_gif('Equilibrium_animation.gif', fps=round((self.model_time)/20))
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
             self.visualize_box()
