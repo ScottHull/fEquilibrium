@@ -1,5 +1,5 @@
 import matplotlib as mpl
-mpl.use('Qt4Agg')
+mpl.use('Qt5Agg')
 import os
 import numpy as np
 import pandas as pd
@@ -148,14 +148,14 @@ class box:
             ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
             ax.set_ylim(ymin=min(self.space['y_coords']), ymax=max(self.space['y_coords']))
             ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
-            XX, YY, ZZ = np.meshgrid(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'])
+            # XX, YY, ZZ = np.meshgrid(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'])
             for row in self.space.index:
                 x = self.space['x_coords'][row]
                 y = self.space['y_coords'][row]
                 z = self.space['z_coords'][row]
-                velocity_x = self.space['x_direct'][row]
-                velocity_y = self.space['y_direct'][row]
-                velocity_z = self.space['z_direct'][row]
+                # velocity_x = self.space['x_direct'][row]
+                # velocity_y = self.space['y_direct'][row]
+                # velocity_z = self.space['z_direct'][row]
                 if str(self.space['object_id'][row][0]) == 'A':
                     print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
                     ax.scatter3D(x, y, z, color='b')
