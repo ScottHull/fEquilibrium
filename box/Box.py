@@ -1,11 +1,14 @@
+import matplotlib as mpl
+mpl.use('Qt4Agg')
 import os
 import numpy as np
 import pandas as pd
 from random import randint
-import mayavi.mlab as mlab
 import moviepy.editor as mpy
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movement import move_particle
-
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import shutil
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -18,6 +21,7 @@ class box:
         :param space_resolution: spatial resolution of the system, in m
         :param model_time: initial time of the system, in 'years ago'
         :param visualize_system: optional parameter to turn on movie generation of the evolution of the system
+
         """
         self.length = length
         self.width = width
@@ -29,17 +33,20 @@ class box:
                                                  space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
         self.space = pd.DataFrame({
-            'object_id': ['NaN' for i in list(range(len(self.coords)))], 'object': ['NaN' for i in list(range(len(self.coords)))],
-            'x_coords': [i[0] for i in self.coords], 'y_coords': [i[1] for i in self.coords],
-            'z_coords': [i[2] for i in self.coords], 'object_size': [np.NAN for i in list(range(len(self.coords)))],
-            'density': [0 for i in list(range(len(self.coords)))], 'temperature': [0 for i in list(range(len(self.coords)))],
-            'pressure': [0 for i in list(range(len(self.coords)))],
-            'object_velocity': [0 for i in list(range(len(self.coords)))],
-            'x_direct': [0 for i in list(range(len(self.coords)))], 'y_direct': [0 for i in list(range(len(self.coords)))],
-            'z_direct': [0 for i in list(range(len(self.coords)))], 'potential_energy': [0 for i in list(range(len(self.coords)))],
-            'kinematic_energy': [0 for i in list(range(len(self.coords)))]
+            'object_id': [np.NAN for i in list(range(len(self.coords)))], 'object': [np.NAN for i in list(range(len(self.coords)))],
+            'x_coords': [float(i[0]) for i in self.coords], 'y_coords': [float(i[1]) for i in self.coords],
+            'z_coords': [float(i[2]) for i in self.coords], 'object_size': [np.NAN for i in list(range(len(self.coords)))],
+            'density': [np.NAN for i in list(range(len(self.coords)))], 'temperature': [np.NAN for i in list(range(len(self.coords)))],
+            'pressure': [np.NAN for i in list(range(len(self.coords)))],
+            'object_velocity': [np.NAN for i in list(range(len(self.coords)))],
+            'x_direct': [np.NAN for i in list(range(len(self.coords)))], 'y_direct': [np.NAN for i in list(range(len(self.coords)))],
+            'z_direct': [np.NAN for i in list(range(len(self.coords)))], 'potential_energy': [np.NAN for i in list(range(len(self.coords)))],
+            'kinematic_energy': [np.NAN for i in list(range(len(self.coords)))]
         })
         self.mov_frames = []
+        if os.path.exists('mpl_pics'):
+            shutil.rmtree('mpl_pics')
+        os.mkdir('mpl_pics')
 
 
     @staticmethod
@@ -66,6 +73,22 @@ class box:
                     coords.append(temp_coords)
         print("Coordinates generated!")
         return coords
+
+    @staticmethod
+    def round_coord_arbitrary(coordinate, system_data, coordinate_type):
+        rounded_coordinate = ''
+        found_min = ''
+        for i in system_data[coordinate_type]:
+            attempted_min = abs(coordinate - i)
+            if found_min == '':
+                found_min = attempted_min
+                rounded_coordinate = i
+            else:
+                if attempted_min < found_min:
+                    found_min = attempted_min
+                    rounded_coordinate = i
+        return rounded_coordinate
+
 
 
     def check_coords(self, x_coord, y_coord, z_coord):
@@ -107,10 +130,7 @@ class box:
                         if self.space['z_coords'][row] == z_coord: # verifies that coordinates match to Dataframe
                             self.space['object'][row] = object
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
-                            self.space['object_size'] = object_size
-                            self.space['object_velocity']['z_direct'] = move_particle(body_type='fe alloy',
-                                                                        system_params=self.space).stokes_settling()
-        print("Object inserted!")
+                            self.space['object_size'][row] = object_size
 
     def insert_matrix(self, matrix_material):
         print("Inserting matrix...")
@@ -123,18 +143,60 @@ class box:
 
     def visualize_box(self):
         if self.visualize_system != False:
-            mlab.clf()
+            fig = plt.figure()
+            ax = Axes3D(fig)
+            ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
+            ax.set_ylim(ymin=min(self.space['y_coords']), ymax=max(self.space['y_coords']))
+            ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
+            XX, YY, ZZ = np.meshgrid(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'])
             for row in self.space.index:
                 x = self.space['x_coords'][row]
-                y = self.space['x_coords'][row]
-                z = self.space['x_coords'][row]
-                object_size = self.space['object_size'][row]
+                y = self.space['y_coords'][row]
+                z = self.space['z_coords'][row]
+                velocity_x = self.space['x_direct'][row]
+                velocity_y = self.space['y_direct'][row]
+                velocity_z = self.space['z_direct'][row]
                 if str(self.space['object_id'][row][0]) == 'A':
-                    mlab.points3d(x, y, z, object_size, scale_factor=8)
-                    mlab.view(distance=12)
-                else:
-                    mlab.points3d(x, y, z, scale_factor=1)
-            self.mov_frames.append(mlab.screenshot(antialiased=True))
+                    print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
+                    ax.scatter3D(x, y, z, color='b')
+                # else:
+                #     print("Plotted quiver at: x:{} y:{} z:{}.".format(x, y, z))
+                #     for i in list(range(6))[1:]:
+                #         if 'A' in self.space['object_id'][row + i]:
+                #             ax.quiver(XX, YY, ZZ, velocity_x, velocity_y, velocity_z, length=0.4)
+            ax.set_title("Sinking diapirs at {} years ago".format(self.model_time))
+            ax.set_xlabel("Box Length")
+            ax.set_ylabel("Box Width")
+            ax.set_zlabel("Box Height")
+            ax.invert_xaxis()
+            ax.invert_yaxis()
+            ax.invert_zaxis()
+            plt.savefig(os.getcwd()+'/mpl_pics/snap_{}.png'.format(self.model_time), format='png')
+
+
+            # mlab.clf()
+            # for row in self.space.index:
+            #     x = self.space['x_coords'][row]
+            #     y = self.space['y_coords'][row]
+            #     z = self.space['z_coords'][row]
+            #     velocity_x = self.space['x_direct'][row]
+            #     velocity_y = self.space['y_direct'][row]
+            #     velocity_z = self.space['z_direct'][row]
+            #     object_size = self.space['object_size'][row]
+            #     if str(self.space['object_id'][row][0]) == 'A':
+            #         mlab.points3d(x, y, z, object_size, scale_factor=1)
+            #     else:
+            #         pass
+            #         # mlab.flow(velocity_x, velocity_y, velocity_z)
+            # mlab.view(distance=12)
+            # # scene = mlab.screenshot(antialiased=True)
+            # fig = plt.figure()
+            # scene = mlab.screenshot()
+            # pl.imshow(scene)
+            # plt.grid()
+            # plt.show()
+            # plt.close()
+            # self.mov_frames.append(scene)
 
 
     @staticmethod
@@ -158,46 +220,74 @@ class box:
     def swap_rows(system_data, updated_system_data, from_row_index, to_row_index):
         updated_system = updated_system_data
         for i in updated_system_data:
+            # print("Swapping coordinate data from x:{} y:{} z:{} with x:{} y:{} z:{}".format(system_data['x_coords'][to_row_index],
+            #                                                                                 system_data['y_coords'][
+            #                                                                                     to_row_index],
+            #                                                                                 system_data['z_coords'][
+            #                                                                                     to_row_index], system_data['x_coords'][from_row_index],
+            #                                                                                 system_data['y_coords'][from_row_index], system_data['z_coords'][from_row_index]))
             if i != 'x_coords' and i != 'y_coords' and i != 'z_coords':
+                # print("From index: {}       To index: {}".format(from_row_index, to_row_index))
                 updated_system[i][to_row_index] = system_data[i][from_row_index]
+                updated_system[i][from_row_index] = system_data[i][to_row_index]
         return updated_system
-
+    
+    # TODO: seperate velocity calculations from system movement so space dataframe can be updated and moved according to velocity contents
+    @classmethod
+    def calculate_velocities(cls):
+        pass
+    
+    @classmethod
+    def move_systems(clf, system_data, update_space, deltaTime):
+        update_space_copy = update_space.copy(deep=True)
+        for row in system_data.index:
+            if str(system_data['object_id'][row][0]) == 'A':
+                object_velocity = move_particle(body_type='fe alloy',
+                                                  system_params=system_data).stokes_settling()
+                system_data['object_velocity'][row] = object_velocity
+                system_data['z_direct'][row] = object_velocity
+                z_dis_obj_travel = object_velocity * deltaTime
+                updated_x_coords = system_data['x_coords'][row]
+                updated_y_coords = system_data['y_coords'][row]
+                updated_z_coords = clf.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][row]),
+                                                             system_data=system_data, coordinate_type='z_coords')
+                print("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
+                    system_data['object_id'][row], system_data['object'][row], system_data['x_coords'][row],
+                    system_data['y_coords'][row], system_data['z_coords'][row], updated_x_coords, updated_y_coords,
+                    updated_z_coords))
+                from_row_index = clf.grab_row_index_by_coord(system_data=system_data,
+                                                              x_coord=system_data['x_coords'][row],
+                                                              y_coord=system_data['y_coords'][row],
+                                                              z_coord=system_data['z_coords'][row])
+                to_row_index = clf.grab_row_index_by_coord(system_data=system_data,
+                                                            x_coord=updated_x_coords,
+                                                            y_coord=updated_y_coords,
+                                                            z_coord=updated_z_coords)
+                update_space_copy = clf.swap_rows(system_data=system_data, updated_system_data=update_space,
+                                              from_row_index=from_row_index, to_row_index=to_row_index)
+        return update_space_copy
 
     # TODO: update x and y coords
     def update_system(self, deltaTime):
         print("Model time at: {}".format(self.model_time))
-        update_space = self.space
+        update_space = self.space.copy(deep=True)
         if self.model_time == self.initial_time:
             self.visualize_box()
         elif self.model_time <= 0:
             self.visualize_box()
             print("Model at minimum time!")
             if self.visualize_system == True:
-                print("length of frame dict: {}".format(len(self.mov_frames)))
-                animation = mpy.ImageSequenceClip(self.mov_frames, fps=1)
-                # animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
-                animation.write_gif('Equilibrium_animation.gif', fps=1)
                 self.space.to_csv('space.csv')
+                self.mov_frames.append(i for i in os.listdir(os.getcwd()+'/mpl_pics'))
+                os.chdir(os.getcwd()+'/mpl_pics')
+                animation = mpy.ImageSequenceClip(list(reversed([z for z in os.listdir(os.getcwd())])), fps=1, load_images=True)
+                os.chdir('..')
+                animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
+                # animation.write_gif('Equilibrium_animation.gif', fps=1)
         else:
-            for row in self.space.index:
-                row_object = self.space.index[row]
-                if str(self.space['object_id'][row][0]) == 'A':
-                    z_dis_obj_travel = (move_particle(body_type='fe alloy',
-                                        system_params=self.space).stokes_settling()) * deltaTime
-                    # updated_x_coords = 0
-                    # updated_y_coords = 0
-                    updated_z_coords = round(z_dis_obj_travel, -len(str(self.space_resolution)))
-                    from_row_index = self.grab_row_index_by_coord(system_data=self.space, x_coord=self.space['x_coords'][row],
-                                                                    y_coord=self.space['y_coords'][row],
-                                                                    z_coord=self.space['z_coords'][row])
-                    to_row_index = self.grab_row_index_by_coord(system_data=update_space, x_coord=self.space['x_coords'][row],
-                                                                    y_coord=self.space['y_coords'][row],
-                                                                    z_coord=updated_z_coords)
-                    update_space = self.swap_rows(system_data=self.space, updated_system_data=update_space,
-                                                  from_row_index=from_row_index, to_row_index=to_row_index)
+            update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
             self.visualize_box()
         self.space = update_space
         self.model_time -= deltaTime
-        return self.model_time
 
 

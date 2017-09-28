@@ -79,9 +79,11 @@ class move_particle:
                                       diameter_body=diameter_body, matrix_viscosity=matrix_viscosity)
         if f < 10: # low frictional coefficient, when body is in laminar flow regime
             v = ((density_body - density_matrix) * grav_constant * diameter_body**2) / (18 * matrix_viscosity)
+            # print("Laminar flow regime: calculated a velocity of: {}".format(v))
             return v
         else:
             v = sqrt((4 / 3 * drag_coeff) * ((density_body - density_matrix) / density_matrix) * grav_constant * diameter_body)
+            # print("Turbulent flow regime: calculated a velocity of: {}".format(v))
             return v
 
 
