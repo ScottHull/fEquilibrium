@@ -137,7 +137,8 @@ class box:
             self.mov_frames.append(mlab.screenshot(antialiased=True))
 
 
-    def grab_row_index_by_coord(self, system_data, x_coord, y_coord, z_coord):
+    @staticmethod
+    def grab_row_index_by_coord(system_data, x_coord, y_coord, z_coord):
         """
         Returns the index of the row in the instance's Pandas dataframe by associating with x, y, and z coordinates stored
             in the dataframe.
@@ -176,6 +177,7 @@ class box:
                 animation = mpy.ImageSequenceClip(self.mov_frames, fps=1)
                 # animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
                 animation.write_gif('Equilibrium_animation.gif', fps=1)
+                self.space.to_csv('space.csv')
         else:
             for row in self.space.index:
                 row_object = self.space.index[row]
