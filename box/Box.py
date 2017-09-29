@@ -6,6 +6,7 @@ import pandas as pd
 from random import randint
 import moviepy.editor as mpy
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movement import move_particle
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Energy import energy
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
