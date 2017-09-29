@@ -9,7 +9,7 @@ os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movemen
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
-import re
+import sys
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -28,8 +28,8 @@ class box:
         self.width = width
         self.height = height
         self.space_resolution = space_resolution
-        self.model_time = model_time
-        self.initial_time = model_time
+        self.model_time = float(model_time)
+        self.initial_time = float(model_time)
         self.coords = self.generate_coordinate_points(length=self.length, width=self.width, height=self.height,
                                                  space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
@@ -93,14 +93,14 @@ class box:
 
 
     def check_coords(self, x_coord, y_coord, z_coord):
-        print("Checking if coordinates are valid...")
+        print("Checking if coordinates are valid for object insertion...")
         x_min, x_max = self.space['x_coords'][0], self.space['x_coords'][len(self.coords) - 1]
         y_min, y_max = self.space['y_coords'][0], self.space['y_coords'][len(self.coords) -1]
         z_min, z_max = self.space['z_coords'][0], self.space['z_coords'][len(self.coords) -1]
         if x_coord >= x_min and x_coord <= x_max:
             if y_coord >= y_min and y_coord <= y_max:
                 if z_coord >= z_min and z_coord <= z_max:
-                    print("Coordinates validated!")
+                    print("Coordinates validated for object insertion!")
                     return True
         else:
             print("Coordinates invalid!")
@@ -132,6 +132,9 @@ class box:
                             self.space['object'][row] = object
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_size'][row] = object_size
+        else:
+            print("Could not insert object!  Outside of defined coordinate points!")
+            sys.exit(1)
 
     def insert_matrix(self, matrix_material):
         print("Inserting matrix...")
@@ -173,6 +176,8 @@ class box:
             ax.invert_yaxis()
             ax.invert_zaxis()
             plt.savefig(os.getcwd()+'/mpl_pics/snap_{}.png'.format(self.model_time), format='png')
+            self.mov_frames.append('snap_{}.png'.format(self.model_time))
+            print("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
 
 
             # mlab.clf()
@@ -268,18 +273,9 @@ class box:
                                               from_row_index=from_row_index, to_row_index=to_row_index)
         return update_space_copy
 
-    def atof(self, text):
-        try:
-            retval = float(text)
-        except ValueError:
-            retval = text
-        return retval
-
-    def natural_keys(self, text):
-        return [self.atof(c) for c in re.split(r'[+-]?([0-9]+(?:[.][0-9]*)?|[.][0-9]+)', text)]
 
     # TODO: update x and y coords
-    def update_system(self, deltaTime):
+    def update_system(self, auto_update=True, deltaTime=1):
         print("Model time at: {}".format(self.model_time))
         update_space = self.space.copy(deep=True)
         if self.model_time == self.initial_time:
@@ -288,17 +284,28 @@ class box:
             self.visualize_box()
             print("Model at minimum time!")
             if self.visualize_system == True:
-                self.space.to_csv('space.csv')
-                self.mov_frames.append(i for i in os.listdir(os.getcwd()+'/mpl_pics'))
+                print("Writing animation...")
                 os.chdir(os.getcwd()+'/mpl_pics')
-                animation = mpy.ImageSequenceClip(list(reversed([z for z in os.listdir(os.getcwd())].sort(key=self.natural_keys))), fps=round((self.model_time)/15), load_images=True)
+                animation = mpy.ImageSequenceClip(self.mov_frames, fps=round((self.initial_time/(self.initial_time/3))), load_images=True)
                 os.chdir('..')
                 animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
-                animation.write_gif('Equilibrium_animation.gif', fps=round((self.model_time)/20))
+                animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
+                print("Animation created & available in {}!".format(os.getcwd()))
+                return self.model_time, self.space
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
             self.visualize_box()
         self.space = update_space
-        self.model_time -= deltaTime
+        if auto_update == True:
+            if self.model_time == 1:
+                self.model_time -= deltaTime
+                self.update_system(auto_update=False, deltaTime=1)
+            elif self.model_time > 1:
+                self.model_time -= deltaTime
+                self.update_system(auto_update=auto_update, deltaTime=(self.model_time/self.model_time))
+            else:
+                return self.model_time, self.space
+        else:
+            return self.model_time, self.space
 
 
