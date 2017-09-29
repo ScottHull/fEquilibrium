@@ -275,7 +275,7 @@ class box:
 
 
     # TODO: update x and y coords
-    def update_system(self, auto_update=True, deltaTime=1):
+    def update_system(self, auto_update=True, deltaTime=1.0):
         print("Model time at: {}".format(self.model_time))
         update_space = self.space.copy(deep=True)
         if self.model_time == self.initial_time:
