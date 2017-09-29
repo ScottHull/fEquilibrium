@@ -5,14 +5,14 @@
 class energy:
 
     def __init__(self):
-        pass
+        self.gravity = 9.81
 
     def kinetic_energy(self, mass, velocity):
         ke = 0.5 * mass * (velocity**2) # ke = 1/2*m*v^2
         return ke
 
-    def potential_energy(self, mass, gravity, height):
-        pe = mass * gravity * height # pe = m*g*h
+    def potential_energy(self, mass, height):
+        pe = mass * self.gravity * height # pe = m*g*h
         return pe
 
     def release_energy(self, former_pe, current_pe):

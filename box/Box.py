@@ -43,7 +43,8 @@ class box:
             'object_velocity': [np.NAN for i in list(range(len(self.coords)))],
             'x_direct': [np.NAN for i in list(range(len(self.coords)))], 'y_direct': [np.NAN for i in list(range(len(self.coords)))],
             'z_direct': [np.NAN for i in list(range(len(self.coords)))], 'potential_energy': [np.NAN for i in list(range(len(self.coords)))],
-            'kinematic_energy': [np.NAN for i in list(range(len(self.coords)))]
+            'kinematic_energy': [np.NAN for i in list(range(len(self.coords)))],
+            'mass': [np.NAN for i in list(range(len(self.coords)))]
         })
         self.mov_frames = []
         if os.path.exists('mpl_pics'):
@@ -123,7 +124,7 @@ class box:
             else:
                 return object_id
 
-    def insert_object(self, object, x_coord, y_coord, z_coord, object_size):
+    def insert_object(self, object, x_coord, y_coord, z_coord, object_size, initial_mass):
         print("Inserting object...")
         if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
             for row in self.space.index:
@@ -133,6 +134,9 @@ class box:
                             self.space['object'][row] = object
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_size'][row] = object_size
+                            self.space['potential_energy'][row] = energy().potential_energy(mass=initial_mass,
+                                                                            height=self.space['z_coords'][row])
+                            self.space['mass'][row] = initial_mass
         else:
             print("Could not insert object!  Outside of defined coordinate points!")
             sys.exit(1)
@@ -251,7 +255,7 @@ class box:
             if str(system_data['object_id'][row][0]) == 'A':
                 object_velocity = move_particle(body_type='fe alloy',
                                                   system_params=system_data).stokes_settling()
-                system_data['object_velocity'][row] = object_velocity
+                system_data['object_velocity'][row] = energy().kinetic_energy(mass=system_data['mass'][row], velocity=object_velocity)
                 system_data['z_direct'][row] = object_velocity
                 z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coords = system_data['x_coords'][row]
