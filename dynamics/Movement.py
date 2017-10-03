@@ -57,7 +57,7 @@ class move_particle:
         return f
 
     # def stokes_settling(self, density_body, density_matrix, diameter_body, matrix_viscosity, drag_coeff=0.2):
-    # TODO: return 3D array such that an x, y, and z velocity are received
+    # TODO: return 3-component array such that an x, y, and z velocity are received
     def stokes_settling(self):
         """
         If friction coefficient, F, is <10 or >10, the modes of Stoke's settling are described as below as a result of
