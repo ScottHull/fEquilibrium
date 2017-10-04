@@ -6,7 +6,7 @@ import pandas as pd
 from random import randint
 import moviepy.editor as mpy
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movement import move_particle
-os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Energy import energy
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Energy import energy, thermal_eq
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
@@ -37,13 +37,14 @@ class box:
         self.space = pd.DataFrame({
             'object_id': [np.NAN for i in list(range(len(self.coords)))], 'object': [np.NAN for i in list(range(len(self.coords)))],
             'x_coords': [float(i[0]) for i in self.coords], 'y_coords': [float(i[1]) for i in self.coords],
-            'z_coords': [float(i[2]) for i in self.coords], 'object_size': [np.NAN for i in list(range(len(self.coords)))],
-            'density': [np.NAN for i in list(range(len(self.coords)))], 'temperature': [np.NAN for i in list(range(len(self.coords)))],
+            'z_coords': [float(i[2]) for i in self.coords], 'object_radius': [np.NAN for i in list(range(len(self.coords)))],
+            'density': [np.NAN for i in list(range(len(self.coords)))], 'temperature': [1600 for i in list(range(len(self.coords)))],
             'pressure': [np.NAN for i in list(range(len(self.coords)))],
             'object_velocity': [np.NAN for i in list(range(len(self.coords)))],
             'x_direct': [np.NAN for i in list(range(len(self.coords)))], 'y_direct': [np.NAN for i in list(range(len(self.coords)))],
             'z_direct': [np.NAN for i in list(range(len(self.coords)))], 'potential_energy': [np.NAN for i in list(range(len(self.coords)))],
             'kinematic_energy': [np.NAN for i in list(range(len(self.coords)))],
+            'total_energy_released': [np.NAN for i in list(range(len(self.coords)))],
             'mass': [np.NAN for i in list(range(len(self.coords)))]
         })
         self.mov_frames = []
@@ -124,7 +125,7 @@ class box:
             else:
                 return object_id
 
-    def insert_object(self, object, x_coord, y_coord, z_coord, object_size, initial_mass):
+    def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, initial_mass):
         print("Inserting object...")
         if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
             for row in self.space.index:
@@ -133,7 +134,7 @@ class box:
                         if self.space['z_coords'][row] == z_coord: # verifies that coordinates match to Dataframe
                             self.space['object'][row] = object
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
-                            self.space['object_size'][row] = object_size
+                            self.space['object_radius'][row] = object_radius
                             self.space['potential_energy'][row] = energy().potential_energy(mass=initial_mass,
                                                                             height=self.space['z_coords'][row])
                             self.space['mass'][row] = initial_mass
@@ -193,9 +194,9 @@ class box:
             #     velocity_x = self.space['x_direct'][row]
             #     velocity_y = self.space['y_direct'][row]
             #     velocity_z = self.space['z_direct'][row]
-            #     object_size = self.space['object_size'][row]
+            #     object_radius = self.space['object_radius'][row]
             #     if str(self.space['object_id'][row][0]) == 'A':
-            #         mlab.points3d(x, y, z, object_size, scale_factor=1)
+            #         mlab.points3d(x, y, z, object_radius, scale_factor=1)
             #     else:
             #         pass
             #         # mlab.flow(velocity_x, velocity_y, velocity_z)
@@ -247,6 +248,26 @@ class box:
     @classmethod
     def calculate_velocities(cls):
         pass
+
+
+    # # TODO: calculate the distance between the two points, and then find nearest coordinate neighbors along the path to account for x,y,z
+    # # TODO: right now, just operates in z-direction. will have to rewrite entire method if lateral motion is to occur
+    # @classmethod
+    # def gather_path_coords(cls, system_data, from_zcoord, to_zcoord, x_coord, y_coord, from_xcoord=None, to_xcoord=None,
+    #                        from_ycoord=None, to_ycoord=None):
+    #     path_coords = []
+    #     for row in system_data.index:
+    #         unique_path_coords = [] # x coord at index 0, y coord at 1, z coord at 2
+    #         if float(system_data['x_coord'][row]) == float(x_coord) and float(system_data['y_coord']) == float(y_coord):
+    #             if float(system_data['z_coord'][row]) >= float(from_zcoord) and float(system_data['z_coord'][row]) <= to_zcoord:
+    #                 # assumption is that z axis is inverted, but z values increase with decreasing depth
+    #                 unique_path_coords.append(float(x_coord))
+    #                 unique_path_coords.append(float(y_coord))
+    #                 unique_path_coords.append(float(system_data['z_coord'][row]))
+    #         path_coords.append(unique_path_coords)
+    #     return path_coords
+
+
     
     @classmethod
     def move_systems(clf, system_data, update_space, deltaTime):
@@ -255,9 +276,13 @@ class box:
             if str(system_data['object_id'][row][0]) == 'A':
                 object_velocity = move_particle(body_type='fe alloy',
                                                   system_params=system_data).stokes_settling()
+                z_dis_obj_travel = object_velocity * deltaTime
+                system_data['temperature'][row] = float(system_data['temperature'][row]) + energy().stokes_frictional_energy(
+                    body_material='Metal Liquid', matrix_material='Silicate Liquid', body_radius=system_data['object_radius'][row],
+                    body_mass=system_data['mass'][row], distance_travelled=z_dis_obj_travel
+                )
                 system_data['object_velocity'][row] = energy().kinetic_energy(mass=system_data['mass'][row], velocity=object_velocity)
                 system_data['z_direct'][row] = object_velocity
-                z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coords = system_data['x_coords'][row]
                 updated_y_coords = system_data['y_coords'][row]
                 updated_z_coords = clf.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][row]),
@@ -296,9 +321,11 @@ class box:
                 animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
                 animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
                 print("Animation created & available in {}!".format(os.getcwd()))
+                self.space.to_csv("space.csv")
                 return self.model_time, self.space
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
+            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space)
             self.visualize_box()
         self.space = update_space
         if auto_update == True:
