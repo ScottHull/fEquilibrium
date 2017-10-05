@@ -47,10 +47,14 @@ class box:
             'total_energy_released': [np.NAN for i in list(range(len(self.coords)))],
             'mass': [np.NAN for i in list(range(len(self.coords)))]
         })
-        self.mov_frames = []
-        if os.path.exists('mpl_pics'):
-            shutil.rmtree('mpl_pics')
-        os.mkdir('mpl_pics')
+        self.move_frames1 = []
+        self.move_frames2 = []
+        if os.path.exists('mpl_animation1'):
+            shutil.rmtree('mpl_animation1')
+        if os.path.exists('mpl_animation2'):
+            shutil.rmtree('mpl_animation2')
+        os.mkdir('mpl_animation1')
+        os.mkdir('mpl_animation2')
 
 
     @staticmethod
@@ -178,11 +182,9 @@ class box:
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
-            ax.invert_xaxis()
-            ax.invert_yaxis()
             ax.invert_zaxis()
-            plt.savefig(os.getcwd()+'/mpl_pics/snap_{}.png'.format(self.model_time), format='png')
-            self.mov_frames.append('snap_{}.png'.format(self.model_time))
+            plt.savefig(os.getcwd()+'/mpl_animation1/snap_{}.png'.format(self.model_time), format='png')
+            self.move_frames1.append('snap_{}.png'.format(self.model_time))
             print("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
 
 
@@ -208,7 +210,7 @@ class box:
             # plt.grid()
             # plt.show()
             # plt.close()
-            # self.mov_frames.append(scene)
+            # self.move_frames1.append(scene)
 
 
     @staticmethod
@@ -315,8 +317,8 @@ class box:
             print("Model at minimum time!")
             if self.visualize_system == True:
                 print("Writing animation...")
-                os.chdir(os.getcwd()+'/mpl_pics')
-                animation = mpy.ImageSequenceClip(self.mov_frames, fps=round((self.initial_time/(self.initial_time/3))), load_images=True)
+                os.chdir(os.getcwd()+'/mpl_animation1')
+                animation = mpy.ImageSequenceClip(self.move_frames1, fps=round((self.initial_time/(self.initial_time/3))), load_images=True)
                 os.chdir('..')
                 animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
                 animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
@@ -326,6 +328,12 @@ class box:
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space)
+            update_space["temperature"] = therm_eq_update_space["temperature"]
+            update_space['neighbors'] = therm_eq_update_space['neighbors']
+            update_space['T_gradient'] = therm_eq_update_space['T_gradient']
+            update_space['neighbors'] = therm_eq_update_space['neighbors']
+            update_space['T_laplace'] = therm_eq_update_space['T_laplace']
+            update_space = therm_eq_update_space
             self.visualize_box()
         self.space = update_space
         if auto_update == True:

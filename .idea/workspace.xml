@@ -2,21 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_36.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_37.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_38.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_39.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_40.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_41.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_42.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_43.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_44.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_45.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_46.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_47.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_48.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_49.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/mpl_pics/snap_50.png" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/physical_parameters.csv" afterPath="$PROJECT_DIR$/box/physical_parameters.csv" />
@@ -39,7 +24,7 @@
         <entry file="file://$PROJECT_DIR$/box/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="135">
-              <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
+              <caret line="9" column="28" lean-forward="false" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -50,8 +35,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="327" column="88" lean-forward="true" selection-start-line="327" selection-start-column="88" selection-end-line="327" selection-end-column="88" />
+            <state relative-caret-position="282">
+              <caret line="330" column="66" lean-forward="false" selection-start-line="330" selection-start-column="66" selection-end-line="330" selection-end-column="66" />
               <folding />
             </state>
           </provider>
@@ -60,8 +45,8 @@
       <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="53" column="118" lean-forward="false" selection-start-line="53" selection-start-column="118" selection-end-line="53" selection-end-column="118" />
+            <state relative-caret-position="-30">
+              <caret line="96" column="23" lean-forward="true" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -72,7 +57,7 @@
       <file leaf-file-name="Movement.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
+            <state relative-caret-position="-291">
               <caret line="59" column="30" lean-forward="false" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="30" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -94,14 +79,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>_1</find>
-      <find>=6</find>
-      <find>frame1</find>
-      <find>f(x)</find>
-      <find>chem.csv</find>
-      <find>cm</find>
-      <find>map</find>
-      <find>run_rcode</find>
       <find>zfil</find>
       <find>ax1</find>
       <find>x_max</find>
@@ -124,6 +101,14 @@
       <find>self.space['x_coord'</find>
       <find>object_size</find>
       <find>body_radius</find>
+      <find>self.mov_frames</find>
+      <find>visuali</find>
+      <find>silicate liquid</find>
+      <find>system_data</find>
+      <find>temps</find>
+      <find>gradients</find>
+      <find>gradient</find>
+      <find>delT_delz</find>
     </findStrings>
     <replaceStrings>
       <replace>=7</replace>
@@ -144,6 +129,12 @@
       <replace>self.initial_time</replace>
       <replace>object_id</replace>
       <replace>object_radius</replace>
+      <replace>self.move_frames1</replace>
+      <replace>therm_eq_update_space</replace>
+      <replace>gradients</replace>
+      <replace>gradient</replace>
+      <replace>laplace</replace>
+      <replace>del2T_delz2</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -184,6 +175,7 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="36" />
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="825" />
@@ -426,11 +418,18 @@
       <option name="project" value="LOCAL" />
       <updated>1507047944405</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Basis for thermal equilibrium added.">
+      <created>1507142342576</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1507142342576</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="27" width="1440" height="825" extended-state="6" />
+    <frame x="3" y="23" width="1440" height="825" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -460,22 +459,16 @@
     <MESSAGE value="Good!" />
     <MESSAGE value="Began integrating energy calculations into the code.  Currently not usable." />
     <MESSAGE value="Code currently not functional." />
-    <option name="LAST_COMMIT_MESSAGE" value="Code currently not functional." />
+    <MESSAGE value="Basis for thermal equilibrium added." />
+    <option name="LAST_COMMIT_MESSAGE" value="Basis for thermal equilibrium added." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="54" column="5" lean-forward="false" selection-start-line="54" selection-start-column="5" selection-end-line="54" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -674,7 +667,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
+        <state relative-caret-position="-291">
           <caret line="59" column="30" lean-forward="false" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="30" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -684,28 +677,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/box/Box.py">
+    <entry file="file://$USER_HOME$/miniconda3/lib/python3.5/site-packages/pandas/core/internals.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="327" column="88" lean-forward="true" selection-start-line="327" selection-start-column="88" selection-end-line="327" selection-end-column="88" />
+        <state relative-caret-position="159">
+          <caret line="3090" column="0" lean-forward="false" selection-start-line="3090" selection-start-column="0" selection-end-line="3090" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="53" column="118" lean-forward="false" selection-start-line="53" selection-start-column="118" selection-end-line="53" selection-end-column="118" />
+        <state relative-caret-position="-30">
+          <caret line="96" column="23" lean-forward="true" selection-start-line="96" selection-start-column="23" selection-end-line="96" selection-end-column="23" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/box/Box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="282">
+          <caret line="330" column="66" lean-forward="false" selection-start-line="330" selection-start-column="66" selection-end-line="330" selection-end-column="66" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/box/test_box.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
-          <caret line="9" column="21" lean-forward="false" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
+          <caret line="9" column="28" lean-forward="false" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>

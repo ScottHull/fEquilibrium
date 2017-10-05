@@ -1,3 +1,3 @@
 Material,Density,H*,V*,D_not,Lambda_O,Thermal Diffusivity,Thermal Expansivity,Heat Capacity,Latent Heat of Crystallization,C_p
 Silicate Liquid,3750,267,0,0.015,2.8,0.00001,0.00006,1000,400000,
-Metal Liquid,7800,100,2.8,0.000017,,,,,,0.45
+Metal Liquid,7800,100,2.8,0.000017,,0.000007,,,,0.45
