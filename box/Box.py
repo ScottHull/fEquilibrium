@@ -213,7 +213,7 @@ class box:
             colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
             colorsmap.set_array(self.space['temperature'])
             ax.scatter(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'], marker='s', s=140,
-                       c=self.space['temperature'], cmap='jet')
+                       c=self.space['temperature'], cmap='jet', alpha=0.50)
             cb = fig.colorbar(colorsmap)
             ax.set_title("Sinking diapirs at {} years ago".format(self.model_time))
             ax.set_xlabel("Box Length")
@@ -378,7 +378,7 @@ class box:
                 return self.model_time, self.space
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
-            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space)
+            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime)
             update_space["temperature"] = therm_eq_update_space["temperature"]
             update_space['neighbors'] = therm_eq_update_space['neighbors']
             update_space['T_gradient'] = therm_eq_update_space['T_gradient']

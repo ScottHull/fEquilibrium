@@ -112,22 +112,22 @@ class thermal_eq:
             for row in system_data.index:
                 if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
                                 system_data['z_coords'][row] == set[2] and (x_coord + 1) == set[0]:
-                    neighbor_gradients_x_plus1 = system_data['T_gradient'][row]
+                    neighbor_gradients_x_plus1 = system_data['T_gradient'][row][0]
                 if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
                                 system_data['z_coords'][row] == set[2] and (x_coord - 1) == set[0]:
-                    neighbor_gradients_x_minus1 = system_data['T_gradient'][row]
+                    neighbor_gradients_x_minus1 = system_data['T_gradient'][row][0]
                 if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
                                 system_data['z_coords'][row] == set[2] and (y_coord + 1) == set[1]:
-                    neighbor_gradients_y_plus1 = system_data['T_gradient'][row]
+                    neighbor_gradients_y_plus1 = system_data['T_gradient'][row][1]
                 if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
                                 system_data['z_coords'][row] == set[2] and (y_coord - 1) == set[1]:
-                    neighbor_gradients_y_minus1 = system_data['T_gradient'][row]
+                    neighbor_gradients_y_minus1 = system_data['T_gradient'][row][1]
                 if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
                                 system_data['z_coords'][row] == set[2] and (z_coord + 1) == set[2]:
-                    neighbor_gradients_z_plus1 = system_data['T_gradient'][row]
+                    neighbor_gradients_z_plus1 = system_data['T_gradient'][row][2]
                 if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
                                 system_data['z_coords'][row] == set[2] and (z_coord - 1) == set[2]:
-                    neighbor_gradients_z_minus1 = system_data['T_gradient'][row]
+                    neighbor_gradients_z_minus1 = system_data['T_gradient'][row][2]
         if isinstance(neighbor_gradients_x_plus1, str):
             for row in system_data.index:
                 if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and \
@@ -239,10 +239,12 @@ class thermal_eq:
         return neighbors # for each coordinate set in neighbors, x at position 0, y at 1, z and 2
 
 
-    def D3_thermal_eq(self, system_data, animate_neighbors=False):
+    def D3_thermal_eq(self, system_data, deltaTime, animate_neighbors=False):
         system_data['neighbors'] = [[] for i in list(range(len(system_data['x_coords'])))]
-        system_data['T_gradient'] = np.nan
-        system_data['T_laplace'] = np.nan
+        system_data['T_gradient'] = [[] for i in list(range(len(system_data['x_coords'])))]
+        system_data['T_laplace'] = [[] for i in list(range(len(system_data['x_coords'])))]
+        system_data['dT/dt'] = [[] for i in list(range(len(system_data['x_coords'])))]
+        system_data['K'] = np.NAN
         new_thermal_df = system_data.copy(deep=True)
         if animate_neighbors == True:
             import os, shutil
@@ -258,8 +260,8 @@ class thermal_eq:
             neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
                                                z_coord=sample_zcoord, animate_neighbors=animate_neighbors)
             system_data['neighbors'][row] = neighbors
-            system_data['T_gradient'][row] = sum(self.gradient(system_data=system_data, neighbors=neighbors,
-                                                x_coord=sample_xcoord, y_coord=sample_ycoord, z_coord=sample_zcoord))
+            system_data['T_gradient'][row] = self.gradient(system_data=system_data, neighbors=neighbors,
+                                                x_coord=sample_xcoord, y_coord=sample_ycoord, z_coord=sample_zcoord)
         for row in system_data.index:
             sample_xcoord = system_data['x_coords'][row]
             sample_ycoord = system_data['y_coords'][row]
@@ -268,15 +270,38 @@ class thermal_eq:
                                                y_coord=sample_ycoord,
                                                z_coord=sample_zcoord, animate_neighbors=animate_neighbors)
             system_data['neighbors'][row] = neighbors
-            system_data['T_laplace'][row] = sum(self.laplace(system_data=system_data, neighbors=neighbors,
-                                            x_coord=sample_xcoord, y_coord=sample_ycoord, z_coord=sample_zcoord))
+            system_data['T_laplace'][row] = self.laplace(system_data=system_data, neighbors=neighbors,
+                                            x_coord=sample_xcoord, y_coord=sample_ycoord, z_coord=sample_zcoord)
+        for row in system_data.index:
+            dT_dt_dict = []
             K = material_properts["Thermal Diffusivity"][system_data['object'][row]]
-            dT_dt = K * system_data['T_laplace'][row]
-
-            new_thermal_df["temperature"][row] = new_thermal_df["temperature"][row] + dT_dt
+            dT_dt_x = K * system_data['T_laplace'][row][0]
+            dT_dt_y = K * system_data['T_laplace'][row][1]
+            dT_dt_z = K * system_data['T_laplace'][row][2]
+            dT_dt_dict.append(dT_dt_x)
+            dT_dt_dict.append(dT_dt_y)
+            dT_dt_dict.append(dT_dt_z)
+            system_data['dT/dt'][row] = dT_dt_dict
             new_thermal_df['neighbors'][row] = system_data['neighbors'][row]
             new_thermal_df['T_gradient'][row] = system_data['T_gradient'][row]
             new_thermal_df['T_laplace'][row] = system_data['T_laplace'][row]
+            new_thermal_df['K'][row] = K
+            for subrow in system_data.index:
+                for set in system_data['neighbors'][subrow]:
+                    if system_data['x_coords'][subrow] in set and system_data['y_coords'][subrow] in \
+                    set and system_data['z_coords'][subrow] in set:
+                        if system_data['x_coords'][subrow] - sample_xcoord != 0 and system_data['y_coords'][subrow] - sample_ycoord == 0 \
+                        and system_data['z_coords'][subrow] - sample_zcoord == 0:
+                            dT = (K * dT_dt_x) * deltaTime
+                            system_data['temperature'][subrow] = system_data['temperature'][subrow] + dT
+                        elif system_data['x_coords'][subrow] - sample_xcoord == 0 and system_data['y_coords'][subrow] - sample_ycoord !=0 \
+                        and system_data['z_coords'][subrow] - sample_zcoord == 0:
+                            dT = (K * dT_dt_y) * deltaTime
+                            system_data['temperature'][subrow] = system_data['temperature'][subrow] + dT
+                        elif system_data['x_coords'][subrow] - sample_xcoord == 0 and system_data['y_coords'][subrow] - sample_ycoord ==0 \
+                        and system_data['z_coords'][subrow] - sample_zcoord != 0:
+                            dT = (K * dT_dt_z) * deltaTime
+                            system_data['temperature'][subrow] = system_data['temperature'][subrow] + dT
 
             if animate_neighbors == True:
                 frames.append('snap_{}-{}-{}.png'.format(sample_xcoord, sample_ycoord, sample_zcoord))
