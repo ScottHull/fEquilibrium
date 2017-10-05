@@ -11,6 +11,9 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
 import sys
+import matplotlib.cm as cm
+import matplotlib.colors
+import matplotlib.colorbar
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -156,6 +159,7 @@ class box:
 
 
     def visualize_box(self):
+        # dynamic only
         if self.visualize_system != False:
             fig = plt.figure()
             ax = Axes3D(fig)
@@ -183,9 +187,45 @@ class box:
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
             ax.invert_zaxis()
-            plt.savefig(os.getcwd()+'/mpl_animation1/snap_{}.png'.format(self.model_time), format='png')
+            fig.savefig(os.getcwd()+'/mpl_animation1/snap_{}.png'.format(self.model_time), format='png')
+            fig.clf()
             self.move_frames1.append('snap_{}.png'.format(self.model_time))
             print("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
+
+
+            fig = plt.figure()
+            ax = Axes3D(fig)
+            ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
+            ax.set_ylim(ymin=min(self.space['y_coords']), ymax=max(self.space['y_coords']))
+            ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
+            # XX, YY, ZZ = np.meshgrid(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'])
+            for row in self.space.index:
+                x = self.space['x_coords'][row]
+                y = self.space['y_coords'][row]
+                z = self.space['z_coords'][row]
+                # velocity_x = self.space['x_direct'][row]
+                # velocity_y = self.space['y_direct'][row]
+                # velocity_z = self.space['z_direct'][row]
+                if str(self.space['object_id'][row][0]) == 'A':
+                    print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
+                    ax.scatter3D(x, y, z, color='b')
+            norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
+            colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
+            colorsmap.set_array(self.space['temperature'])
+            ax.scatter(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'], marker='s', s=140,
+                       c=self.space['temperature'], cmap='jet')
+            cb = fig.colorbar(colorsmap)
+            ax.set_title("Sinking diapirs at {} years ago".format(self.model_time))
+            ax.set_xlabel("Box Length")
+            ax.set_ylabel("Box Width")
+            ax.set_zlabel("Box Height")
+            ax.invert_zaxis()
+            fig.savefig(os.getcwd()+'/mpl_animation2/snap_{}.png'.format(self.model_time), format='png')
+            self.move_frames2.append('snap_{}.png'.format(self.model_time))
+            fig.clf()
+
+
+
 
 
             # mlab.clf()
@@ -323,6 +363,17 @@ class box:
                 animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
                 animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
                 print("Animation created & available in {}!".format(os.getcwd()))
+
+                os.chdir(os.getcwd() + '/mpl_animation2')
+                animation = mpy.ImageSequenceClip(self.move_frames2,
+                                                  fps=round((self.initial_time / (self.initial_time / 3))),
+                                                  load_images=True)
+                os.chdir('..')
+                animation.write_videofile('thermal_fEquilibrium_animation.mp4', fps=1, audio=False)
+                animation.write_gif('thermal_fEquilibrium_animation.gif',
+                                    fps=round((self.initial_time / (self.initial_time / 3))))
+                print("Animation created & available in {}!".format(os.getcwd()))
+
                 self.space.to_csv("space.csv")
                 return self.model_time, self.space
         else:
