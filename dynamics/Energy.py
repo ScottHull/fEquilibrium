@@ -278,6 +278,9 @@ class thermal_eq:
             dT_dt_x = K * system_data['T_laplace'][row][0]
             dT_dt_y = K * system_data['T_laplace'][row][1]
             dT_dt_z = K * system_data['T_laplace'][row][2]
+            print("*{}, **{}, ***{}".format('dT/dt_x', system_data['T_laplace'][row][0], dT_dt_x))
+            print("*{}, **{}, ***{}".format('dT/dt_y', system_data['T_laplace'][row][1], dT_dt_y))
+            print("*{}, **{}, ***{}".format('dT/dt_z', system_data['T_laplace'][row][0], dT_dt_z))
             dT_dt_dict.append(dT_dt_x)
             dT_dt_dict.append(dT_dt_y)
             dT_dt_dict.append(dT_dt_z)
@@ -287,7 +290,7 @@ class thermal_eq:
             new_thermal_df['T_laplace'][row] = system_data['T_laplace'][row]
             new_thermal_df['K'][row] = K
             for subrow in system_data.index:
-                for set in system_data['neighbors'][subrow]:
+                for set in system_data['neighbors'][row]:
                     if system_data['x_coords'][subrow] in set and system_data['y_coords'][subrow] in \
                     set and system_data['z_coords'][subrow] in set:
                         if system_data['x_coords'][subrow] - sample_xcoord != 0 and system_data['y_coords'][subrow] - sample_ycoord == 0 \

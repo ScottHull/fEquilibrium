@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/space.csv" afterPath="$PROJECT_DIR$/box/space.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stats/Regression.py" afterPath="$PROJECT_DIR$/stats/Regression.py" />
@@ -42,8 +41,8 @@
       <file leaf-file-name="Energy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="840">
-              <caret line="287" column="40" lean-forward="false" selection-start-line="287" selection-start-column="40" selection-end-line="287" selection-end-column="40" />
+            <state relative-caret-position="256">
+              <caret line="289" column="64" lean-forward="false" selection-start-line="289" selection-start-column="64" selection-end-line="289" selection-end-column="64" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -76,7 +75,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>ax1</find>
       <find>x_max</find>
       <find>'b'</find>
       <find>pressure</find>
@@ -105,6 +103,7 @@
       <find>gradients</find>
       <find>gradient</find>
       <find>delT_delz</find>
+      <find>subrow</find>
       <find>row</find>
     </findStrings>
     <replaceStrings>
@@ -132,6 +131,7 @@
       <replace>gradient</replace>
       <replace>laplace</replace>
       <replace>del2T_delz2</replace>
+      <replace>row</replace>
       <replace>subrow</replace>
     </replaceStrings>
   </component>
@@ -437,11 +437,18 @@
       <option name="project" value="LOCAL" />
       <updated>1507233506826</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Temperature equilibration currently not working.">
+      <created>1507236581643</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1507236581643</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="825" extended-state="6" />
+    <frame x="1" y="23" width="1440" height="825" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -474,7 +481,8 @@
     <MESSAGE value="Basis for thermal equilibrium added." />
     <MESSAGE value="Possibly functional thermal equilibrium." />
     <MESSAGE value="Visualization support for thermal equilibrium." />
-    <option name="LAST_COMMIT_MESSAGE" value="Visualization support for thermal equilibrium." />
+    <MESSAGE value="Temperature equilibration currently not working." />
+    <option name="LAST_COMMIT_MESSAGE" value="Temperature equilibration currently not working." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -719,8 +727,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="840">
-          <caret line="287" column="40" lean-forward="false" selection-start-line="287" selection-start-column="40" selection-end-line="287" selection-end-column="40" />
+        <state relative-caret-position="256">
+          <caret line="289" column="64" lean-forward="false" selection-start-line="289" selection-start-column="64" selection-end-line="289" selection-end-column="64" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
