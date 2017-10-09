@@ -1,186 +1,200 @@
 from math import pi, sqrt
 import pandas as pd
 import numpy as np
+import time
 
 
 class thermal_eq:
 
     def __init__(self):
         pass
+                
+
+    @ classmethod
+    def classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution, data_type):
+        neighbors_dict = {'x': {'x+': {'coords': [], 'index': [], '{}'.format(data_type): []}, 'x': {'coords': [], 'index': [], '{}'.format(data_type): []},
+                    'x-': {'coords': [], 'index': [], '{}'.format(data_type): []}}, 'y': {'y+': {'coords': [], 'index': [], '{}'.format(data_type): []},
+                    'y': {'coords': [], 'index': [], '{}'.format(data_type): []},'y-': {'coords': [], 'index': [], '{}'.format(data_type): []}},
+                    'z': {'z+': {'coords': [], 'index': [], '{}'.format(data_type): []}, 'z': {'coords': [], 'index': [], '{}'.format(data_type): []},
+                    'z-': {'coords': [], 'index': [], '{}'.format(data_type): []}}} # for each dict, x,y,z,index
+        neighbors_dict['x']['x']['coords'].append(x_coord)
+        neighbors_dict['x']['x']['coords'].append(y_coord)
+        neighbors_dict['x']['x']['coords'].append(z_coord)
+        neighbors_dict['y']['y']['coords'].append(x_coord)
+        neighbors_dict['y']['y']['coords'].append(y_coord)
+        neighbors_dict['y']['y']['coords'].append(z_coord)
+        neighbors_dict['z']['z']['coords'].append(x_coord)
+        neighbors_dict['z']['z']['coords'].append(y_coord)
+        neighbors_dict['z']['z']['coords'].append(z_coord)
+        for set in neighbors:
+            if x_coord + space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
+                neighbors_dict['x']['x+']['coords'].append(x_coord+space_resolution)
+                neighbors_dict['x']['x+']['coords'].append(y_coord)
+                neighbors_dict['x']['x+']['coords'].append(z_coord)
+            if x_coord - space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
+                neighbors_dict['x']['x-']['coords'].append(x_coord-space_resolution)
+                neighbors_dict['x']['x-']['coords'].append(y_coord)
+                neighbors_dict['x']['x-']['coords'].append(z_coord)
+            if x_coord == set[0] and y_coord + space_resolution == set[1] and z_coord == set[2]:
+                neighbors_dict['y']['y+']['coords'].append(x_coord)
+                neighbors_dict['y']['y+']['coords'].append(y_coord+space_resolution)
+                neighbors_dict['y']['y+']['coords'].append(z_coord)
+            if x_coord == set[0] and y_coord - space_resolution == set[1] and z_coord == set[2]:
+                neighbors_dict['y']['y-']['coords'].append(x_coord)
+                neighbors_dict['y']['y-']['coords'].append(y_coord-space_resolution)
+                neighbors_dict['y']['y-']['coords'].append(z_coord)
+            if x_coord == set[0] and y_coord == set[1] and z_coord + space_resolution == set[2]:
+                neighbors_dict['z']['z+']['coords'].append(x_coord)
+                neighbors_dict['z']['z+']['coords'].append(y_coord)
+                neighbors_dict['z']['z+']['coords'].append(z_coord+space_resolution)
+            if x_coord == set[0] and y_coord == set[1] and z_coord - space_resolution == set[2]:
+                neighbors_dict['z']['z-']['coords'].append(x_coord)
+                neighbors_dict['z']['z-']['coords'].append(y_coord)
+                neighbors_dict['z']['z-']['coords'].append(z_coord-space_resolution)
+
+        # print(neighbors_dict)
+        # time.sleep(4)
+        for i in neighbors_dict:
+            for z in neighbors_dict[i]:
+                if len(neighbors_dict[i][z]['coords']) == 3:
+                    for row in system_data.index:
+                        if system_data['x_coords'][row] == neighbors_dict[i][z]['coords'][0] and \
+                        system_data['y_coords'][row] == neighbors_dict[i][z]['coords'][1] and system_data['z_coords'][row] == \
+                        neighbors_dict[i][z]['coords'][2]:
+                            neighbors_dict[i][z]['index'].append(row)
+                            neighbors_dict[i][z]['{}'.format(data_type)].append(system_data['{}'.format(data_type)][row])
+        return neighbors_dict
 
 
     @classmethod
-    def gradient(cls, system_data, neighbors, x_coord, y_coord, z_coord):
-        gradient = [] # d/dx at index 0, d/dy at 1, d/dz at 2
-        neighbor_temps_x_minus1 = ''
-        neighbor_temps_x_plus1 = ''
-        neighbor_temps_y_minus1 = ''
-        neighbor_temps_y_plus1 = ''
-        neighbor_temps_z_minus1 = ''
-        neighbor_temps_z_plus1 = ''
-        delT_delx = 0
-        delT_dely = 0
-        delT_delz = 0
-        for set in neighbors:
-            # print("At coord: x:{} y:{} z:{}".format(x_coord, y_coord, z_coord))
-            # print("Working on set: {}".format(set))
-            for row in system_data.index:
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (x_coord + 1) == set[0]:
-                    # print("Identified a x+1!")
-                    neighbor_temps_x_plus1 = system_data['temperature'][row]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (x_coord - 1) == set[0]:
-                    # print("Identified a x-1!")
-                    neighbor_temps_x_minus1 = system_data['temperature'][row]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (y_coord + 1) == set[1]:
-                    # print("Identified a y+1!")
-                    neighbor_temps_y_plus1 = system_data['temperature'][row]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (y_coord - 1) == set[1]:
-                    neighbor_temps_y_minus1 = system_data['temperature'][row]
-                    # print("Identified a y-1!")
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (z_coord + 1) == set[2]:
-                    # print("Identified a z+1!")
-                    neighbor_temps_z_plus1 = system_data['temperature'][row]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (z_coord - 1) == set[2]:
-                    # print("Identified a z-1!")
-                    neighbor_temps_z_minus1 = system_data['temperature'][row]
-        if isinstance(neighbor_temps_x_plus1, str):
-            for row in system_data.index:
-                if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_temps_x_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_temps_x_minus1, str):
-            for row in system_data.index:
-                if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_temps_x_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_temps_y_plus1, str):
-            for row in system_data.index:
-                if system_data['y_coords'][row] == y_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_temps_y_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_temps_y_minus1, str):
-            for row in system_data.index:
-                if system_data['y_coords'][row] == y_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_temps_y_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_temps_z_plus1, str):
-            for row in system_data.index:
-                if system_data['z_coords'][row] == z_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_temps_z_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_temps_z_minus1, str):
-            for row in system_data.index:
-                if system_data['z_coords'][row] == z_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_temps_z_plus1 = system_data['temperature'][row]
-        if not isinstance(neighbor_temps_x_minus1, str) and not isinstance(neighbor_temps_x_plus1, str):
-            # print("x+1: {}K, x-1: {}K (x:{})".format(neighbor_temps_x_plus1, neighbor_temps_x_minus1, x_coord))
-            delT_delx = (neighbor_temps_x_plus1 - neighbor_temps_x_minus1) / ((x_coord + 1) - (x_coord - 1))
-        if not isinstance(neighbor_temps_y_minus1, str) and not isinstance(neighbor_temps_y_plus1, str):
-            # print("y+1: {}K, y-1: {}K (y:{})".format(neighbor_temps_y_plus1, neighbor_temps_y_minus1, y_coord))
-            delT_dely = (neighbor_temps_y_plus1 - neighbor_temps_y_minus1) / ((y_coord + 1) - (y_coord - 1))
-        if not isinstance(neighbor_temps_z_minus1, str) and not isinstance(neighbor_temps_z_plus1, str):
-            # print("z+1: {}K, z-1: {}K (z:{})".format(neighbor_temps_z_plus1, neighbor_temps_z_minus1, z_coord))
-            delT_delz = (neighbor_temps_z_plus1 - neighbor_temps_z_minus1) / ((z_coord + 1) - (z_coord - 1))
-        gradient.append(delT_delx)
-        gradient.append(delT_dely)
-        gradient.append(delT_delz)
-        # print("x+1:{} x-1:{} y+1:{} y-1:{} z+1:{} z-1:{}".format(neighbor_temps_x_plus1, neighbor_temps_x_minus1,
-        #             neighbor_temps_y_plus1, neighbor_temps_y_minus1, neighbor_temps_z_plus1, neighbor_temps_z_minus1))
-        # print("Gradient: {}".format(gradient))
+    def gradient(cls, classified_neighbors):
+        gradient = {'grad_x': [], 'grad_y': [], 'grad_z': []}
+        for i in classified_neighbors:
+            if i == 'x':
+                if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+            elif i == 'y':
+                if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+            elif i == 'z':
+                if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['temperature'][0] - \
+                            classified_neighbors[i]["{}".format(i)]['temperature'][0]
+                    gradient['grad_{}'.format(i)].append(dT_d)
         return gradient
 
+
     @classmethod
-    def laplace(cls, system_data, neighbors, x_coord, y_coord, z_coord):
-        laplace = [] # d2/dx2 at index 0, d2/dy2 at 1, d2/dz2 at 2
-        neighbor_gradients_x_minus1 = ''
-        neighbor_gradients_x_plus1 = ''
-        neighbor_gradients_y_minus1 = ''
-        neighbor_gradients_y_plus1 = ''
-        neighbor_gradients_z_minus1 = ''
-        neighbor_gradients_z_plus1 = ''
-        del2T_delx2 = 0
-        del2T_dely2 = 0
-        del2T_delz2 = 0
-        for set in neighbors:
-            for row in system_data.index:
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (x_coord + 1) == set[0]:
-                    neighbor_gradients_x_plus1 = system_data['T_gradient'][row][0]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (x_coord - 1) == set[0]:
-                    neighbor_gradients_x_minus1 = system_data['T_gradient'][row][0]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (y_coord + 1) == set[1]:
-                    neighbor_gradients_y_plus1 = system_data['T_gradient'][row][1]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (y_coord - 1) == set[1]:
-                    neighbor_gradients_y_minus1 = system_data['T_gradient'][row][1]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (z_coord + 1) == set[2]:
-                    neighbor_gradients_z_plus1 = system_data['T_gradient'][row][2]
-                if system_data['x_coords'][row] == set[0] and system_data['y_coords'][row] == set[1] and \
-                                system_data['z_coords'][row] == set[2] and (z_coord - 1) == set[2]:
-                    neighbor_gradients_z_minus1 = system_data['T_gradient'][row][2]
-        if isinstance(neighbor_gradients_x_plus1, str):
-            for row in system_data.index:
-                if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_gradients_x_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_gradients_x_minus1, str):
-            for row in system_data.index:
-                if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_gradients_x_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_gradients_y_plus1, str):
-            for row in system_data.index:
-                if system_data['y_coords'][row] == y_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_gradients_y_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_gradients_y_minus1, str):
-            for row in system_data.index:
-                if system_data['y_coords'][row] == y_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_gradients_y_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_gradients_z_plus1, str):
-            for row in system_data.index:
-                if system_data['z_coords'][row] == z_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_gradients_z_plus1 = system_data['temperature'][row]
-        if isinstance(neighbor_gradients_z_minus1, str):
-            for row in system_data.index:
-                if system_data['z_coords'][row] == z_coord and system_data['y_coords'][row] == y_coord and \
-                                system_data['z_coords'][row] == z_coord:
-                    neighbor_gradients_z_plus1 = system_data['temperature'][row]
-        if not isinstance(neighbor_gradients_x_minus1, str) and not isinstance(neighbor_gradients_x_plus1, str):
-            # print("x+1: {}K, x-1: {}K (x:{})".format(neighbor_gradients_x_plus1, neighbor_gradients_x_minus1, x_coord))
-            del2T_delx2 = (neighbor_gradients_x_plus1 - neighbor_gradients_x_minus1) / ((x_coord + 1) - (x_coord - 1))
-        if not isinstance(neighbor_gradients_y_minus1, str) and not isinstance(neighbor_gradients_y_plus1, str):
-            # print("y+1: {}K, y-1: {}K (y:{})".format(neighbor_gradients_y_plus1, neighbor_gradients_y_minus1, y_coord))
-            del2T_dely2 = (neighbor_gradients_y_plus1 - neighbor_gradients_y_minus1) / ((y_coord + 1) - (y_coord - 1))
-        if not isinstance(neighbor_gradients_z_minus1, str) and not isinstance(neighbor_gradients_z_plus1, str):
-            # print("z+1: {}K, z-1: {}K (z:{})".format(neighbor_gradients_z_plus1, neighbor_gradients_z_minus1, z_coord))
-            del2T_delz2 = (neighbor_gradients_z_plus1 - neighbor_gradients_z_minus1) / ((z_coord + 1) - (z_coord - 1))
-        laplace.append(del2T_delx2)
-        laplace.append(del2T_dely2)
-        laplace.append(del2T_delz2)
-        # print("x+1:{} x-1:{} y+1:{} y-1:{} z+1:{} z-1:{}".format(neighbor_gradients_x_plus1, neighbor_gradients_x_minus1,
-        #             neighbor_gradients_y_plus1, neighbor_gradients_y_minus1, neighbor_gradients_z_plus1, neighbor_gradients_z_minus1))
-        # print("laplace: {}".format(laplace))
-        return laplace
-                
-            
+    def laplacian(cls, classified_neighbors):
+        laplacian = {'laplacian_x': [], 'laplacian_y': [], 'laplacian_z': []}
+        for i in classified_neighbors:
+            if i == 'x':
+                if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][0][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][0][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}".format(i)]['T_gradient'][0][0][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][0][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][0][0] - \
+                            classified_neighbors[i]["{}".format(i)]['T_gradient'][0][0][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+            elif i == 'y':
+                if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][1][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][1][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}".format(i)]['T_gradient'][0][1][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][1][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][1][0] - \
+                            classified_neighbors[i]["{}".format(i)]['T_gradient'][0][1][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+            elif i == 'z':
+                if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][2][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][2][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
+                    dT_d = classified_neighbors[i]["{}".format(i)]['T_gradient'][0][2][0] - \
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][2][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+                elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
+                len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
+                    dT_d = classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][2][0] - \
+                            classified_neighbors[i]["{}".format(i)]['T_gradient'][0][2][0]
+                    laplacian['laplacian_{}'.format(i)].append(dT_d)
+        return laplacian
+
+    @classmethod
+    def change_temperature(cls, laplacian, point_temperature, deltaTime, thermal_diffusivity):
+        # heat equation (time-dependent): dT/dt = K*laplacian(T)
+        # dT = (K*K*laplacian(T)) * dt
+        # T = T_not + dT
+        format_laplacian = []
+        for i in laplacian:
+            format_laplacian.append(i[0])
+        dT = (thermal_diffusivity*sum(format_laplacian)) * deltaTime
+        T = point_temperature + dT
+        return T
+
+
+
 
 
 
     @classmethod
-    def nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, visualize_neighbors=False, animate_neighbors=False):
+    def nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution, data_type,
+                          visualize_neighbors=True, animate_neighbors=False):
         neighbors = []
         minimum = 0
         for row in system_data.index:
@@ -236,14 +250,17 @@ class thermal_eq:
             if animate_neighbors == True:
                 fig.savefig(os.getcwd()+'/mpl_animation3/snap_{}-{}-{}.png'.format(x_coord, y_coord, z_coord), format='png')
             fig.clf()
-        return neighbors # for each coordinate set in neighbors, x at position 0, y at 1, z and 2
+        classified_neighbors = self.classify_neighbors(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord,
+                                neighbors=neighbors, space_resolution=space_resolution, system_data=system_data, data_type=data_type)
+        return classified_neighbors
+        # return neighbors # for each coordinate set in neighbors, x at position 0, y at 1, z and 2
 
 
-    def D3_thermal_eq(self, system_data, deltaTime, animate_neighbors=False):
-        system_data['neighbors'] = [[] for i in list(range(len(system_data['x_coords'])))]
+    def D3_thermal_eq(self, system_data, deltaTime, space_resolution, visualize_neighbors=False, animate_neighbors=False):
+        system_data['neighbors'] = np.NAN
         system_data['T_gradient'] = [[] for i in list(range(len(system_data['x_coords'])))]
-        system_data['T_laplace'] = [[] for i in list(range(len(system_data['x_coords'])))]
-        system_data['dT/dt'] = [[] for i in list(range(len(system_data['x_coords'])))]
+        system_data['T_laplacian'] = [[] for i in list(range(len(system_data['x_coords'])))]
+        system_data['dT/dt'] = np.NAN
         system_data['K'] = np.NAN
         new_thermal_df = system_data.copy(deep=True)
         if animate_neighbors == True:
@@ -252,60 +269,42 @@ class thermal_eq:
                 shutil.rmtree('mpl_animation3')
             os.mkdir('mpl_animation3')
         frames = []
-        material_properts = pd.read_csv("physical_parameters.csv", index_col='Material')
+        material_properties = pd.read_csv("physical_parameters.csv", index_col='Material')
         for row in system_data.index:
             sample_xcoord = system_data['x_coords'][row]
             sample_ycoord = system_data['y_coords'][row]
             sample_zcoord = system_data['z_coords'][row]
             neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
-                                               z_coord=sample_zcoord, animate_neighbors=animate_neighbors)
-            system_data['neighbors'][row] = neighbors
-            system_data['T_gradient'][row] = self.gradient(system_data=system_data, neighbors=neighbors,
-                                                x_coord=sample_xcoord, y_coord=sample_ycoord, z_coord=sample_zcoord)
+                                               z_coord=sample_zcoord, space_resolution=space_resolution,
+                                               visualize_neighbors=visualize_neighbors,
+                                               animate_neighbors=animate_neighbors, data_type='temperature')
+            gradient = [] # x gradient at index 0, y at 1, z at 2
+            unsorted_gradient = self.gradient(classified_neighbors=neighbors)
+            gradient.append([unsorted_gradient['grad_x'][0]])
+            gradient.append([unsorted_gradient['grad_y'][0]])
+            gradient.append([unsorted_gradient['grad_z'][0]])
+            system_data['T_gradient'][row] = gradient
+
         for row in system_data.index:
             sample_xcoord = system_data['x_coords'][row]
             sample_ycoord = system_data['y_coords'][row]
             sample_zcoord = system_data['z_coords'][row]
-            neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord,
-                                               y_coord=sample_ycoord,
-                                               z_coord=sample_zcoord, animate_neighbors=animate_neighbors)
-            system_data['neighbors'][row] = neighbors
-            system_data['T_laplace'][row] = self.laplace(system_data=system_data, neighbors=neighbors,
-                                            x_coord=sample_xcoord, y_coord=sample_ycoord, z_coord=sample_zcoord)
-        for row in system_data.index:
-            dT_dt_dict = []
-            K = material_properts["Thermal Diffusivity"][system_data['object'][row]]
-            dT_dt_x = K * system_data['T_laplace'][row][0]
-            dT_dt_y = K * system_data['T_laplace'][row][1]
-            dT_dt_z = K * system_data['T_laplace'][row][2]
-            print("*{}, **{}, ***{}".format('dT/dt_x', system_data['T_laplace'][row][0], dT_dt_x))
-            print("*{}, **{}, ***{}".format('dT/dt_y', system_data['T_laplace'][row][1], dT_dt_y))
-            print("*{}, **{}, ***{}".format('dT/dt_z', system_data['T_laplace'][row][0], dT_dt_z))
-            dT_dt_dict.append(dT_dt_x)
-            dT_dt_dict.append(dT_dt_y)
-            dT_dt_dict.append(dT_dt_z)
-            system_data['dT/dt'][row] = dT_dt_dict
-            new_thermal_df['neighbors'][row] = system_data['neighbors'][row]
-            new_thermal_df['T_gradient'][row] = system_data['T_gradient'][row]
-            new_thermal_df['T_laplace'][row] = system_data['T_laplace'][row]
-            new_thermal_df['K'][row] = K
-            for subrow in system_data.index:
-                for set in system_data['neighbors'][row]:
-                    if system_data['x_coords'][subrow] in set and system_data['y_coords'][subrow] in \
-                    set and system_data['z_coords'][subrow] in set:
-                        if system_data['x_coords'][subrow] - sample_xcoord != 0 and system_data['y_coords'][subrow] - sample_ycoord == 0 \
-                        and system_data['z_coords'][subrow] - sample_zcoord == 0:
-                            dT = (K * dT_dt_x) * deltaTime
-                            system_data['temperature'][subrow] = system_data['temperature'][subrow] + dT
-                        elif system_data['x_coords'][subrow] - sample_xcoord == 0 and system_data['y_coords'][subrow] - sample_ycoord !=0 \
-                        and system_data['z_coords'][subrow] - sample_zcoord == 0:
-                            dT = (K * dT_dt_y) * deltaTime
-                            system_data['temperature'][subrow] = system_data['temperature'][subrow] + dT
-                        elif system_data['x_coords'][subrow] - sample_xcoord == 0 and system_data['y_coords'][subrow] - sample_ycoord ==0 \
-                        and system_data['z_coords'][subrow] - sample_zcoord != 0:
-                            dT = (K * dT_dt_z) * deltaTime
-                            system_data['temperature'][subrow] = system_data['temperature'][subrow] + dT
-
+            neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
+                                               z_coord=sample_zcoord, space_resolution=space_resolution,
+                                               visualize_neighbors=visualize_neighbors,
+                                               animate_neighbors=animate_neighbors, data_type='T_gradient')
+            laplacian = []  # x laplacian at index 0, y at 1, z at 2
+            unsorted_laplacian = self.laplacian(classified_neighbors=neighbors)
+            laplacian.append([unsorted_laplacian['laplacian_x'][0]])
+            laplacian.append([unsorted_laplacian['laplacian_y'][0]])
+            laplacian.append([unsorted_laplacian['laplacian_z'][0]])
+            system_data['T_laplacian'][row] = laplacian
+            system_data['temperature'][row] = self.change_temperature(laplacian=laplacian,
+                point_temperature=system_data['temperature'][row], deltaTime=deltaTime,
+                                thermal_diffusivity=material_properties['Thermal Diffusivity'][system_data['object'][row]])
+            
+            
+            
             if animate_neighbors == True:
                 frames.append('snap_{}-{}-{}.png'.format(sample_xcoord, sample_ycoord, sample_zcoord))
         if animate_neighbors == True:
@@ -317,8 +316,7 @@ class thermal_eq:
                                               load_images=True)
             animation.write_gif('neighbors.gif', fps=5)
             os.chdir("..")
-            time.sleep(20)
-        return new_thermal_df
+        # return new_thermal_df
 
 
 class energy:

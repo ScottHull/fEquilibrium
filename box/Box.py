@@ -38,17 +38,17 @@ class box:
                                                  space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
         self.space = pd.DataFrame({
-            'object_id': [np.NAN for i in list(range(len(self.coords)))], 'object': [np.NAN for i in list(range(len(self.coords)))],
+            'object_id': np.NAN, 'object': np.NAN,
             'x_coords': [float(i[0]) for i in self.coords], 'y_coords': [float(i[1]) for i in self.coords],
-            'z_coords': [float(i[2]) for i in self.coords], 'object_radius': [np.NAN for i in list(range(len(self.coords)))],
-            'density': [np.NAN for i in list(range(len(self.coords)))], 'temperature': [1600 for i in list(range(len(self.coords)))],
-            'pressure': [np.NAN for i in list(range(len(self.coords)))],
-            'object_velocity': [np.NAN for i in list(range(len(self.coords)))],
-            'x_direct': [np.NAN for i in list(range(len(self.coords)))], 'y_direct': [np.NAN for i in list(range(len(self.coords)))],
-            'z_direct': [np.NAN for i in list(range(len(self.coords)))], 'potential_energy': [np.NAN for i in list(range(len(self.coords)))],
-            'kinematic_energy': [np.NAN for i in list(range(len(self.coords)))],
-            'total_energy_released': [np.NAN for i in list(range(len(self.coords)))],
-            'mass': [np.NAN for i in list(range(len(self.coords)))]
+            'z_coords': [float(i[2]) for i in self.coords], 'object_radius': np.NAN,
+            'density': np.NAN, 'temperature': [1600 for i in list(range(len(self.coords)))],
+            'pressure': np.NAN,
+            'object_velocity': np.NAN,
+            'x_direct': np.NAN, 'y_direct': np.NAN,
+            'z_direct': np.NAN, 'potential_energy': np.NAN,
+            'kinematic_energy': np.NAN,
+            'total_energy_released': np.NAN,
+            'mass': np.NAN
         })
         self.move_frames1 = []
         self.move_frames2 = []
@@ -143,7 +143,7 @@ class box:
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_radius'][row] = object_radius
                             self.space['potential_energy'][row] = energy().potential_energy(mass=initial_mass,
-                                                                            height=self.space['z_coords'][row])
+                                                                            height=(self.space['z_coords'].max() - self.space['z_coords'][row]))
                             self.space['mass'][row] = initial_mass
         else:
             print("Could not insert object!  Outside of defined coordinate points!")
@@ -378,13 +378,13 @@ class box:
                 return self.model_time, self.space
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
-            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime)
-            update_space["temperature"] = therm_eq_update_space["temperature"]
-            update_space['neighbors'] = therm_eq_update_space['neighbors']
-            update_space['T_gradient'] = therm_eq_update_space['T_gradient']
-            update_space['neighbors'] = therm_eq_update_space['neighbors']
-            update_space['T_laplace'] = therm_eq_update_space['T_laplace']
-            update_space = therm_eq_update_space
+            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
+            # update_space["temperature"] = therm_eq_update_space["temperature"]
+            # update_space['neighbors'] = therm_eq_update_space['neighbors']
+            # update_space['T_gradient'] = therm_eq_update_space['T_gradient']
+            # update_space['neighbors'] = therm_eq_update_space['neighbors']
+            # update_space['T_laplace'] = therm_eq_update_space['T_laplace']
+            # update_space = therm_eq_update_space
             self.visualize_box()
         self.space = update_space
         if auto_update == True:
