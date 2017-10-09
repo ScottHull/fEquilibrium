@@ -46,7 +46,7 @@ class box:
             'object_velocity': np.NAN,
             'x_direct': np.NAN, 'y_direct': np.NAN,
             'z_direct': np.NAN, 'potential_energy': np.NAN,
-            'kinematic_energy': np.NAN,
+            'kinetic_energy': np.NAN,
             'total_energy_released': np.NAN,
             'mass': np.NAN
         })
@@ -142,8 +142,6 @@ class box:
                             self.space['object'][row] = object
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_radius'][row] = object_radius
-                            self.space['potential_energy'][row] = energy().potential_energy(mass=initial_mass,
-                                                                            height=(self.space['z_coords'].max() - self.space['z_coords'][row]))
                             self.space['mass'][row] = initial_mass
         else:
             print("Could not insert object!  Outside of defined coordinate points!")
@@ -312,23 +310,39 @@ class box:
 
     
     @classmethod
-    def move_systems(clf, system_data, update_space, deltaTime):
+    def move_systems(clf, system_data, update_space, deltaTime, box_height):
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.index:
             if str(system_data['object_id'][row][0]) == 'A':
                 object_velocity = move_particle(body_type='fe alloy',
                                                   system_params=system_data).stokes_settling()
                 z_dis_obj_travel = object_velocity * deltaTime
-                system_data['temperature'][row] = float(system_data['temperature'][row]) + energy().stokes_frictional_energy(
-                    body_material='Metal Liquid', matrix_material='Silicate Liquid', body_radius=system_data['object_radius'][row],
-                    body_mass=system_data['mass'][row], distance_travelled=z_dis_obj_travel
-                )
-                system_data['object_velocity'][row] = energy().kinetic_energy(mass=system_data['mass'][row], velocity=object_velocity)
-                system_data['z_direct'][row] = object_velocity
+                curr_x_coords = system_data['x_coords'][row]
+                curr_y_coords = system_data['y_coords'][row]
+                curr_z_coords = system_data['z_coords'][row]
                 updated_x_coords = system_data['x_coords'][row]
                 updated_y_coords = system_data['y_coords'][row]
                 updated_z_coords = clf.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][row]),
                                                              system_data=system_data, coordinate_type='z_coords')
+                rounded_distance_travelled = updated_z_coords - curr_z_coords
+                if rounded_distance_travelled == 0:
+                    object_velocity = 0
+                    z_dis_obj_travel = 0
+                system_data['temperature'][row] = float(
+                    system_data['temperature'][row]) + energy().stokes_frictional_energy(
+                    body_material='Metal Liquid', matrix_material='Silicate Liquid',
+                    body_radius=system_data['object_radius'][row],
+                    body_mass=system_data['mass'][row], distance_travelled=z_dis_obj_travel
+                )
+                system_data['object_velocity'][row] = energy().kinetic_energy(mass=system_data['mass'][row],
+                                                                              velocity=object_velocity)
+                system_data['z_direct'][row] = object_velocity
+                system_data['potential_energy'][row] = energy().potential_energy(mass=system_data['mass'][row],
+                                                                                 height=system_data['z_coords'][row],
+                                                                                 box_height=box_height)
+                system_data['kinetic_energy'][row] = energy().kinetic_energy(mass=system_data['mass'][row],
+                                                                             velocity=system_data['object_velocity'][
+                                                                                 row])
                 print("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
                     system_data['object_id'][row], system_data['object'][row], system_data['x_coords'][row],
                     system_data['y_coords'][row], system_data['z_coords'][row], updated_x_coords, updated_y_coords,
@@ -344,6 +358,7 @@ class box:
                 update_space_copy = clf.swap_rows(system_data=system_data, updated_system_data=update_space,
                                               from_row_index=from_row_index, to_row_index=to_row_index)
         return update_space_copy
+
 
 
     # TODO: update x and y coords
@@ -377,14 +392,8 @@ class box:
                 self.space.to_csv("space.csv")
                 return self.model_time, self.space
         else:
-            update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime)
+            update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime, box_height=self.height)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
-            # update_space["temperature"] = therm_eq_update_space["temperature"]
-            # update_space['neighbors'] = therm_eq_update_space['neighbors']
-            # update_space['T_gradient'] = therm_eq_update_space['T_gradient']
-            # update_space['neighbors'] = therm_eq_update_space['neighbors']
-            # update_space['T_laplace'] = therm_eq_update_space['T_laplace']
-            # update_space = therm_eq_update_space
             self.visualize_box()
         self.space = update_space
         if auto_update == True:

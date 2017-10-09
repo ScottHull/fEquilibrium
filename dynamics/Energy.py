@@ -257,6 +257,7 @@ class thermal_eq:
 
 
     def D3_thermal_eq(self, system_data, deltaTime, space_resolution, visualize_neighbors=False, animate_neighbors=False):
+        print("Thermally equilibrating system...")
         system_data['neighbors'] = np.NAN
         system_data['T_gradient'] = [[] for i in list(range(len(system_data['x_coords'])))]
         system_data['T_laplacian'] = [[] for i in list(range(len(system_data['x_coords'])))]
@@ -274,6 +275,7 @@ class thermal_eq:
             sample_xcoord = system_data['x_coords'][row]
             sample_ycoord = system_data['y_coords'][row]
             sample_zcoord = system_data['z_coords'][row]
+            print("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
             neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
                                                z_coord=sample_zcoord, space_resolution=space_resolution,
                                                visualize_neighbors=visualize_neighbors,
@@ -289,6 +291,8 @@ class thermal_eq:
             sample_xcoord = system_data['x_coords'][row]
             sample_ycoord = system_data['y_coords'][row]
             sample_zcoord = system_data['z_coords'][row]
+            print("Calculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
+                                                                               sample_zcoord))
             neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
                                                z_coord=sample_zcoord, space_resolution=space_resolution,
                                                visualize_neighbors=visualize_neighbors,
@@ -360,8 +364,8 @@ class energy:
         ke = 0.5 * mass * (velocity**2) # ke = 1/2*m*v^2
         return ke
     #
-    def potential_energy(self, mass, height):
-        pe = mass * self.gravity * height # pe = m*g*h
+    def potential_energy(self, mass, height, box_height):
+        pe = mass * self.gravity * abs((height - box_height)) # pe = m*g*h
         return pe
     #
     # def release_energy(self, former_pe, current_pe):
