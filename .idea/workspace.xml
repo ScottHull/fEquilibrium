@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box/test.csv" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/physical_parameters.csv" afterPath="$PROJECT_DIR$/box/physical_parameters.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/space.csv" afterPath="$PROJECT_DIR$/box/space.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/test_box.py" afterPath="$PROJECT_DIR$/box/test_box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stats/Regression.py" afterPath="$PROJECT_DIR$/stats/Regression.py" />
     </list>
@@ -35,7 +32,7 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="229">
+            <state relative-caret-position="295">
               <caret line="329" column="40" lean-forward="false" selection-start-line="329" selection-start-column="40" selection-end-line="329" selection-end-column="40" />
               <folding />
             </state>
@@ -45,8 +42,8 @@
       <file leaf-file-name="Energy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="81" column="86" lean-forward="true" selection-start-line="81" selection-start-column="86" selection-end-line="81" selection-end-column="86" />
+            <state relative-caret-position="-396">
+              <caret line="209" column="55" lean-forward="false" selection-start-line="209" selection-start-column="55" selection-end-line="209" selection-end-column="55" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -452,7 +449,14 @@
       <option name="project" value="LOCAL" />
       <updated>1507563553343</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement.">
+      <created>1507573232725</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1507573232725</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -491,7 +495,8 @@
     <MESSAGE value="Visualization support for thermal equilibrium." />
     <MESSAGE value="Temperature equilibration currently not working." />
     <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing." />
-    <option name="LAST_COMMIT_MESSAGE" value="Discrete point heat equation seemingly operational.  Requires more testing." />
+    <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement." />
+    <option name="LAST_COMMIT_MESSAGE" value="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -730,7 +735,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
+        <state relative-caret-position="295">
           <caret line="329" column="40" lean-forward="false" selection-start-line="329" selection-start-column="40" selection-end-line="329" selection-end-column="40" />
           <folding />
         </state>
@@ -738,8 +743,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="81" column="86" lean-forward="true" selection-start-line="81" selection-start-column="86" selection-end-line="81" selection-end-column="86" />
+        <state relative-caret-position="-396">
+          <caret line="209" column="55" lean-forward="false" selection-start-line="209" selection-start-column="55" selection-end-line="209" selection-end-column="55" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
