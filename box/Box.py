@@ -18,7 +18,7 @@ import matplotlib.colorbar
 # TODO: update some methods to class methods to avoid outside interference
 class box:
 
-    def __init__(self, length, width, height, space_resolution, model_time, visualize_system=False):
+    def __init__(self, length, width, height, space_resolution, model_time, visualize_system=False, object_history=False):
         """
         :param length: length of the system, in m
         :param width: width of the system, in m
@@ -37,6 +37,7 @@ class box:
         self.coords = self.generate_coordinate_points(length=self.length, width=self.width, height=self.height,
                                                  space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
+        self.object_history = object_history
         self.space = pd.DataFrame({
             'object_id': np.NAN, 'object': np.NAN,
             'x_coords': [float(i[0]) for i in self.coords], 'y_coords': [float(i[1]) for i in self.coords],
@@ -58,6 +59,15 @@ class box:
             shutil.rmtree('mpl_animation2')
         os.mkdir('mpl_animation1')
         os.mkdir('mpl_animation2')
+        if self.object_history == True:
+            if "object_history.csv" in os.listdir(os.getcwd()):
+                os.remove("object_history.csv")
+            self.object_output = open("object_history.csv", 'w')
+            header = ['Model Time']
+            for i in self.space.columns.tolist():
+                header.append(str(i))
+            formatted_header = ",".join(i for i in header)
+            self.object_output.write("{}\n".format(formatted_header))
 
 
     @staticmethod
@@ -157,7 +167,6 @@ class box:
 
 
     def visualize_box(self):
-        # dynamic only
         if self.visualize_system != False:
             fig = plt.figure()
             ax = Axes3D(fig)
@@ -175,11 +184,6 @@ class box:
                 if str(self.space['object_id'][row][0]) == 'A':
                     print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
                     ax.scatter3D(x, y, z, color='b')
-                # else:
-                #     print("Plotted quiver at: x:{} y:{} z:{}.".format(x, y, z))
-                #     for i in list(range(6))[1:]:
-                #         if 'A' in self.space['object_id'][row + i]:
-                #             ax.quiver(XX, YY, ZZ, velocity_x, velocity_y, velocity_z, length=0.4)
             ax.set_title("Sinking diapirs at {} years ago".format(self.model_time))
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
@@ -207,7 +211,8 @@ class box:
                 if str(self.space['object_id'][row][0]) == 'A':
                     print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
                     ax.scatter3D(x, y, z, color='b')
-            norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
+            # norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
+            norm_colors = mpl.colors.Normalize(vmin=1400, vmax=3000)
             colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
             colorsmap.set_array(self.space['temperature'])
             ax.scatter(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'], marker='s', s=140,
@@ -221,34 +226,6 @@ class box:
             fig.savefig(os.getcwd()+'/mpl_animation2/snap_{}.png'.format(self.model_time), format='png')
             self.move_frames2.append('snap_{}.png'.format(self.model_time))
             fig.clf()
-
-
-
-
-
-            # mlab.clf()
-            # for row in self.space.index:
-            #     x = self.space['x_coords'][row]
-            #     y = self.space['y_coords'][row]
-            #     z = self.space['z_coords'][row]
-            #     velocity_x = self.space['x_direct'][row]
-            #     velocity_y = self.space['y_direct'][row]
-            #     velocity_z = self.space['z_direct'][row]
-            #     object_radius = self.space['object_radius'][row]
-            #     if str(self.space['object_id'][row][0]) == 'A':
-            #         mlab.points3d(x, y, z, object_radius, scale_factor=1)
-            #     else:
-            #         pass
-            #         # mlab.flow(velocity_x, velocity_y, velocity_z)
-            # mlab.view(distance=12)
-            # # scene = mlab.screenshot(antialiased=True)
-            # fig = plt.figure()
-            # scene = mlab.screenshot()
-            # pl.imshow(scene)
-            # plt.grid()
-            # plt.show()
-            # plt.close()
-            # self.move_frames1.append(scene)
 
 
     @staticmethod
@@ -272,12 +249,6 @@ class box:
     def swap_rows(system_data, updated_system_data, from_row_index, to_row_index):
         updated_system = updated_system_data
         for i in updated_system_data:
-            # print("Swapping coordinate data from x:{} y:{} z:{} with x:{} y:{} z:{}".format(system_data['x_coords'][to_row_index],
-            #                                                                                 system_data['y_coords'][
-            #                                                                                     to_row_index],
-            #                                                                                 system_data['z_coords'][
-            #                                                                                     to_row_index], system_data['x_coords'][from_row_index],
-            #                                                                                 system_data['y_coords'][from_row_index], system_data['z_coords'][from_row_index]))
             if i != 'x_coords' and i != 'y_coords' and i != 'z_coords':
                 # print("From index: {}       To index: {}".format(from_row_index, to_row_index))
                 updated_system[i][to_row_index] = system_data[i][from_row_index]
@@ -367,6 +338,15 @@ class box:
         update_space = self.space.copy(deep=True)
         if self.model_time == self.initial_time:
             self.visualize_box()
+            if self.object_history == True:
+                for row in self.space.index:
+                    if 'A' in self.space['object_id'][row]:
+                        contents = []
+                        contents.append(str(self.model_time))
+                        for i in self.space:
+                            contents.append(str(self.space[i][row]))
+                        formatted_contents = ",".join(i for i in contents)
+                        self.object_output.write("{}\n".format(formatted_contents))
         elif self.model_time <= 0:
             self.visualize_box()
             print("Model at minimum time!")
@@ -390,12 +370,32 @@ class box:
                 print("Animation created & available in {}!".format(os.getcwd()))
 
                 self.space.to_csv("space.csv")
+                if self.object_history == True:
+                    for row in self.space.index:
+                        if 'A' in self.space['object_id'][row]:
+                            contents = []
+                            contents.append(str(self.model_time))
+                            for i in self.space:
+                                contents.append(str(self.space[i][row]))
+                            formatted_contents = ",".join(i for i in contents)
+                            self.object_output.write("{}\n".format(formatted_contents))
+                if self.object_output == True:
+                    self.object_output.close()
                 return self.model_time, self.space
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime, box_height=self.height)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
             self.visualize_box()
-        self.space = update_space
+            self.space = update_space
+            if self.object_history == True:
+                for row in self.space.index:
+                    if 'A' in self.space['object_id'][row]:
+                        contents = []
+                        contents.append(str(self.model_time))
+                        for i in self.space:
+                            contents.append(str(self.space[i][row]))
+                        formatted_contents = ",".join(i for i in contents)
+                        self.object_output.write("{}\n".format(formatted_contents))
         if auto_update == True:
             if self.model_time == 1:
                 self.model_time -= deltaTime
