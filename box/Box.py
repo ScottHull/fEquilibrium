@@ -53,12 +53,16 @@ class box:
         })
         self.move_frames1 = []
         self.move_frames2 = []
+        self.move_frames4 = []
         if os.path.exists('mpl_animation1'):
             shutil.rmtree('mpl_animation1')
         if os.path.exists('mpl_animation2'):
             shutil.rmtree('mpl_animation2')
+        if os.path.exists('mpl_animation4'):
+            shutil.rmtree('mpl_animation4')
         os.mkdir('mpl_animation1')
         os.mkdir('mpl_animation2')
+        os.mkdir('mpl_animation4')
         if self.object_history == True:
             if "object_history.csv" in os.listdir(os.getcwd()):
                 os.remove("object_history.csv")
@@ -157,6 +161,7 @@ class box:
             print("Could not insert object!  Outside of defined coordinate points!")
             sys.exit(1)
 
+    # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
     def insert_matrix(self, matrix_material):
         print("Inserting matrix...")
         for row in self.space.index:
@@ -184,7 +189,7 @@ class box:
                 if str(self.space['object_id'][row][0]) == 'A':
                     print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
                     ax.scatter3D(x, y, z, color='b')
-            ax.set_title("Sinking diapirs at {} years ago".format(self.model_time))
+            ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
@@ -218,7 +223,7 @@ class box:
             ax.scatter(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'], marker='s', s=140,
                        c=self.space['temperature'], cmap='jet', alpha=0.50)
             cb = fig.colorbar(colorsmap)
-            ax.set_title("Sinking diapirs at {} years ago".format(self.model_time))
+            ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
@@ -226,6 +231,27 @@ class box:
             fig.savefig(os.getcwd()+'/mpl_animation2/snap_{}.png'.format(self.model_time), format='png')
             self.move_frames2.append('snap_{}.png'.format(self.model_time))
             fig.clf()
+
+            x_coords = []
+            y_coords = []
+            temperature = []
+            for row in self.space.index:
+                if float(self.space['z_coords'][row]) == float(self.height):
+                    x_coords.append(self.space['x_coords'][row])
+                    y_coords.append(self.space['y_coords'][row])
+                    temperature.append(self.space['temperature'][row])
+            fig = plt.figure()
+            ax = Axes3D(fig)
+            ax.plot_trisurf(x_coords, y_coords, temperature)
+            ax.set_xlabel("Box Length")
+            ax.set_ylabel("Box Width")
+            ax.set_zlabel("Temperature (degK)")
+            ax.set_zlim(zmin=1500, zmax=3200)
+            ax.set_title("Temperature Distribution at Time {} At Base of Model".format(self.model_time))
+            fig.savefig(os.getcwd() + '/mpl_animation4/snap_{}.png'.format(self.model_time), format='png')
+            self.move_frames4.append('snap_{}.png'.format(self.model_time))
+            fig.clf()
+
 
 
     @staticmethod
@@ -351,7 +377,9 @@ class box:
             self.visualize_box()
             print("Model at minimum time!")
             if self.visualize_system == True:
-                print("Writing animation...")
+                print("Writing animations...")
+
+                # dynamics animation
                 os.chdir(os.getcwd()+'/mpl_animation1')
                 animation = mpy.ImageSequenceClip(self.move_frames1, fps=round((self.initial_time/(self.initial_time/3))), load_images=True)
                 os.chdir('..')
@@ -359,6 +387,7 @@ class box:
                 animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
                 print("Animation created & available in {}!".format(os.getcwd()))
 
+                # 3d heatmap animation
                 os.chdir(os.getcwd() + '/mpl_animation2')
                 animation = mpy.ImageSequenceClip(self.move_frames2,
                                                   fps=round((self.initial_time / (self.initial_time / 3))),
@@ -366,6 +395,17 @@ class box:
                 os.chdir('..')
                 animation.write_videofile('thermal_fEquilibrium_animation.mp4', fps=1, audio=False)
                 animation.write_gif('thermal_fEquilibrium_animation.gif',
+                                    fps=round((self.initial_time / (self.initial_time / 3))))
+                print("Animation created & available in {}!".format(os.getcwd()))
+
+                # 3d surface heat distribution animation
+                os.chdir(os.getcwd() + '/mpl_animation4')
+                animation = mpy.ImageSequenceClip(self.move_frames4,
+                                                  fps=round((self.initial_time / (self.initial_time / 3))),
+                                                  load_images=True)
+                os.chdir('..')
+                animation.write_videofile('time_t_distrib.mp4', fps=1, audio=False)
+                animation.write_gif('time_t_distrib.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 print("Animation created & available in {}!".format(os.getcwd()))
 
