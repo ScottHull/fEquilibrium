@@ -1,5 +1,6 @@
 from box.Box import box
 from random import randint
+import os
 
 
 model = box(length=8, width=8, height=5, model_time=15, space_resolution=1, visualize_system=True, object_history=True)

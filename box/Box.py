@@ -7,6 +7,7 @@ from random import randint
 import moviepy.editor as mpy
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movement import move_particle
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Energy import energy, thermal_eq
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from thermodynamics.Solution import solution
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
@@ -38,6 +39,7 @@ class box:
                                                  space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
         self.object_history = object_history
+        self.solution = solution()
         self.space = pd.DataFrame({
             'object_id': np.NAN, 'object': np.NAN,
             'x_coords': [float(i[0]) for i in self.coords], 'y_coords': [float(i[1]) for i in self.coords],
@@ -72,6 +74,10 @@ class box:
                 header.append(str(i))
             formatted_header = ",".join(i for i in header)
             self.object_output.write("{}\n".format(formatted_header))
+
+
+    def get_box(self):
+        return self.space
 
 
     @staticmethod
@@ -162,11 +168,12 @@ class box:
             sys.exit(1)
 
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
-    def insert_matrix(self, matrix_material):
+    def insert_matrix(self, matrix_material, composition):
         print("Inserting matrix...")
         for row in self.space.index:
             self.space['object_id'][row] = self.generate_object_id(matrix=True)
             self.space['object'][row] = matrix_material
+            self.space['composition'] = composition
             print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
         print("Matrix inserted!")
 
