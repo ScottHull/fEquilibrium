@@ -246,7 +246,7 @@ class box:
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Temperature (degK)")
-            ax.set_zlim(zmin=1500, zmax=3200)
+            ax.set_zlim(zmin=1500, zmax=2800)
             ax.set_title("Temperature Distribution at Time {} At Base of Model".format(self.model_time))
             fig.savefig(os.getcwd() + '/mpl_animation4/snap_{}.png'.format(self.model_time), format='png')
             self.move_frames4.append('snap_{}.png'.format(self.model_time))
@@ -383,7 +383,8 @@ class box:
                 os.chdir(os.getcwd()+'/mpl_animation1')
                 animation = mpy.ImageSequenceClip(self.move_frames1, fps=round((self.initial_time/(self.initial_time/3))), load_images=True)
                 os.chdir('..')
-                animation.write_videofile('fEquilibrium_animation.mp4', fps=1, audio=False)
+                animation.write_videofile('fEquilibrium_animation.mp4',
+                                          fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
                 print("Animation created & available in {}!".format(os.getcwd()))
 
@@ -393,7 +394,8 @@ class box:
                                                   fps=round((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
-                animation.write_videofile('thermal_fEquilibrium_animation.mp4', fps=1, audio=False)
+                animation.write_videofile('thermal_fEquilibrium_animation.mp4',
+                                          fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('thermal_fEquilibrium_animation.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 print("Animation created & available in {}!".format(os.getcwd()))
@@ -404,7 +406,8 @@ class box:
                                                   fps=round((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
-                animation.write_videofile('time_t_distrib.mp4', fps=1, audio=False)
+                animation.write_videofile('time_t_distrib.mp4',
+                                          fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('time_t_distrib.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 print("Animation created & available in {}!".format(os.getcwd()))

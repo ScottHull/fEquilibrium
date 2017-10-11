@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Graduate Research.iml" afterPath="$PROJECT_DIR$/.idea/Graduate Research.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/physical_parameters.csv" afterPath="$PROJECT_DIR$/box/physical_parameters.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/space.csv" afterPath="$PROJECT_DIR$/box/space.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/test_box.py" afterPath="$PROJECT_DIR$/box/test_box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/stats/Regression.py" afterPath="$PROJECT_DIR$/stats/Regression.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,11 +16,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="31" lean-forward="false" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
+            <state relative-caret-position="120">
+              <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -32,11 +28,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="303">
-              <caret line="214" column="67" lean-forward="false" selection-start-line="214" selection-start-column="67" selection-end-line="214" selection-end-column="67" />
+            <state relative-caret-position="501">
+              <caret line="386" column="112" lean-forward="false" selection-start-line="386" selection-start-column="112" selection-end-line="386" selection-end-column="112" />
               <folding />
             </state>
           </provider>
@@ -45,8 +41,8 @@
       <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1600">
-              <caret line="208" column="83" lean-forward="false" selection-start-line="208" selection-start-column="83" selection-end-line="208" selection-end-column="83" />
+            <state relative-caret-position="1596">
+              <caret line="335" column="68" lean-forward="false" selection-start-line="335" selection-start-column="68" selection-end-line="335" selection-end-column="68" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -162,14 +158,15 @@
         <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$USER_HOME$/SCE_GUI_Project/SIPM_v3_final.py" />
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
-        <option value="$PROJECT_DIR$/box/Box.py" />
         <option value="$PROJECT_DIR$/box/test_box.py" />
+        <option value="$PROJECT_DIR$/box/Box.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="y" value="23" />
-    <option name="width" value="1648" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="305" />
+    <option name="y" value="186" />
+    <option name="width" value="2021" />
     <option name="height" value="961" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -459,17 +456,31 @@
       <option name="project" value="LOCAL" />
       <updated>1507573232725</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Object history output file support added.">
+      <created>1507653315549</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1507653315549</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Base temperature visualization via 3D surface plots.">
+      <created>1507737878253</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1507737878253</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1648" height="961" extended-state="0" />
+    <frame x="0" y="23" width="1920" height="982" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2184466" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3239595" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3239595" sideWeight="0.50242716" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.47692308" sideWeight="0.4975728" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -499,11 +510,13 @@
     <MESSAGE value="Temperature equilibration currently not working." />
     <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing." />
     <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement." />
-    <option name="LAST_COMMIT_MESSAGE" value="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement." />
+    <MESSAGE value="Object history output file support added." />
+    <MESSAGE value="Base temperature visualization via 3D surface plots." />
+    <option name="LAST_COMMIT_MESSAGE" value="Base temperature visualization via 3D surface plots." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="4" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -642,6 +655,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -654,29 +668,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1600">
-          <caret line="208" column="83" lean-forward="false" selection-start-line="208" selection-start-column="83" selection-end-line="208" selection-end-column="83" />
+        <state relative-caret-position="1596">
+          <caret line="335" column="68" lean-forward="false" selection-start-line="335" selection-start-column="68" selection-end-line="335" selection-end-column="68" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/box/Box.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="214" column="67" lean-forward="false" selection-start-line="214" selection-start-column="67" selection-end-line="214" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/box/test_box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="31" lean-forward="false" selection-start-line="4" selection-start-column="31" selection-end-line="4" selection-end-column="31" />
+        <state relative-caret-position="120">
+          <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/box/Box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="501">
+          <caret line="386" column="112" lean-forward="false" selection-start-line="386" selection-start-column="112" selection-end-line="386" selection-end-column="112" />
+          <folding />
         </state>
       </provider>
     </entry>
