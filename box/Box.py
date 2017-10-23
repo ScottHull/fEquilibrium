@@ -39,7 +39,6 @@ class box:
                                                  space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
         self.object_history = object_history
-        self.solution = solution()
         self.space = pd.DataFrame({
             'object_id': np.NAN, 'object': np.NAN,
             'x_coords': [float(i[0]) for i in self.coords], 'y_coords': [float(i[1]) for i in self.coords],
@@ -53,6 +52,8 @@ class box:
             'total_energy_released': np.NAN,
             'mass': np.NAN
         })
+        self.num_coords = len(self.coords)
+        self.solution = solution(box_length=self.num_coords)
         self.move_frames1 = []
         self.move_frames2 = []
         self.move_frames4 = []
@@ -173,7 +174,7 @@ class box:
         for row in self.space.index:
             self.space['object_id'][row] = self.generate_object_id(matrix=True)
             self.space['object'][row] = matrix_material
-            self.space['composition'] = composition
+            self.solution.create_solution(box=self.space, composition=composition, object=self.space['object'][row])
             print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
         print("Matrix inserted!")
 
