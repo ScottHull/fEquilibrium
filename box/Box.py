@@ -330,7 +330,7 @@ class box:
 
 
     @classmethod
-    def move_systems(clf, system_data, update_space, deltaTime, box_height):
+    def move_systems(clf, system_data, update_space, deltaTime, box_height, space_resolution):
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.index:
             if str(system_data['object_id'][row][0]) == 'A':
@@ -343,7 +343,7 @@ class box:
 
                 # assumption is that object will travel through matrix most like that occupying z coord below it.
                 # code block below attempts to idenfity that material
-                if (system_data['z_coords'][row] + 1) in system_data['z_coords']:
+                if (system_data['z_coords'][row] + space_resolution) in system_data['z_coords']:
                     searchfor_coord = (system_data['z_coords'][row] + 1)
                     matrix_material = ''
                     matrix_material_temp = 0.0
@@ -472,7 +472,8 @@ class box:
                     self.object_output.close()
                 return self.model_time, self.space
         else:
-            update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime, box_height=self.height)
+            update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime,
+                                             box_height=self.height, space_resolution=self.space_resolution)
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
             for row in self.space.index:
