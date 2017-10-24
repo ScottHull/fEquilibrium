@@ -45,7 +45,7 @@ class box:
             'z_coords': [float(i[2]) for i in self.coords], 'object_radius': np.NAN,
             'density': np.NAN, 'temperature': [1600 for i in list(range(len(self.coords)))],
             'pressure': np.NAN,
-            'object_velocity': np.NAN,
+            'object_velocity': [float(0) for i in self.coords],
             'x_direct': np.NAN, 'y_direct': np.NAN,
             'z_direct': np.NAN, 'potential_energy': np.NAN,
             'kinetic_energy': np.NAN,
@@ -153,7 +153,7 @@ class box:
             else:
                 return object_id
 
-    def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, initial_mass):
+    def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, initial_mass, composition):
         print("Inserting object...")
         if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
             for row in self.space.index:
@@ -164,6 +164,7 @@ class box:
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_radius'][row] = object_radius
                             self.space['mass'][row] = initial_mass
+                            self.solution.create_solution(box=self.space, composition=composition, object=self.space['object'][row], row=row)
         else:
             print("Could not insert object!  Outside of defined coordinate points!")
             sys.exit(1)
@@ -174,7 +175,7 @@ class box:
         for row in self.space.index:
             self.space['object_id'][row] = self.generate_object_id(matrix=True)
             self.space['object'][row] = matrix_material
-            self.solution.create_solution(box=self.space, composition=composition, object=self.space['object'][row])
+            self.solution.create_solution(box=self.space, composition=composition, object=self.space['object'][row], row=row)
             print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
         print("Matrix inserted!")
 
