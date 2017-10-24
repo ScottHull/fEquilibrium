@@ -1,0 +1,4 @@
+Isotope,Primordial Parent,Half-Life,Daughter,Decay Mode,Decay Energy
+182-Hf,TRUE,8.90E+06,182-Ta,B-,374.69
+182-W,FALSE,7.70E+21,NONE,STABLE,0
+182-Ta,FALSE,3.18E-01,182-W,B-,1814.26

@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from radioactivity.Radioactivity import decay
 import time
 
 
@@ -14,7 +15,7 @@ class solution:
         self.solution = pd.DataFrame({'object_id': [np.nan for i in list(range(box_length))],
                                       'object': [np.nan for i in list(range(box_length))]})
 
-    def create_solution(self, object, composition, box, row):
+    def create_solution(self, composition, box, row):
         """
         Creates a dataframe to manage chemistry within the box.  This should be called when inserting a new type of object
         into the box, and not to update existing components of the solution dataframe.  Current assumption is homogenous
@@ -32,7 +33,7 @@ class solution:
         # checks to see if the molecule exists as a column in dataframe. if not, creates column.
         for molecule in composition:
             if molecule not in self.solution:
-                self.solution[molecule] = np.NAN
+                self.solution[molecule] = np.NaN
             else:
                 pass
 
@@ -42,5 +43,14 @@ class solution:
 
 
 
-    def update_solution(self, box):
-        pass
+    def update_solution(self, deltaTime):
+
+        decay().rad_decay(solution=self.solution, deltaTime=deltaTime)
+
+
+
+
+
+
+
+
