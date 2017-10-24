@@ -14,8 +14,9 @@ class solution:
     def __init__(self, box_length):
         self.solution = pd.DataFrame({'object_id': [np.nan for i in list(range(box_length))],
                                       'object': [np.nan for i in list(range(box_length))]})
+        self.decay = decay()
 
-    def create_solution(self, composition, box, row):
+    def create_solution(self, object, composition, box, row):
         """
         Creates a dataframe to manage chemistry within the box.  This should be called when inserting a new type of object
         into the box, and not to update existing components of the solution dataframe.  Current assumption is homogenous
@@ -31,6 +32,9 @@ class solution:
         self.solution['object'][row] = box['object'][row]
 
         # checks to see if the molecule exists as a column in dataframe. if not, creates column.
+        if len(self.solution.columns.values.tolist()[2:]) > len(list(composition.keys())):
+            for i in self.solution.columns.values.tolist()[2:]:
+                self.solution[i][row] = float(0)
         for molecule in composition:
             if molecule not in self.solution:
                 self.solution[molecule] = np.NaN
@@ -39,13 +43,15 @@ class solution:
 
             self.solution[molecule][row] = float(composition[molecule])
 
-        return self.solution
-
-
 
     def update_solution(self, deltaTime):
 
-        decay().rad_decay(solution=self.solution, deltaTime=deltaTime)
+        self.solution = self.decay.rad_decay(solution=self.solution, deltaTime=deltaTime)
+        return self.solution
+
+    def get_solution(self):
+
+        return self.solution
 
 
 

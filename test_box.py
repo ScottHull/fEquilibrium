@@ -7,7 +7,7 @@ import os
 model = box(length=3, width=3, height=3, model_time=3, space_resolution=1, visualize_system=True, object_history=True)
 
 # insert the matrix matrial into the box, will populate all possible coordinate positions
-model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-W': 100})
+model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100})
 
 # insert X number of objects into the box, specify their location, will overwrite matrix at that point
 for i in list(range(1)):

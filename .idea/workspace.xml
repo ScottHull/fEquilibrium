@@ -2,11 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/radioactivity/isotopes.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Graduate Research.iml" afterPath="$PROJECT_DIR$/.idea/Graduate Research.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/test_box.py" afterPath="$PROJECT_DIR$/box/test_box.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Movement.py" afterPath="$PROJECT_DIR$/dynamics/Movement.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radioactivity/Radioactivity.py" afterPath="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radioactivity/isotopes.csv" afterPath="$PROJECT_DIR$/radioactivity/isotopes.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thermodynamics/Solution.py" afterPath="$PROJECT_DIR$/thermodynamics/Solution.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,13 +22,11 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/box/test_box.py">
+        <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="16" column="60" lean-forward="false" selection-start-line="16" selection-start-column="60" selection-end-line="16" selection-end-column="60" />
-              <folding>
-                <element signature="e#0#23#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="225">
+              <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -33,8 +34,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="172" column="45" lean-forward="false" selection-start-line="172" selection-start-column="45" selection-end-line="172" selection-end-column="45" />
+            <state relative-caret-position="362">
+              <caret line="176" column="55" lean-forward="false" selection-start-line="176" selection-start-column="55" selection-end-line="176" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -43,8 +44,8 @@
       <file leaf-file-name="Solution.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="203">
-              <caret line="17" column="30" lean-forward="true" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
+            <state relative-caret-position="285">
+              <caret line="36" column="47" lean-forward="false" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -55,40 +56,10 @@
       <file leaf-file-name="Radioactivity.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="584">
-              <caret line="85" column="32" lean-forward="true" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="isotopes.csv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/isotopes.csv">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fEquilibrium.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fEquilibrium.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="29" column="17" lean-forward="false" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="833">
-              <caret line="335" column="68" lean-forward="false" selection-start-line="335" selection-start-column="68" selection-end-line="335" selection-end-column="68" />
+            <state relative-caret-position="351">
+              <caret line="53" column="67" lean-forward="true" selection-start-line="53" selection-start-column="67" selection-end-line="53" selection-end-column="67" />
               <folding>
-                <element signature="e#0#25#0" expanded="true" />
+                <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -105,14 +76,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>body_radius</find>
-      <find>self.mov_frames</find>
-      <find>visuali</find>
-      <find>silicate liquid</find>
-      <find>system_data</find>
-      <find>temps</find>
-      <find>gradients</find>
-      <find>delT_delz</find>
       <find>subrow</find>
       <find>row</find>
       <find>dropbox.</find>
@@ -135,10 +98,16 @@
       <find>velocity</find>
       <find>append</find>
       <find>isotope_df</find>
+      <find>physical_</find>
+      <find>energy/</find>
+      <find>phys</find>
+      <find>z</find>
+      <find>create</find>
+      <find>matrix_material</find>
+      <find>solution</find>
+      <find>physical</find>
     </findStrings>
     <replaceStrings>
-      <replace>x_max3</replace>
-      <replace>'g'</replace>
       <replace>temperature</replace>
       <replace>ax6</replace>
       <replace>self.partitioncoeff</replace>
@@ -156,7 +125,6 @@
       <replace>gradient</replace>
       <replace>laplace</replace>
       <replace>del2T_delz2</replace>
-      <replace>row</replace>
       <replace>subrow</replace>
       <replace>'coords'</replace>
       <replace>dT_d</replace>
@@ -166,6 +134,9 @@
       <replace>T_gradient</replace>
       <replace>laplacian</replace>
       <replace>object_history</replace>
+      <replace>dynamics/</replace>
+      <replace>object</replace>
+      <replace>row</replace>
       <replace>solution</replace>
     </replaceStrings>
   </component>
@@ -197,18 +168,19 @@
         <option value="$USER_HOME$/Graduate Classes Autumn 2017/Geodynamics/Homework_Code/Homework 3/thermal_equilibrium copy.py" />
         <option value="$PROJECT_DIR$/box/coord_test.py" />
         <option value="$PROJECT_DIR$/stats/regression.py" />
-        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$USER_HOME$/SCE_GUI_Project/SIPM_v3_final.py" />
-        <option value="$PROJECT_DIR$/dynamics/Energy.py" />
         <option value="$PROJECT_DIR$/box/test_box.py" />
+        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
+        <option value="$PROJECT_DIR$/dynamics/Energy.py" />
         <option value="$PROJECT_DIR$/box/Box.py" />
+        <option value="$PROJECT_DIR$/test_box.py" />
         <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="572" />
+    <option name="x" value="129" />
     <option name="y" value="23" />
     <option name="width" value="1920" />
     <option name="height" value="982" />
@@ -239,6 +211,11 @@
             <path>
               <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
               <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+              <item name="dynamics" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
               <item name="radioactivity" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -252,6 +229,11 @@
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$USER_HOME$/miniconda3/bin/python3.5" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
   </component>
   <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
     <UpdatedFiles>
@@ -487,12 +469,12 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/box" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Graduate Research" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/box/test_box.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_box.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -643,7 +625,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508775888068</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Fixing radioactivity...">
+      <created>1508857100340</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1508857100340</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -653,7 +642,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25824177" sideWeight="0.50208336" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25934067" sideWeight="0.49791667" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25934067" sideWeight="0.49791667" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -698,16 +687,16 @@
     <MESSAGE value="Base temperature visualization via 3D surface plots." />
     <MESSAGE value="Began implementing solution geochemistry." />
     <MESSAGE value="Operable model with solution geochemistry in matrix." />
-    <option name="LAST_COMMIT_MESSAGE" value="Operable model with solution geochemistry in matrix." />
+    <MESSAGE value="Fixing radioactivity..." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixing radioactivity..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/distribution.py" />
     <entry file="file://$USER_HOME$/Southern Company Project/Southern_GUI.py" />
     <entry file="file://$PROJECT_DIR$/distribution.py" />
     <entry file="file://$PROJECT_DIR$/chem.csv" />
@@ -822,28 +811,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
+    <entry file="file://$PROJECT_DIR$/box/test_box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="885">
-          <caret line="59" column="30" lean-forward="false" selection-start-line="59" selection-start-column="30" selection-end-line="59" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="833">
-          <caret line="335" column="68" lean-forward="false" selection-start-line="335" selection-start-column="68" selection-end-line="335" selection-end-column="68" />
+        <state relative-caret-position="135">
+          <caret line="9" column="103" lean-forward="false" selection-start-line="9" selection-start-column="103" selection-end-line="9" selection-end-column="103" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fEquilibrium.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="29" column="17" lean-forward="false" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -855,28 +829,52 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/box/test_box.py">
+    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="60" lean-forward="false" selection-start-line="16" selection-start-column="60" selection-end-line="16" selection-end-column="60" />
+        <state relative-caret-position="314">
+          <caret line="30" column="122" lean-forward="false" selection-start-line="30" selection-start-column="122" selection-end-line="30" selection-end-column="122" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fEquilibrium.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="29" column="17" lean-forward="false" selection-start-line="29" selection-start-column="17" selection-end-line="29" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4117">
+          <caret line="308" column="52" lean-forward="false" selection-start-line="308" selection-start-column="52" selection-end-line="308" selection-end-column="52" />
           <folding>
-            <element signature="e#0#23#0" expanded="true" />
+            <element signature="e#0#25#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="172" column="45" lean-forward="false" selection-start-line="172" selection-start-column="45" selection-end-line="172" selection-end-column="45" />
+        <state relative-caret-position="362">
+          <caret line="176" column="55" lean-forward="false" selection-start-line="176" selection-start-column="55" selection-end-line="176" selection-end-column="55" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="17" column="30" lean-forward="true" selection-start-line="17" selection-start-column="30" selection-end-line="17" selection-end-column="30" />
+        <state relative-caret-position="285">
+          <caret line="36" column="47" lean-forward="false" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -885,9 +883,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="584">
-          <caret line="85" column="32" lean-forward="true" selection-start-line="85" selection-start-column="32" selection-end-line="85" selection-end-column="32" />
-          <folding />
+        <state relative-caret-position="351">
+          <caret line="53" column="67" lean-forward="true" selection-start-line="53" selection-start-column="67" selection-end-line="53" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -306,7 +306,7 @@ class thermal_eq:
                 shutil.rmtree('mpl_animation3')
             os.mkdir('mpl_animation3')
         frames = []
-        material_properties = pd.read_csv("physical_parameters.csv", index_col='Material')
+        material_properties = pd.read_csv("dynamics/physical_parameters.csv", index_col='Material')
         for row in system_data.index:
             sample_xcoord = system_data['x_coords'][row]
             sample_ycoord = system_data['y_coords'][row]
@@ -370,7 +370,7 @@ class energy:
         (drag force) must therefore balance the force due to gravity, Fg=Fd.
         :return:
         """
-        df = pd.read_csv('physical_parameters.csv', index_col='Material')
+        df = pd.read_csv('dynamics/physical_parameters.csv', index_col='Material')
         body_cp = df['C_p'][body_material] # specific heat of the body
         body_density = df['Density'][body_material]
         matrix_density = df['Density'][matrix_material]

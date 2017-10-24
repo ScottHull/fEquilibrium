@@ -33,7 +33,7 @@ class move_particle:
         """
         gas_const = 8.312  # J/mol*k
         boltzmann_const = 1.3806 * 10**-23 # (m^2*kg)/(s^2*degK)
-        material_properties = pd.read_csv("physical_parameters.csv", index_col='Material')
+        material_properties = pd.read_csv("dynamics/physical_parameters.csv", index_col='Material')
         D_not = material_properties['D_not'][material] # diffusion equation param, the diffusion coefficient
         H_star = material_properties['H*'][material] # diffusion equation param, the activation enthalpy
         V_star = material_properties['V*'][material] # diffusion equation param, the activation volume

@@ -164,7 +164,7 @@ class box:
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_radius'][row] = object_radius
                             self.space['mass'][row] = initial_mass
-                            self.solution.create_solution(box=self.space, composition=composition, object=self.space['object'][row], row=row)
+                            self.solution.create_solution(box=self.space, composition=composition, row=row, object=object)
         else:
             print("Could not insert object!  Outside of defined coordinate points!")
             sys.exit(1)
@@ -175,7 +175,7 @@ class box:
         for row in self.space.index:
             self.space['object_id'][row] = self.generate_object_id(matrix=True)
             self.space['object'][row] = matrix_material
-            self.solution.create_solution(box=self.space, composition=composition, object=self.space['object'][row], row=row)
+            self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
             print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
         print("Matrix inserted!")
 
@@ -289,7 +289,7 @@ class box:
                 updated_system[i][to_row_index] = system_data[i][from_row_index]
                 updated_system[i][from_row_index] = system_data[i][to_row_index]
         return updated_system
-    
+
     # TODO: seperate velocity calculations from system movement so space dataframe can be updated and moved according to velocity contents
     @classmethod
     def calculate_velocities(cls):
@@ -314,7 +314,7 @@ class box:
     #     return path_coords
 
 
-    
+
     @classmethod
     def move_systems(clf, system_data, update_space, deltaTime, box_height):
         update_space_copy = update_space.copy(deep=True)
@@ -422,6 +422,7 @@ class box:
                 print("Animation created & available in {}!".format(os.getcwd()))
 
                 self.space.to_csv("space.csv")
+                self.solution.get_solution().to_csv("solution.csv")
                 if self.object_history == True:
                     for row in self.space.index:
                         if 'A' in self.space['object_id'][row]:
@@ -436,6 +437,7 @@ class box:
                 return self.model_time, self.space
         else:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime, box_height=self.height)
+            update_solution = self.solution.update_solution(deltaTime=deltaTime)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
             self.visualize_box()
             self.space = update_space
