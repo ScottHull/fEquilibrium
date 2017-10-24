@@ -170,14 +170,17 @@ class box:
             sys.exit(1)
 
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
-    def insert_matrix(self, matrix_material, composition):
+    def insert_matrix(self, matrix_material, composition, z_range=False):
         print("Inserting matrix...")
-        for row in self.space.index:
-            self.space['object_id'][row] = self.generate_object_id(matrix=True)
-            self.space['object'][row] = matrix_material
-            self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
-            print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
-        print("Matrix inserted!")
+        if z_range != False: # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
+            pass
+        else:
+            for row in self.space.index:
+                self.space['object_id'][row] = self.generate_object_id(matrix=True)
+                self.space['object'][row] = matrix_material
+                self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
+                print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
+            print("Matrix inserted!")
 
 
     def visualize_box(self):

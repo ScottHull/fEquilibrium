@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test_box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/test_box.py" afterPath="$PROJECT_DIR$/box/test_box.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Movement.py" afterPath="$PROJECT_DIR$/dynamics/Movement.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radioactivity/Radioactivity.py" afterPath="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radioactivity/isotopes.csv" afterPath="$PROJECT_DIR$/radioactivity/isotopes.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thermodynamics/Solution.py" afterPath="$PROJECT_DIR$/thermodynamics/Solution.py" />
@@ -34,18 +30,18 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="176" column="55" lean-forward="false" selection-start-line="176" selection-start-column="55" selection-end-line="176" selection-end-column="55" />
+            <state relative-caret-position="309">
+              <caret line="159" column="58" lean-forward="true" selection-start-line="159" selection-start-column="58" selection-end-line="159" selection-end-column="58" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Solution.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Solution.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="36" column="47" lean-forward="false" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
+            <state relative-caret-position="930">
+              <caret line="62" column="53" lean-forward="false" selection-start-line="62" selection-start-column="53" selection-end-line="62" selection-end-column="53" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -53,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Radioactivity.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Radioactivity.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="351">
-              <caret line="53" column="67" lean-forward="true" selection-start-line="53" selection-start-column="67" selection-end-line="53" selection-end-column="67" />
+            <state relative-caret-position="1052">
+              <caret line="77" column="42" lean-forward="false" selection-start-line="77" selection-start-column="42" selection-end-line="77" selection-end-column="42" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -103,8 +99,8 @@
       <find>phys</find>
       <find>z</find>
       <find>create</find>
-      <find>matrix_material</find>
       <find>solution</find>
+      <find>matrix_material</find>
       <find>physical</find>
     </findStrings>
     <replaceStrings>
@@ -135,8 +131,8 @@
       <replace>laplacian</replace>
       <replace>object_history</replace>
       <replace>dynamics/</replace>
-      <replace>object</replace>
       <replace>row</replace>
+      <replace>object</replace>
       <replace>solution</replace>
     </replaceStrings>
   </component>
@@ -172,10 +168,10 @@
         <option value="$PROJECT_DIR$/box/test_box.py" />
         <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
-        <option value="$PROJECT_DIR$/box/Box.py" />
         <option value="$PROJECT_DIR$/test_box.py" />
-        <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
+        <option value="$PROJECT_DIR$/box/Box.py" />
+        <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
       </list>
     </option>
   </component>
@@ -632,7 +628,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508857100340</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Integrated radioactivity for specified primordial parent isotopes.">
+      <created>1508870629693</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1508870629693</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -688,7 +691,8 @@
     <MESSAGE value="Began implementing solution geochemistry." />
     <MESSAGE value="Operable model with solution geochemistry in matrix." />
     <MESSAGE value="Fixing radioactivity..." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixing radioactivity..." />
+    <MESSAGE value="Integrated radioactivity for specified primordial parent isotopes." />
+    <option name="LAST_COMMIT_MESSAGE" value="Integrated radioactivity for specified primordial parent isotopes." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -850,7 +854,7 @@
         <state relative-caret-position="4117">
           <caret line="308" column="52" lean-forward="false" selection-start-line="308" selection-start-column="52" selection-end-line="308" selection-end-column="52" />
           <folding>
-            <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#0#25#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -863,28 +867,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/box/Box.py">
+    <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="176" column="55" lean-forward="false" selection-start-line="176" selection-start-column="55" selection-end-line="176" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="36" column="47" lean-forward="false" selection-start-line="36" selection-start-column="47" selection-end-line="36" selection-end-column="47" />
+        <state relative-caret-position="1052">
+          <caret line="77" column="42" lean-forward="false" selection-start-line="77" selection-start-column="42" selection-end-line="77" selection-end-column="42" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
+    <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="351">
-          <caret line="53" column="67" lean-forward="true" selection-start-line="53" selection-start-column="67" selection-end-line="53" selection-end-column="67" />
+        <state relative-caret-position="309">
+          <caret line="159" column="58" lean-forward="true" selection-start-line="159" selection-start-column="58" selection-end-line="159" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="930">
+          <caret line="62" column="53" lean-forward="false" selection-start-line="62" selection-start-column="53" selection-end-line="62" selection-end-column="53" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

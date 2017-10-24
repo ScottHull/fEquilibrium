@@ -37,7 +37,8 @@ class decay:
         Identifies the entire decay chain of elements given.
         :param solution:
         :param isotope_df:
-        :return:
+        :return: decay chain (a list of decay products and the parent), solution (an updated self.solution
+            dataframe from module 'Solution.py'
         """
 
         decay_chain = []
@@ -60,33 +61,34 @@ class decay:
 
     def rad_decay(self, solution, deltaTime):
         """
+        Models radioactive decay of a chain of elements.
         :param solution:
         :param deltaTime:
         :return: solution
         """
 
-        isotope_df = pd.read_csv('radioactivity/isotopes.csv', index_col='Isotope')
-        chain, solution = self.decay_chain(solution=solution, isotope_df=isotope_df)
-        if len(chain) > 1:
-            if len(chain) > 1: # check to see that primordial isotope has daughters, i.e. is radioactive
-                iterdaughters = iter(reversed(chain)) # now stable isotope is first in list, primordial parent last
-                next(iterdaughters) # skips the stable isotope
-                for i in iterdaughters: # iterates through daughters to model decay
-                    half_life = float(isotope_df['Half-Life'][i]) # extracts half-life
-                    daughter = isotope_df['Daughter'][i] # identifies daughter
-                    for row in solution.index:
-                        curr_amount = float(solution[i][row]) # finds current abundance of isotope in question
-                        k = log(0.5) / half_life # gamma variable in decay equation
-                        remaining_amount = curr_amount * exp(k * deltaTime) # models remaining amount of decay,
-                                                # where time is the time resolution (N = N0*exp(gamma*t))
-                        solution[i][row] = remaining_amount # the remaining amount of isotope after decay
-                        if isotope_df['Daughter'][i] != 'NONE': # makes sure that a daughter exists
-                            solution[daughter][row] = float(solution[daughter][row] +
-                                                (curr_amount - remaining_amount)) # updates daughter abundance
-                        else:
-                            pass
-            else: # no daughters, doesn't decay into daughter products
-                pass
+        isotope_df = pd.read_csv('radioactivity/isotopes.csv', index_col='Isotope') # reads in the list of supported radioactive elements
+        chain, solution = self.decay_chain(solution=solution, isotope_df=isotope_df) # gets the decay chain and the updated solution dataframe
+        if len(chain) > 1: # check to see that primordial isotope has daughters, i.e. is radioactive
+            iterdaughters = iter(reversed(chain)) # now stable isotope is first in list, primordial parent last
+            next(iterdaughters) # skips the stable isotope
+            for i in iterdaughters: # iterates through daughters to model decay
+                half_life = float(isotope_df['Half-Life'][i]) # extracts half-life
+                daughter = isotope_df['Daughter'][i] # identifies daughter
+                for row in solution.index:
+                    curr_amount = float(solution[i][row]) # finds current abundance of isotope in question
+                    k = log(0.5) / half_life # gamma variable in decay equation
+                    remaining_amount = curr_amount * exp(k * deltaTime) # models remaining amount of decay,
+                                            # where time is the time resolution (N = N0*exp(gamma*t))
+                    solution[i][row] = remaining_amount # the remaining amount of isotope after decay
+                    if isotope_df['Daughter'][i] != 'NONE': # makes sure that a daughter exists
+                        solution[daughter][row] = float(solution[daughter][row] +
+                                            (curr_amount - remaining_amount)) # updates daughter abundance
+                    else:
+                        pass
+        else: # no daughters, doesn't decay into daughter products
+            pass
+
         return solution # returns the updated isotope dataframe for one iteration
 
 
