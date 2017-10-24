@@ -4,9 +4,10 @@
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radioactivity/Radioactivity.py" afterPath="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Movement.py" afterPath="$PROJECT_DIR$/dynamics/Movement.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/physical_parameters.csv" afterPath="$PROJECT_DIR$/dynamics/physical_parameters.csv" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radioactivity/isotopes.csv" afterPath="$PROJECT_DIR$/radioactivity/isotopes.csv" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thermodynamics/Solution.py" afterPath="$PROJECT_DIR$/thermodynamics/Solution.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,27 +21,37 @@
       <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
+            <state relative-caret-position="240">
+              <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="309">
-              <caret line="159" column="58" lean-forward="true" selection-start-line="159" selection-start-column="58" selection-end-line="159" selection-end-column="58" />
+            <state relative-caret-position="385">
+              <caret line="357" column="89" lean-forward="false" selection-start-line="357" selection-start-column="89" selection-end-line="357" selection-end-column="89" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Solution.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Movement.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="335">
+              <caret line="75" column="40" lean-forward="false" selection-start-line="75" selection-start-column="40" selection-end-line="75" selection-end-column="40" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Solution.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="930">
+            <state relative-caret-position="289">
               <caret line="62" column="53" lean-forward="false" selection-start-line="62" selection-start-column="53" selection-end-line="62" selection-end-column="53" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -52,7 +63,7 @@
       <file leaf-file-name="Radioactivity.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1052">
+            <state relative-caret-position="300">
               <caret line="77" column="42" lean-forward="false" selection-start-line="77" selection-start-column="42" selection-end-line="77" selection-end-column="42" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -166,12 +177,12 @@
         <option value="$PROJECT_DIR$/stats/regression.py" />
         <option value="$USER_HOME$/SCE_GUI_Project/SIPM_v3_final.py" />
         <option value="$PROJECT_DIR$/box/test_box.py" />
-        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
-        <option value="$PROJECT_DIR$/test_box.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
-        <option value="$PROJECT_DIR$/box/Box.py" />
         <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
+        <option value="$PROJECT_DIR$/test_box.py" />
+        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
+        <option value="$PROJECT_DIR$/box/Box.py" />
       </list>
     </option>
   </component>
@@ -635,7 +646,14 @@
       <option name="project" value="LOCAL" />
       <updated>1508870629693</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Integrated radioactivity for specified primordial parent isotopes.">
+      <created>1508871739524</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1508871739524</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -833,14 +851,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="30" column="122" lean-forward="false" selection-start-line="30" selection-start-column="122" selection-end-line="30" selection-end-column="122" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fEquilibrium.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -859,17 +869,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_box.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="17" column="21" lean-forward="false" selection-start-line="17" selection-start-column="21" selection-end-line="17" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1052">
+        <state relative-caret-position="300">
           <caret line="77" column="42" lean-forward="false" selection-start-line="77" selection-start-column="42" selection-end-line="77" selection-end-column="42" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
@@ -877,21 +879,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/box/Box.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="309">
-          <caret line="159" column="58" lean-forward="true" selection-start-line="159" selection-start-column="58" selection-end-line="159" selection-end-column="58" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="930">
+        <state relative-caret-position="289">
           <caret line="62" column="53" lean-forward="false" selection-start-line="62" selection-start-column="53" selection-end-line="62" selection-end-column="53" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="335">
+          <caret line="75" column="40" lean-forward="false" selection-start-line="75" selection-start-column="40" selection-end-line="75" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/box/Box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="357" column="89" lean-forward="false" selection-start-line="357" selection-start-column="89" selection-end-line="357" selection-end-column="89" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -58,7 +58,7 @@ class move_particle:
 
     # def stokes_settling(self, density_body, density_matrix, diameter_body, matrix_viscosity, drag_coeff=0.2):
     # TODO: return 3-component array such that an x, y, and z velocity are received
-    def stokes_settling(self):
+    def stokes_settling(self, matrix_matrial, matrix_material_temp, matrix_material_pressure):
         """
         If friction coefficient, F, is <10 or >10, the modes of Stoke's settling are described as below as a result of
             differences in laminar versus turbulent flow.
@@ -72,13 +72,14 @@ class move_particle:
         density_body = 7800
         density_matrix = 3750
         drag_coeff = 0.2
-        matrix_viscosity = self.viscosity(material='Silicate Liquid', pressure=10000, temperature=1800)
+        matrix_viscosity = self.viscosity(material=matrix_matrial, pressure=matrix_material_pressure,
+                                        temperature=matrix_material_temp)
         diameter_body = 0.1
         grav_constant = 9.81 # m/s^2
         f = self.friction_coefficient(density_body=density_body, density_matrix=density_matrix,
                                       diameter_body=diameter_body, matrix_viscosity=matrix_viscosity)
         if f < 10: # low frictional coefficient, when body is in laminar flow regime
-            v = ((density_body - density_matrix) * grav_constant * diameter_body**2) / (18 * matrix_viscosity)
+            v = ((density_body - density_matrix) * grav_constant * diameter_body**2) / (18 * matrix_viscosity) # calculates the velocity of the body
             # print("Laminar flow regime: calculated a velocity of: {}".format(v))
             return v
         else:

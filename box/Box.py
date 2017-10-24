@@ -75,6 +75,9 @@ class box:
                 header.append(str(i))
             formatted_header = ",".join(i for i in header)
             self.object_output.write("{}\n".format(formatted_header))
+        if 'object_velocities.csv' in os.listdir(os.getcwd()):
+            os.remove('object_velocities.csv')
+        self.velocity_output = open('object_velocities.csv', 'a')
 
 
     def get_box(self):
@@ -170,16 +173,24 @@ class box:
             sys.exit(1)
 
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
-    def insert_matrix(self, matrix_material, composition, z_range=False):
+    def insert_matrix(self, matrix_material, composition, z_range=[0,0]):
         print("Inserting matrix...")
-        if z_range != False: # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
-            pass
+        if z_range[0] != 0 and z_range[1] != 0: # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
+            for row in self.space.index:
+                if self.space['z_coords'][row] >= z_range[0] and self.space['z_coords'][row] <= z_range[1]:
+                    self.space['object_id'][row] = self.generate_object_id(matrix=True)
+                    self.space['object'][row] = matrix_material
+                    self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
+                    print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row],
+                                                        self.space['y_coords'][row], self.space['z_coords'][row]))
         else:
             for row in self.space.index:
                 self.space['object_id'][row] = self.generate_object_id(matrix=True)
                 self.space['object'][row] = matrix_material
                 self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
-                print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row], self.space['y_coords'][row], self.space['z_coords'][row]))
+                print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row],
+                                                        self.space['y_coords'][row], self.space['z_coords'][row]))
+
             print("Matrix inserted!")
 
 
@@ -323,12 +334,34 @@ class box:
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.index:
             if str(system_data['object_id'][row][0]) == 'A':
-                object_velocity = move_particle(body_type='fe alloy',
-                                                  system_params=system_data).stokes_settling()
-                z_dis_obj_travel = object_velocity * deltaTime
                 curr_x_coords = system_data['x_coords'][row]
                 curr_y_coords = system_data['y_coords'][row]
                 curr_z_coords = system_data['z_coords'][row]
+                object_velocity = 0
+
+
+
+                # assumption is that object will travel through matrix most like that occupying z coord below it.
+                # code block below attempts to idenfity that material
+                if (system_data['z_coords'][row] + 1) in system_data['z_coords']:
+                    searchfor_coord = (system_data['z_coords'][row] + 1)
+                    matrix_material = ''
+                    matrix_material_temp = 0.0
+                    matrix_material_pressure = 0.0
+                    for row in system_data.index:
+                        if system_data['z_coords'][row] == searchfor_coord and system_data['y_coords'][row] \
+                        == curr_y_coords and system_data['x_coords'][row] == curr_x_coords:
+                            matrix_material = system_data['object'][row]
+                            matrix_material_temp = system_data['temperature'][row]
+                            matrix_material_pressure = system_data['pressure'][row]
+                            break
+                    object_velocity = move_particle(body_type=system_data['object'][row],
+                            system_params=system_data).stokes_settling(matrix_matrial=matrix_material,
+                            matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure)
+
+
+
+                z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coords = system_data['x_coords'][row]
                 updated_y_coords = system_data['y_coords'][row]
                 updated_z_coords = clf.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][row]),
@@ -442,6 +475,9 @@ class box:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime, box_height=self.height)
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
+            for row in self.space.index:
+                if self.space['object'][row] == 'Metal Liquid':
+                    self.velocity_output.write("\n{}".format(self.space['object_velocity'][row]))
             self.visualize_box()
             self.space = update_space
             if self.object_history == True:
