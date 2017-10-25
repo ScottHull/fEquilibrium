@@ -15,6 +15,8 @@ import sys
 import matplotlib.cm as cm
 import matplotlib.colors
 import matplotlib.colorbar
+import time
+from math import pi
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -40,17 +42,22 @@ class box:
         self.visualize_system = visualize_system
         self.object_history = object_history
         self.space = pd.DataFrame({
-            'object_id': np.NAN, 'object': np.NAN,
-            'x_coords': [float(i[0]) for i in self.coords], 'y_coords': [float(i[1]) for i in self.coords],
-            'z_coords': [float(i[2]) for i in self.coords], 'object_radius': np.NAN,
-            'density': np.NAN, 'temperature': [1600 for i in list(range(len(self.coords)))],
-            'pressure': np.NAN,
+            'object_id': np.NAN,
+            'object': np.NAN,
+            'x_coords': [float(i[0]) for i in self.coords],
+            'y_coords': [float(i[1]) for i in self.coords],
+            'z_coords': [float(i[2]) for i in self.coords],
+            'object_radius': np.NAN, # in m
+            'density': np.NAN, # in kg/m^3
+            'temperature': np.NAN, # in K
+            'pressure': [(1*10**9) for i in self.coords], # pressure in pascals, in order to work with ideal gas law
             'object_velocity': [float(0) for i in self.coords],
-            'x_direct': np.NAN, 'y_direct': np.NAN,
+            'x_direct': np.NAN,
+            'y_direct': np.NAN,
             'z_direct': np.NAN, 'potential_energy': np.NAN,
-            'kinetic_energy': np.NAN,
-            'total_energy_released': np.NAN,
-            'mass': np.NAN
+            'kinetic_energy': np.NAN, # in J
+            'total_energy_released': np.NAN, # in J
+            'mass': np.NAN # in kg
         })
         self.num_coords = len(self.coords)
         self.solution = solution(box_length=self.num_coords)
@@ -102,9 +109,9 @@ class box:
             for j in y_coords_range:
                 for q in z_coords_range:
                     temp_coords = []
-                    temp_coords.append(i)
-                    temp_coords.append(j)
-                    temp_coords.append(q)
+                    temp_coords.append(round(i, len(str(space_resolution))))
+                    temp_coords.append(round(j, len(str(space_resolution))))
+                    temp_coords.append(round(q, len(str(space_resolution))))
                     coords.append(temp_coords)
         print("Coordinates generated!")
         return coords
@@ -156,7 +163,7 @@ class box:
             else:
                 return object_id
 
-    def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, initial_mass, composition):
+    def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, initial_mass, composition, initial_temperature):
         print("Inserting object...")
         if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
             for row in self.space.index:
@@ -167,28 +174,36 @@ class box:
                             self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
                             self.space['object_radius'][row] = object_radius
                             self.space['mass'][row] = initial_mass
+                            self.space['temperature'][row] = initial_temperature
+                            self.space['object_density'] = float(self.space['mass'][row]) / ((4/3) * pi * float(self.space['object_radius'][row])**3) # assume object is a perfect sphere
                             self.solution.create_solution(box=self.space, composition=composition, row=row, object=object)
+                            print("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row],
+                                                                                           self.space['x_coords'][row],
+                                                                                           self.space['y_coords'][row],
+                                                                                           self.space['z_coords'][row]))
         else:
             print("Could not insert object!  Outside of defined coordinate points!")
             sys.exit(1)
 
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
-    def insert_matrix(self, matrix_material, composition, z_range=[0,0]):
+    def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0,0]):
         print("Inserting matrix...")
         if z_range[0] != 0 and z_range[1] != 0: # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
             for row in self.space.index:
                 if self.space['z_coords'][row] >= z_range[0] and self.space['z_coords'][row] <= z_range[1]:
                     self.space['object_id'][row] = self.generate_object_id(matrix=True)
                     self.space['object'][row] = matrix_material
+                    self.space['temperature'][row] = initial_temperature
                     self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
-                    print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row],
+                    print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row], self.space['x_coords'][row],
                                                         self.space['y_coords'][row], self.space['z_coords'][row]))
         else:
             for row in self.space.index:
                 self.space['object_id'][row] = self.generate_object_id(matrix=True)
                 self.space['object'][row] = matrix_material
+                self.space['temperature'][row] = initial_temperature
                 self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
-                print("Inserted matrix at coordinates: x:{} y:{}, z:{}".format(self.space['x_coords'][row],
+                print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row], self.space['x_coords'][row],
                                                         self.space['y_coords'][row], self.space['z_coords'][row]))
 
             print("Matrix inserted!")
@@ -330,7 +345,7 @@ class box:
 
 
     @classmethod
-    def move_systems(clf, system_data, update_space, deltaTime, box_height, space_resolution):
+    def move_systems(clf, system_data, update_space, deltaTime, box_height, space_resolution, default_matrix_material='Silicate Liquid'):
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.index:
             if str(system_data['object_id'][row][0]) == 'A':
@@ -339,27 +354,23 @@ class box:
                 curr_z_coords = system_data['z_coords'][row]
                 object_velocity = 0
 
-
-
+                matrix_material = default_matrix_material # the default matrix matrial until overwritten
+                matrix_material_temp = 0.0
+                matrix_material_pressure = 0.0
                 # assumption is that object will travel through matrix most like that occupying z coord below it.
                 # code block below attempts to idenfity that material
                 if (system_data['z_coords'][row] + space_resolution) in system_data['z_coords']:
-                    searchfor_coord = (system_data['z_coords'][row] + 1)
-                    matrix_material = ''
-                    matrix_material_temp = 0.0
-                    matrix_material_pressure = 0.0
-                    for row in system_data.index:
-                        if system_data['z_coords'][row] == searchfor_coord and system_data['y_coords'][row] \
-                        == curr_y_coords and system_data['x_coords'][row] == curr_x_coords:
-                            matrix_material = system_data['object'][row]
-                            matrix_material_temp = system_data['temperature'][row]
-                            matrix_material_pressure = system_data['pressure'][row]
+                    searchfor_coord = (system_data['z_coords'][row] + space_resolution)
+                    for row2 in system_data.index:
+                        if system_data['z_coords'][row2] == searchfor_coord and system_data['y_coords'][row2] \
+                        == curr_y_coords and system_data['x_coords'][row2] == curr_x_coords:
+                            matrix_material = system_data['object'][row2]
+                            matrix_material_temp = system_data['temperature'][row2]
+                            matrix_material_pressure = system_data['pressure'][row2]
                             break
-                    object_velocity = move_particle(body_type=system_data['object'][row],
-                            system_params=system_data).stokes_settling(matrix_matrial=matrix_material,
-                            matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure)
-
-
+                object_velocity = move_particle(body_type=system_data['object'][row],
+                        system_params=system_data).stokes_settling(object=system_data['object'][row], matrix_material=matrix_material,
+                        matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure)
 
                 z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coords = system_data['x_coords'][row]
@@ -372,12 +383,11 @@ class box:
                     z_dis_obj_travel = 0
                 system_data['temperature'][row] = float(
                     system_data['temperature'][row]) + energy().stokes_frictional_energy(
-                    body_material='Metal Liquid', matrix_material='Silicate Liquid',
+                    body_material=system_data['object'][row], matrix_material=matrix_material,
                     body_radius=system_data['object_radius'][row],
                     body_mass=system_data['mass'][row], distance_travelled=z_dis_obj_travel
                 )
-                system_data['object_velocity'][row] = energy().kinetic_energy(mass=system_data['mass'][row],
-                                                                              velocity=object_velocity)
+                system_data['object_velocity'][row] = object_velocity
                 system_data['z_direct'][row] = object_velocity
                 system_data['potential_energy'][row] = energy().potential_energy(mass=system_data['mass'][row],
                                                                                  height=system_data['z_coords'][row],
@@ -476,9 +486,9 @@ class box:
                                              box_height=self.height, space_resolution=self.space_resolution)
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
-            for row in self.space.index:
-                if self.space['object'][row] == 'Metal Liquid':
-                    self.velocity_output.write("\n{}".format(self.space['object_velocity'][row]))
+            for row in update_space.index:
+                if update_space['object'][row] == 'Metal Liquid':
+                    self.velocity_output.write("\n{}".format(update_space['object_velocity'][row]))
             self.visualize_box()
             self.space = update_space
             if self.object_history == True:

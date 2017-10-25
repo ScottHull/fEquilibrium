@@ -4,16 +4,16 @@ import os
 
 
 # create the box
-model = box(length=3, width=3, height=8, model_time=12, space_resolution=1, visualize_system=True, object_history=True)
+model = box(length=3, width=3, height=8, model_time=12, space_resolution=0.2, visualize_system=True, object_history=True)
 
 # insert the matrix matrial into the box, will populate all possible coordinate positions
-model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100}, z_range=[0,4])
-model.insert_matrix(matrix_material='Denser Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100}, z_range=[5,8])
+model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100}, z_range=[0,4], initial_temperature=2000)
+model.insert_matrix(matrix_material='Denser Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100}, z_range=[5,8], initial_temperature=3000)
 
 # insert X number of objects into the box, specify their location, will overwrite matrix at that point
 for i in list(range(1)):
-    model.insert_object(object='Metal Liquid', object_radius=0.1, x_coord=2,
-                        y_coord=2, z_coord=0, initial_mass=1, composition={'SiO2': 20, 'FeO': 80})
+    model.insert_object(object='Metal Liquid', object_radius=0.01, x_coord=2,
+                        y_coord=2, z_coord=0, initial_mass=1, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2000)
 
 # automatically iteratively update the box to model_time = 0
 model.update_system()
