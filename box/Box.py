@@ -42,6 +42,7 @@ class box:
         self.visualize_system = visualize_system
         self.object_history = object_history
         self.space = pd.DataFrame({
+            'coord_index': [str(i) for i in self.coords],
             'object_id': np.NAN, # randomly generated object id tag to identify unique elements in box
             'object': np.NAN, # name of the object, as defined in self.physical_parameters
             'x_coords': [float(i[0]) for i in self.coords],
@@ -61,7 +62,7 @@ class box:
             'total_energy_released': np.NAN, # in J
             'mass': np.NAN, # in kg
             'volume': np.NAN # in m^3
-        })
+        }, index='coord_index')
         self.num_coords = len(self.coords)
         self.solution = solution(box_length=self.num_coords)
         self.physical_parameters = pd.read_csv(os.path.dirname(os.path.abspath('.')) + "/fEquilibrium/dynamics/physical_parameters.csv", index_col='Material')
