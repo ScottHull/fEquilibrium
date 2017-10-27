@@ -42,11 +42,12 @@ class box:
         self.visualize_system = visualize_system
         self.object_history = object_history
         self.space = pd.DataFrame({
-            'object_id': np.NAN,
-            'object': np.NAN,
+            'object_id': np.NAN, # randomly generated object id tag to identify unique elements in box
+            'object': np.NAN, # name of the object, as defined in self.physical_parameters
             'x_coords': [float(i[0]) for i in self.coords],
             'y_coords': [float(i[1]) for i in self.coords],
             'z_coords': [float(i[2]) for i in self.coords],
+            'nearest_neighbors': np.NAN, # x, y, and z neighbors in each direction
             'object_radius': np.NAN, # in m
             'density': np.NAN, # in kg/m^3
             'temperature': np.NAN, # in K
@@ -54,24 +55,31 @@ class box:
             'object_velocity': [float(0) for i in self.coords],
             'x_direct': np.NAN,
             'y_direct': np.NAN,
-            'z_direct': np.NAN, 'potential_energy': np.NAN,
+            'z_direct': np.NAN,
+            'potential_energy': np.NAN,
             'kinetic_energy': np.NAN, # in J
             'total_energy_released': np.NAN, # in J
-            'mass': np.NAN # in kg
+            'mass': np.NAN, # in kg
+            'volume': np.NAN # in m^3
         })
         self.num_coords = len(self.coords)
         self.solution = solution(box_length=self.num_coords)
+        self.physical_parameters = pd.read_csv(os.path.dirname(os.path.abspath('.')) + "/fEquilibrium/dynamics/physical_parameters.csv", index_col='Material')
         self.move_frames1 = []
         self.move_frames2 = []
+        self.move_frames3 = []
         self.move_frames4 = []
         if os.path.exists('mpl_animation1'):
             shutil.rmtree('mpl_animation1')
         if os.path.exists('mpl_animation2'):
             shutil.rmtree('mpl_animation2')
+        if os.path.exists('mpl_animation3'):
+            shutil.rmtree('mpl_animation3')
         if os.path.exists('mpl_animation4'):
             shutil.rmtree('mpl_animation4')
         os.mkdir('mpl_animation1')
         os.mkdir('mpl_animation2')
+        os.mkdir('mpl_animation3')
         os.mkdir('mpl_animation4')
         if self.object_history == True:
             if "object_history.csv" in os.listdir(os.getcwd()):
@@ -89,6 +97,32 @@ class box:
 
     def get_box(self):
         return self.space
+
+    def classify_neighbors(self, animate_neighbors):
+        loop_count = 1
+        loop_total = len(self.space.index.tolist())
+        print("Finding nearest neighbors for all points.  This may take several minutes...")
+        for row in self.space.index:
+            neighbors = thermal_eq.explicit_nearest_neighboor(system_data=self.space, x_coord=self.space['x_coords'][row],
+                    y_coord=self.space['y_coords'][row], z_coord=self.space['z_coords'][row], space_resolution=self.space_resolution)
+            self.space['nearest_neighbors'][row] = str(neighbors)
+            print("Found neighbors for {}/{} coordinate points.".format(loop_count, loop_total))
+            loop_count += 1
+            if animate_neighbors == True:
+                self.move_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][row],
+                                                        self.space['y_coords'][row], self.space['z_coords'][row]))
+        if animate_neighbors == True:
+            self.space.to_csv("space2_coords_check.csv")
+            import moviepy.editor as mpy
+            import os, time
+            os.chdir(os.getcwd() + "/mpl_animation3")
+            animation = mpy.ImageSequenceClip(self.move_frames3,
+                                              fps=5,
+                                              load_images=True)
+            animation.write_gif('neighbors.gif', fps=5)
+            os.chdir("..")
+        return None
+
 
 
     @staticmethod
@@ -148,65 +182,79 @@ class box:
             return False
 
     def generate_object_id(self, matrix):
-        unref_object_id = randint(0, len(self.coords))
-        str_unref_object_id = str(unref_object_id)
-        if matrix is True:
-            object_id = 'B' + str_unref_object_id # matrix material objects begin with a B
-            if object_id in self.space['object_id']:
-                self.generate_object_id(matrix=matrix)
-            else:
-                return object_id
-        else:
-            object_id = 'A' + str_unref_object_id # non-matrix material objects begin with a A
-            if object_id in self.space['object_id']:
-                self.generate_object_id(matrix=matrix)
-            else:
-                return object_id
 
-    def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, initial_mass, composition, initial_temperature):
-        print("Inserting object...")
-        if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
-            for row in self.space.index:
-                if self.space['x_coords'][row] == x_coord:
-                    if self.space['y_coords'][row] == y_coord:
-                        if self.space['z_coords'][row] == z_coord: # verifies that coordinates match to Dataframe
-                            self.space['object'][row] = object
-                            self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
-                            self.space['object_radius'][row] = object_radius
-                            self.space['mass'][row] = initial_mass
-                            self.space['temperature'][row] = initial_temperature
-                            self.space['object_density'] = float(self.space['mass'][row]) / ((4/3) * pi * float(self.space['object_radius'][row])**3) # assume object is a perfect sphere
-                            self.solution.create_solution(box=self.space, composition=composition, row=row, object=object)
-                            print("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row],
-                                                                                           self.space['x_coords'][row],
-                                                                                           self.space['y_coords'][row],
-                                                                                           self.space['z_coords'][row]))
+        def random_gen(object_identifier):
+            object_id = object_identifier + str(randint(0, len(self.coords) + len(self.coords)))
+            return object_id
+
+        if matrix is True:
+            object_id = random_gen(object_identifier='B') # matrix material objects begin with a B
+            while object_id in self.space['object_id'].tolist():
+                object_id = random_gen(object_identifier='B')  # matrix material objects begin with a B
+            return object_id
         else:
-            print("Could not insert object!  Outside of defined coordinate points!")
+            object_id = random_gen(object_identifier='A') # non-matrix material objects begin with a A
+            while object_id in self.space['object_id'].tolist():
+                object_id = random_gen(object_identifier='A')  # matrix material objects begin with a A
+            return object_id
+
+    def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, composition, initial_temperature):
+        print("Inserting object...")
+        if object in self.physical_parameters.index:
+            if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
+                for row in self.space.index:
+                    if self.space['x_coords'][row] == x_coord:
+                        if self.space['y_coords'][row] == y_coord:
+                            if self.space['z_coords'][row] == z_coord: # verifies that coordinates match to Dataframe
+                                self.space['object'][row] = object # the name of the object, as defined in dynamics/physical_parameters.csv
+                                self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
+                                self.space['object_radius'][row] = object_radius # in m
+                                self.space['volume'][row] = (4/3) * pi * (object_radius)**3 # assume volume of object is a perfect sphere
+                                self.space['mass'][row] = self.physical_parameters['Density'][object] * self.space['volume'][row] # mass = density * volume
+                                self.space['temperature'][row] = initial_temperature
+                                self.space['object_density'] = float(self.space['mass'][row]) / ((4/3) * pi *
+                                                float(self.space['object_radius'][row])**3) # assume object is a perfect sphere
+                                self.solution.create_solution(box=self.space, composition=composition, row=row, object=object)
+                                print("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row],
+                                                                                               self.space['x_coords'][row],
+                                                                                               self.space['y_coords'][row],
+                                                                                               self.space['z_coords'][row]))
+            else:
+                print("Could not insert object!  Outside of defined coordinate points!")
+                sys.exit(1)
+        else:
+            print("Object not defined in {}!  Cannot insert object!".format(
+                                                    os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
 
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
     def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0,0]):
         print("Inserting matrix...")
-        if z_range[0] != 0 and z_range[1] != 0: # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
-            for row in self.space.index:
-                if self.space['z_coords'][row] >= z_range[0] and self.space['z_coords'][row] <= z_range[1]:
+        if matrix_material in self.physical_parameters.index:
+            if z_range[0] != 0 and z_range[1] != 0: # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
+                for row in self.space.index:
+                    if self.space['z_coords'][row] >= z_range[0] and self.space['z_coords'][row] <= z_range[1]:
+                        self.space['object_id'][row] = self.generate_object_id(matrix=True)
+                        self.space['object'][row] = matrix_material
+                        self.space['temperature'][row] = initial_temperature
+                        self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
+                        print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row], self.space['x_coords'][row],
+                                                            self.space['y_coords'][row], self.space['z_coords'][row]))
+            else:
+                for row in self.space.index:
                     self.space['object_id'][row] = self.generate_object_id(matrix=True)
                     self.space['object'][row] = matrix_material
                     self.space['temperature'][row] = initial_temperature
                     self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
                     print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row], self.space['x_coords'][row],
-                                                        self.space['y_coords'][row], self.space['z_coords'][row]))
-        else:
-            for row in self.space.index:
-                self.space['object_id'][row] = self.generate_object_id(matrix=True)
-                self.space['object'][row] = matrix_material
-                self.space['temperature'][row] = initial_temperature
-                self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
-                print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row], self.space['x_coords'][row],
-                                                        self.space['y_coords'][row], self.space['z_coords'][row]))
+                                                            self.space['y_coords'][row], self.space['z_coords'][row]))
 
             print("Matrix inserted!")
+
+        else:
+            print("Matrix material not defined in {}!  Cannot insert matrix material!".format(
+                os.getcwd() + "/dynamics/physical_parameters.csv"))
+            sys.exit(1)
 
 
     def visualize_box(self):
@@ -284,7 +332,7 @@ class box:
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Temperature (degK)")
-            ax.set_zlim(zmin=1500, zmax=2800)
+            ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
             ax.set_title("Temperature Distribution at Time {} At Base of Model".format(self.model_time))
             fig.savefig(os.getcwd() + '/mpl_animation4/snap_{}.png'.format(self.model_time), format='png')
             self.move_frames4.append('snap_{}.png'.format(self.model_time))
@@ -418,6 +466,7 @@ class box:
         print("Model time at: {}".format(self.model_time))
         update_space = self.space.copy(deep=True)
         if self.model_time == self.initial_time:
+            self.classify_neighbors(animate_neighbors=False)
             self.visualize_box()
             if self.object_history == True:
                 for row in self.space.index:

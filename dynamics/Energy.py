@@ -1,6 +1,7 @@
 from math import pi, sqrt
 import pandas as pd
 import numpy as np
+import ast
 import time
 
 
@@ -8,9 +9,152 @@ class thermal_eq:
 
     def __init__(self):
         pass
-                
 
-    @ classmethod
+
+    @classmethod
+    def explicit_nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution,
+                          visualize_neighbors=False, animate_neighbors=False):
+        neighbors = []
+        # minimum = 0 # Uncomment this code if you'd like explicit distance calculations
+        # potential_neighbors = {} # Uncomment this code if you'd like explicit distance calculations
+
+        potential_xplus_neighbor = x_coord + space_resolution
+        potential_yplus_neighbor = y_coord + space_resolution
+        potential_zplus_neighbor = z_coord + space_resolution
+        potential_xminus_neighbor = x_coord - space_resolution
+        potential_yminus_neighbor = y_coord - space_resolution
+        potential_zminus_neighbor = z_coord - space_resolution
+
+        if min(system_data['x_coords']) <= potential_xplus_neighbor <= max(system_data['x_coords']):
+            # x_plus = [system_data.loc[(system_data['x_coords'] == potential_xplus_neighbor) &
+            #         (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == z_coord)]['x_coords'].item()]
+            neighbors.append([potential_xplus_neighbor, y_coord, z_coord])
+        if min(system_data['x_coords']) <= potential_xminus_neighbor <= max(system_data['x_coords']):
+            # x_minus = [system_data.loc[(system_data['x_coords'] == potential_xminus_neighbor) &
+            #     (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == z_coord)]['x_coords'].item()]
+            neighbors.append([potential_xminus_neighbor, y_coord, z_coord])
+
+        if min(system_data['y_coords']) <= potential_yplus_neighbor <= max(system_data['y_coords']):
+            # y_plus = [system_data.loc[(system_data['x_coords'] == x_coord) &
+            #         (system_data['y_coords'] == potential_yplus_neighbor) & (system_data['z_coords'] == z_coord)]['y_coords'].item()]
+            neighbors.append([x_coord, potential_yplus_neighbor, z_coord])
+        if min(system_data['y_coords']) <= potential_yminus_neighbor <= max(system_data['y_coords']):
+            # y_minus = [system_data.loc[(system_data['x_coords'] == x_coord) &
+            #         (system_data['y_coords'] == potential_yminus_neighbor) & (system_data['z_coords'] == z_coord)]['y_coords'].item()]
+            neighbors.append([x_coord, potential_yminus_neighbor, z_coord])
+
+        if min(system_data['z_coords']) <= potential_zplus_neighbor <= max(system_data['z_coords']):
+            # z_plus = [system_data.loc[(system_data['x_coords'] == x_coord) &
+            #         (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == potential_zplus_neighbor)]['z_coords'].item()]
+            neighbors.append([x_coord, y_coord, potential_zplus_neighbor])
+        if min(system_data['z_coords']) <= potential_zminus_neighbor <= max(system_data['z_coords']):
+            # z_minus = [system_data.loc[(system_data['x_coords'] == x_coord) &
+            #         (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == potential_zminus_neighbor)]['z_coords'].item()]
+            neighbors.append([x_coord, y_coord, potential_zminus_neighbor])
+
+        if visualize_neighbors == True:
+            import matplotlib as mpl
+            mpl.use('Qt5Agg')
+            from mpl_toolkits.mplot3d import Axes3D
+            import matplotlib.pyplot as plt
+            import os, shutil
+            fig = plt.figure()
+            ax = Axes3D(fig)
+            ax.set_xlim(xmin=min(system_data['x_coords']), xmax=max(system_data['x_coords']))
+            ax.set_ylim(ymin=min(system_data['y_coords']), ymax=max(system_data['y_coords']))
+            ax.set_zlim(zmin=min(system_data['z_coords']), zmax=max(system_data['z_coords']))
+            ax.scatter3D(x_coord, y_coord, z_coord, color='b')
+            for i in neighbors:
+                ax.scatter3D(i[0], i[1], i[2], color='r')
+            ax.set_title("Nearest neighbors for x:{}, y:{}, z:{}".format(x_coord, y_coord, z_coord))
+            ax.set_xlabel("Box Length")
+            ax.set_ylabel("Box Width")
+            ax.set_zlabel("Box Height")
+            ax.invert_zaxis()
+            if visualize_neighbors == True and animate_neighbors == False:
+                fig.show()
+            if animate_neighbors == True:
+                fig.savefig(os.getcwd()+'/mpl_animation3/snap_{}-{}-{}.png'.format(x_coord, y_coord, z_coord), format='png')
+            fig.clf()
+        classified_neighbors = self.explicit_classify_neighbors(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord,
+                                neighbors=neighbors, space_resolution=space_resolution, system_data=system_data)
+        # print("Classified neighbors: {}".format(classified_neighbors))
+        return classified_neighbors
+
+
+    @classmethod
+    def explicit_classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution):
+        neighbors_dict = {'x': {'x+': {'coords': [], 'index': []}, 'x': {'coords': [], 'index': []},
+                    'x-': {'coords': [], 'index': []}}, 'y': {'y+': {'coords': [], 'index': []},
+                    'y': {'coords': [], 'index': []},'y-': {'coords': [], 'index': []}},
+                    'z': {'z+': {'coords': [], 'index': []}, 'z': {'coords': [], 'index': []},
+                    'z-': {'coords': [], 'index': []}}} # for each dict, x,y,z,index
+        neighbors_dict['x']['x']['coords'].append(x_coord)
+        neighbors_dict['x']['x']['coords'].append(y_coord)
+        neighbors_dict['x']['x']['coords'].append(z_coord)
+        neighbors_dict['y']['y']['coords'].append(x_coord)
+        neighbors_dict['y']['y']['coords'].append(y_coord)
+        neighbors_dict['y']['y']['coords'].append(z_coord)
+        neighbors_dict['z']['z']['coords'].append(x_coord)
+        neighbors_dict['z']['z']['coords'].append(y_coord)
+        neighbors_dict['z']['z']['coords'].append(z_coord)
+        for set in neighbors:
+            if x_coord + space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
+                neighbors_dict['x']['x+']['coords'].append(x_coord+space_resolution)
+                neighbors_dict['x']['x+']['coords'].append(y_coord)
+                neighbors_dict['x']['x+']['coords'].append(z_coord)
+            if x_coord - space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
+                neighbors_dict['x']['x-']['coords'].append(x_coord-space_resolution)
+                neighbors_dict['x']['x-']['coords'].append(y_coord)
+                neighbors_dict['x']['x-']['coords'].append(z_coord)
+            if x_coord == set[0] and y_coord + space_resolution == set[1] and z_coord == set[2]:
+                neighbors_dict['y']['y+']['coords'].append(x_coord)
+                neighbors_dict['y']['y+']['coords'].append(y_coord+space_resolution)
+                neighbors_dict['y']['y+']['coords'].append(z_coord)
+            if x_coord == set[0] and y_coord - space_resolution == set[1] and z_coord == set[2]:
+                neighbors_dict['y']['y-']['coords'].append(x_coord)
+                neighbors_dict['y']['y-']['coords'].append(y_coord-space_resolution)
+                neighbors_dict['y']['y-']['coords'].append(z_coord)
+            if x_coord == set[0] and y_coord == set[1] and z_coord + space_resolution == set[2]:
+                neighbors_dict['z']['z+']['coords'].append(x_coord)
+                neighbors_dict['z']['z+']['coords'].append(y_coord)
+                neighbors_dict['z']['z+']['coords'].append(z_coord+space_resolution)
+            if x_coord == set[0] and y_coord == set[1] and z_coord - space_resolution == set[2]:
+                neighbors_dict['z']['z-']['coords'].append(x_coord)
+                neighbors_dict['z']['z-']['coords'].append(y_coord)
+                neighbors_dict['z']['z-']['coords'].append(z_coord-space_resolution)
+
+        index_count = 0
+        for row in system_data.index:
+            if index_count == 9:
+                break
+            else:
+                for i in neighbors_dict:
+                    for z in neighbors_dict[i]:
+                        if len(neighbors_dict[i][z]['coords']) == 3:
+                            if system_data['x_coords'][row] == neighbors_dict[i][z]['coords'][0] and \
+                            system_data['y_coords'][row] == neighbors_dict[i][z]['coords'][1] and \
+                            system_data['z_coords'][row] == neighbors_dict[i][z]['coords'][2]:
+                                neighbors_dict[i][z]['index'].append(row)
+                                index_count += 1
+
+
+        # for i in neighbors_dict:
+        #     for z in neighbors_dict[i]:
+        #         if len(neighbors_dict[i][z]['coords']) == 3:
+        #             for row in system_data.index:
+        #                 if system_data['x_coords'][row] == neighbors_dict[i][z]['coords'][0] and \
+        #                 system_data['y_coords'][row] == neighbors_dict[i][z]['coords'][1] and system_data['z_coords'][row] == \
+        #                 neighbors_dict[i][z]['coords'][2]:
+        #                     neighbors_dict[i][z]['index'].append(row)
+        #                 break
+
+        # print("Identified neighbors: {}".format(neighbors_dict))
+        return neighbors_dict
+        
+        
+
+    @classmethod
     def classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution, data_type):
         neighbors_dict = {'x': {'x+': {'coords': [], 'index': [], '{}'.format(data_type): []}, 'x': {'coords': [], 'index': [], '{}'.format(data_type): []},
                     'x-': {'coords': [], 'index': [], '{}'.format(data_type): []}}, 'y': {'y+': {'coords': [], 'index': [], '{}'.format(data_type): []},
@@ -52,8 +196,6 @@ class thermal_eq:
                 neighbors_dict['z']['z-']['coords'].append(y_coord)
                 neighbors_dict['z']['z-']['coords'].append(z_coord-space_resolution)
 
-        # print(neighbors_dict)
-        # time.sleep(4)
         for i in neighbors_dict:
             for z in neighbors_dict[i]:
                 if len(neighbors_dict[i][z]['coords']) == 3:
@@ -63,6 +205,7 @@ class thermal_eq:
                         neighbors_dict[i][z]['coords'][2]:
                             neighbors_dict[i][z]['index'].append(row)
                             neighbors_dict[i][z]['{}'.format(data_type)].append(system_data['{}'.format(data_type)][row])
+
         return neighbors_dict
 
 
@@ -146,66 +289,66 @@ class thermal_eq:
             if i == 'x':
                 if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
-                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][0][0] -
-                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][0][0]) / \
+                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0] -
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0]) / \
                            (classified_neighbors[i]["{}+".format(i)]['coords'][0] -
                             classified_neighbors[i]["{}-".format(i)]['coords'][0])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
-                    dT_d = (classified_neighbors[i]["{}".format(i)]['T_gradient'][0][0][0] -
-                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][0][0]) / \
+                    dT_d = (classified_neighbors[i]["{}".format(i)]['T_gradient'][0] -
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0]) / \
                            (classified_neighbors[i]["{}".format(i)]['coords'][0] -
                             classified_neighbors[i]["{}-".format(i)]['coords'][0])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
-                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][0][0] -
-                            classified_neighbors[i]["{}".format(i)]['T_gradient'][0][0][0]) / \
+                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0] -
+                            classified_neighbors[i]["{}".format(i)]['T_gradient'][0]) / \
                            (classified_neighbors[i]["{}+".format(i)]['coords'][0] -
                             classified_neighbors[i]["{}".format(i)]['coords'][0])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
             elif i == 'y':
                 if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
-                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][1][0] -
-                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][1][0]) / \
+                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][1] -
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][1]) / \
                            (classified_neighbors[i]["{}+".format(i)]['coords'][1] -
                             classified_neighbors[i]["{}-".format(i)]['coords'][1])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
-                    dT_d = (classified_neighbors[i]["{}".format(i)]['T_gradient'][0][1][0] -
-                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][1][0]) / \
+                    dT_d = (classified_neighbors[i]["{}".format(i)]['T_gradient'][1] -
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][1]) / \
                            (classified_neighbors[i]["{}".format(i)]['coords'][1] -
                             classified_neighbors[i]["{}-".format(i)]['coords'][1])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
-                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][1][0] -
-                            classified_neighbors[i]["{}".format(i)]['T_gradient'][0][1][0]) / \
+                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][1] -
+                            classified_neighbors[i]["{}".format(i)]['T_gradient'][1]) / \
                            (classified_neighbors[i]["{}+".format(i)]['coords'][1] -
                             classified_neighbors[i]["{}".format(i)]['coords'][1])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
             elif i == 'z':
                 if len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
-                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][2][0] -
-                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][2][0]) / \
+                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][2] -
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][2]) / \
                            (classified_neighbors[i]["{}+".format(i)]['coords'][2] -
                             classified_neighbors[i]["{}-".format(i)]['coords'][2])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
-                    dT_d = (classified_neighbors[i]["{}".format(i)]['T_gradient'][0][2][0] -
-                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][0][2][0]) / \
+                    dT_d = (classified_neighbors[i]["{}".format(i)]['T_gradient'][2] -
+                            classified_neighbors[i]["{}-".format(i)]['T_gradient'][2]) / \
                            (classified_neighbors[i]["{}".format(i)]['coords'][2] -
                             classified_neighbors[i]["{}-".format(i)]['coords'][2])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 elif len(classified_neighbors[i]["{}+".format(i)]['coords']) != 0 and \
                 len(classified_neighbors[i]["{}-".format(i)]['coords']) == 0:
-                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][0][2][0] -
-                            classified_neighbors[i]["{}".format(i)]['T_gradient'][0][2][0]) / \
+                    dT_d = (classified_neighbors[i]["{}+".format(i)]['T_gradient'][2] -
+                            classified_neighbors[i]["{}".format(i)]['T_gradient'][2]) / \
                            (classified_neighbors[i]["{}+".format(i)]['coords'][2] -
                             classified_neighbors[i]["{}".format(i)]['coords'][2])
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
@@ -218,7 +361,7 @@ class thermal_eq:
         # T = T_not + dT
         format_laplacian = []
         for i in laplacian:
-            format_laplacian.append(i[0])
+            format_laplacian.append(laplacian[i][0])
         dT = (thermal_diffusivity*sum(format_laplacian)) * deltaTime
         T = point_temperature + dT
         return T
@@ -230,38 +373,39 @@ class thermal_eq:
 
     @classmethod
     def nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution, data_type,
-                          visualize_neighbors=True, animate_neighbors=False):
+                          visualize_neighbors=False, animate_neighbors=False):
         neighbors = []
         minimum = 0
+        potential_neighbors = {}
         for row in system_data.index:
             if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and system_data['z_coords'][row] == z_coord:
                 pass
-            else:
-                sample_xcoord = system_data['x_coords'][row]
-                sample_ycoord = system_data['y_coords'][row]
-                sample_zcoord = system_data['z_coords'][row]
-                distance = sqrt(((sample_xcoord - x_coord)**2) + ((sample_ycoord - y_coord)**2) + ((sample_zcoord - z_coord)**2))
-                if minimum == 0:
-                    minimum = distance
-                elif distance < minimum:
-                    minimum = distance
-
-        for row in system_data.index:
-            if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and \
-                            system_data['z_coords'][row] == z_coord:
+            elif len(list(potential_neighbors.keys())) == 6:
                 pass
             else:
                 sample_xcoord = system_data['x_coords'][row]
                 sample_ycoord = system_data['y_coords'][row]
                 sample_zcoord = system_data['z_coords'][row]
-                distance = sqrt(((sample_xcoord - x_coord) ** 2) + ((sample_ycoord - y_coord) ** 2) + (
-                (sample_zcoord - z_coord) ** 2))
-                if distance == minimum:
+                distance = round(sqrt(((sample_xcoord - x_coord)**2) + ((sample_ycoord - y_coord)**2) +
+                                      ((sample_zcoord - z_coord)**2)), len(str(space_resolution)))
+                if minimum == 0:
+                    minimum = distance
+                    potential_neighbors.update({system_data['object_id'][row]: distance})
+                elif distance < minimum:
+                    potential_neighbors.clear()
+                    minimum = distance
+                    potential_neighbors.update({system_data['object_id'][row]: distance})
+                elif distance == minimum:
+                    potential_neighbors.update({system_data['object_id'][row]: distance})
+        for row in system_data.index:
+            for i in potential_neighbors:
+                if str(i) == str(system_data['object_id'][row]):
                     sample_neighbors = []
-                    sample_neighbors.append(sample_xcoord)
-                    sample_neighbors.append(sample_ycoord)
-                    sample_neighbors.append(sample_zcoord)
+                    sample_neighbors.append(round(system_data['x_coords'][row], len(str(space_resolution))))
+                    sample_neighbors.append(round(system_data['y_coords'][row], len(str(space_resolution))))
+                    sample_neighbors.append(round(system_data['z_coords'][row], len(str(space_resolution))))
                     neighbors.append(sample_neighbors)
+
         if visualize_neighbors == True:
             import matplotlib as mpl
             mpl.use('Qt5Agg')
@@ -292,7 +436,7 @@ class thermal_eq:
         # return neighbors # for each coordinate set in neighbors, x at position 0, y at 1, z and 2
 
 
-    def D3_thermal_eq(self, system_data, deltaTime, space_resolution, visualize_neighbors=False, animate_neighbors=False):
+    def D3_thermal_eq(self, system_data, deltaTime, space_resolution):
         print("Thermally equilibrating system...")
         system_data['neighbors'] = np.NAN
         system_data['T_gradient'] = [[] for i in list(range(len(system_data['x_coords'])))]
@@ -300,11 +444,6 @@ class thermal_eq:
         system_data['dT/dt'] = np.NAN
         system_data['K'] = np.NAN
         new_thermal_df = system_data.copy(deep=True)
-        if animate_neighbors == True:
-            import os, shutil
-            if os.path.exists('mpl_animation3'):
-                shutil.rmtree('mpl_animation3')
-            os.mkdir('mpl_animation3')
         frames = []
         material_properties = pd.read_csv("dynamics/physical_parameters.csv", index_col='Material')
         for row in system_data.index:
@@ -312,16 +451,24 @@ class thermal_eq:
             sample_ycoord = system_data['y_coords'][row]
             sample_zcoord = system_data['z_coords'][row]
             print("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
-            neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
-                                               z_coord=sample_zcoord, space_resolution=space_resolution,
-                                               visualize_neighbors=visualize_neighbors,
-                                               animate_neighbors=animate_neighbors, data_type='temperature')
-            gradient = [] # x gradient at index 0, y at 1, z at 2
-            unsorted_gradient = self.gradient(classified_neighbors=neighbors)
-            gradient.append([unsorted_gradient['grad_x'][0]])
-            gradient.append([unsorted_gradient['grad_y'][0]])
-            gradient.append([unsorted_gradient['grad_z'][0]])
+            # neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
+            #                                    z_coord=sample_zcoord, space_resolution=space_resolution,
+            #                                    visualize_neighbors=visualize_neighbors,
+            #                                    animate_neighbors=animate_neighbors, data_type='temperature')
+            # gradient = [] # x gradient at index 0, y at 1, z at 2
+            # unsorted_gradient = self.gradient(classified_neighbors=neighbors)
+            neighbors = ast.literal_eval(system_data['nearest_neighbors'][row])
+            for i in neighbors:
+                for z in neighbors[i]:
+                    if len(neighbors[i][z]['coords']) != 0:
+                        index = neighbors[i][z]['index']
+                        temperature = [system_data['temperature'][index].item()]
+                        neighbors[i][z].update({'temperature': temperature})
+            gradient = self.gradient(classified_neighbors=neighbors)
             system_data['T_gradient'][row] = gradient
+            # gradient.append([unsorted_gradient['grad_x'][0]])
+            # gradient.append([unsorted_gradient['grad_y'][0]])
+            # gradient.append([unsorted_gradient['grad_z'][0]])
 
         for row in system_data.index:
             sample_xcoord = system_data['x_coords'][row]
@@ -329,15 +476,18 @@ class thermal_eq:
             sample_zcoord = system_data['z_coords'][row]
             print("Calculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                sample_zcoord))
-            neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
-                                               z_coord=sample_zcoord, space_resolution=space_resolution,
-                                               visualize_neighbors=visualize_neighbors,
-                                               animate_neighbors=animate_neighbors, data_type='T_gradient')
-            laplacian = []  # x laplacian at index 0, y at 1, z at 2
-            unsorted_laplacian = self.laplacian(classified_neighbors=neighbors)
-            laplacian.append([unsorted_laplacian['laplacian_x'][0]])
-            laplacian.append([unsorted_laplacian['laplacian_y'][0]])
-            laplacian.append([unsorted_laplacian['laplacian_z'][0]])
+            neighbors = ast.literal_eval(system_data['nearest_neighbors'][row])
+            for i in neighbors:
+                for z in neighbors[i]:
+                    if len(neighbors[i][z]['coords']) != 0:
+                        structured_grad = []
+                        index = neighbors[i][z]['index']
+                        grad = system_data['T_gradient'][index].item()
+                        structured_grad.append(grad['grad_x'][0])
+                        structured_grad.append(grad['grad_y'][0])
+                        structured_grad.append(grad['grad_z'][0])
+                        neighbors[i][z].update({'T_gradient': structured_grad})
+            laplacian = self.laplacian(classified_neighbors=neighbors)
             system_data['T_laplacian'][row] = laplacian
             system_data['temperature'][row] = self.change_temperature(laplacian=laplacian,
                 point_temperature=system_data['temperature'][row], deltaTime=deltaTime,
@@ -345,18 +495,19 @@ class thermal_eq:
             
             
             
-            if animate_neighbors == True:
-                frames.append('snap_{}-{}-{}.png'.format(sample_xcoord, sample_ycoord, sample_zcoord))
-        if animate_neighbors == True:
-            import moviepy.editor as mpy
-            import os, time
-            os.chdir(os.getcwd() + "/mpl_animation3")
-            animation = mpy.ImageSequenceClip(frames,
-                                              fps=5,
-                                              load_images=True)
-            animation.write_gif('neighbors.gif', fps=5)
-            os.chdir("..")
-        # return new_thermal_df
+        #     if animate_neighbors == True:
+        #         frames.append('snap_{}-{}-{}.png'.format(sample_xcoord, sample_ycoord, sample_zcoord))
+        # if animate_neighbors == True:
+        #     import moviepy.editor as mpy
+        #     import os, time
+        #     os.chdir(os.getcwd() + "/mpl_animation3")
+        #     animation = mpy.ImageSequenceClip(frames,
+        #                                       fps=5,
+        #                                       load_images=True)
+        #     animation.write_gif('neighbors.gif', fps=5)
+        #     os.chdir("..")
+
+        return new_thermal_df
 
 
 class energy:
