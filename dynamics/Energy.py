@@ -26,30 +26,16 @@ class thermal_eq:
         potential_zminus_neighbor = z_coord - space_resolution
 
         if min(system_data['x_coords']) <= potential_xplus_neighbor <= max(system_data['x_coords']):
-            # x_plus = [system_data.loc[(system_data['x_coords'] == potential_xplus_neighbor) &
-            #         (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == z_coord)]['x_coords'].item()]
             neighbors.append([potential_xplus_neighbor, y_coord, z_coord])
         if min(system_data['x_coords']) <= potential_xminus_neighbor <= max(system_data['x_coords']):
-            # x_minus = [system_data.loc[(system_data['x_coords'] == potential_xminus_neighbor) &
-            #     (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == z_coord)]['x_coords'].item()]
             neighbors.append([potential_xminus_neighbor, y_coord, z_coord])
-
         if min(system_data['y_coords']) <= potential_yplus_neighbor <= max(system_data['y_coords']):
-            # y_plus = [system_data.loc[(system_data['x_coords'] == x_coord) &
-            #         (system_data['y_coords'] == potential_yplus_neighbor) & (system_data['z_coords'] == z_coord)]['y_coords'].item()]
             neighbors.append([x_coord, potential_yplus_neighbor, z_coord])
         if min(system_data['y_coords']) <= potential_yminus_neighbor <= max(system_data['y_coords']):
-            # y_minus = [system_data.loc[(system_data['x_coords'] == x_coord) &
-            #         (system_data['y_coords'] == potential_yminus_neighbor) & (system_data['z_coords'] == z_coord)]['y_coords'].item()]
             neighbors.append([x_coord, potential_yminus_neighbor, z_coord])
-
         if min(system_data['z_coords']) <= potential_zplus_neighbor <= max(system_data['z_coords']):
-            # z_plus = [system_data.loc[(system_data['x_coords'] == x_coord) &
-            #         (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == potential_zplus_neighbor)]['z_coords'].item()]
             neighbors.append([x_coord, y_coord, potential_zplus_neighbor])
         if min(system_data['z_coords']) <= potential_zminus_neighbor <= max(system_data['z_coords']):
-            # z_minus = [system_data.loc[(system_data['x_coords'] == x_coord) &
-            #         (system_data['y_coords'] == y_coord) & (system_data['z_coords'] == potential_zminus_neighbor)]['z_coords'].item()]
             neighbors.append([x_coord, y_coord, potential_zminus_neighbor])
 
         if visualize_neighbors == True:
@@ -137,19 +123,6 @@ class thermal_eq:
                             system_data['z_coords'][row] == neighbors_dict[i][z]['coords'][2]:
                                 neighbors_dict[i][z]['index'].append(row)
                                 index_count += 1
-
-
-        # for i in neighbors_dict:
-        #     for z in neighbors_dict[i]:
-        #         if len(neighbors_dict[i][z]['coords']) == 3:
-        #             for row in system_data.index:
-        #                 if system_data['x_coords'][row] == neighbors_dict[i][z]['coords'][0] and \
-        #                 system_data['y_coords'][row] == neighbors_dict[i][z]['coords'][1] and system_data['z_coords'][row] == \
-        #                 neighbors_dict[i][z]['coords'][2]:
-        #                     neighbors_dict[i][z]['index'].append(row)
-        #                 break
-
-        # print("Identified neighbors: {}".format(neighbors_dict))
         return neighbors_dict
         
         
