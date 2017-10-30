@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/Graduate Research.iml" afterPath="$PROJECT_DIR$/.idea/Graduate Research.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Movement.py" afterPath="$PROJECT_DIR$/dynamics/Movement.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/radioactivity/isotopes.csv" afterPath="$PROJECT_DIR$/radioactivity/isotopes.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,23 +17,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
+            <state relative-caret-position="210">
+              <caret line="16" column="64" lean-forward="false" selection-start-line="16" selection-start-column="64" selection-end-line="16" selection-end-column="64" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="302">
-              <caret line="365" column="43" lean-forward="false" selection-start-line="365" selection-start-column="43" selection-end-line="365" selection-end-column="43" />
+            <state relative-caret-position="221">
+              <caret line="415" column="24" lean-forward="false" selection-start-line="415" selection-start-column="24" selection-end-line="415" selection-end-column="24" />
               <folding>
-                <marker date="1509378320000" expanded="true" signature="1860:1874" ph="..." />
+                <marker date="1509380058000" expanded="true" signature="1860:1874" ph="..." />
               </folding>
             </state>
           </provider>
@@ -42,8 +42,8 @@
       <file leaf-file-name="Movement.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="54" column="25" lean-forward="false" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
+            <state relative-caret-position="245">
+              <caret line="84" column="43" lean-forward="false" selection-start-line="84" selection-start-column="43" selection-end-line="84" selection-end-column="43" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -98,8 +98,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>append</find>
-      <find>isotope_df</find>
       <find>physical_</find>
       <find>energy/</find>
       <find>phys</find>
@@ -121,13 +119,15 @@
       <find>os.mkdir</find>
       <find>physical</find>
       <find>mpl_an</find>
-      <find>stokes</find>
       <find>animate</find>
       <find>mass</find>
       <find>space2.</find>
       <find>temperature</find>
       <find>.csv</find>
       <find>swap_ro</find>
+      <find>object_his</find>
+      <find>velocity</find>
+      <find>stokes</find>
     </findStrings>
     <replaceStrings>
       <replace>matrix</replace>
@@ -194,10 +194,10 @@
         <option value="$PROJECT_DIR$/box/test_box.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
         <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
-        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
-        <option value="$PROJECT_DIR$/test_box.py" />
         <option value="$PROJECT_DIR$/box/Box.py" />
+        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
+        <option value="$PROJECT_DIR$/test_box.py" />
       </list>
     </option>
   </component>
@@ -581,7 +581,14 @@
       <option name="project" value="LOCAL" />
       <updated>1509322766183</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="Updated column swapping error.">
+      <created>1509378334022</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1509378334022</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -591,7 +598,7 @@
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30416667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25896415" sideWeight="0.5048611" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25896415" sideWeight="0.49513888" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25824177" sideWeight="0.49513888" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -631,7 +638,8 @@
     <MESSAGE value="(More) realistic velocity calculations." />
     <MESSAGE value="Test" />
     <MESSAGE value="Fixed some typos." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed some typos." />
+    <MESSAGE value="Updated column swapping error." />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated column swapping error." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -799,16 +807,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="54" column="25" lean-forward="false" selection-start-line="54" selection-start-column="25" selection-end-line="54" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1095">
@@ -819,21 +817,31 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_box.py">
+    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="22" column="0" lean-forward="false" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="245">
+          <caret line="84" column="43" lean-forward="false" selection-start-line="84" selection-start-column="43" selection-end-line="84" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="302">
-          <caret line="365" column="43" lean-forward="false" selection-start-line="365" selection-start-column="43" selection-end-line="365" selection-end-column="43" />
+        <state relative-caret-position="221">
+          <caret line="415" column="24" lean-forward="false" selection-start-line="415" selection-start-column="24" selection-end-line="415" selection-end-column="24" />
           <folding>
-            <marker date="1509378320000" expanded="true" signature="1860:1874" ph="..." />
+            <marker date="1509380058000" expanded="true" signature="1860:1874" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="16" column="64" lean-forward="false" selection-start-line="16" selection-start-column="64" selection-end-line="16" selection-end-column="64" />
+          <folding />
         </state>
       </provider>
     </entry>

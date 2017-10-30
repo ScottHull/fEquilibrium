@@ -265,17 +265,13 @@ class box:
             ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
             ax.set_ylim(ymin=min(self.space['y_coords']), ymax=max(self.space['y_coords']))
             ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
-            # XX, YY, ZZ = np.meshgrid(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'])
             for row in self.space.index:
                 x = self.space['x_coords'][row]
                 y = self.space['y_coords'][row]
                 z = self.space['z_coords'][row]
-                # velocity_x = self.space['x_direct'][row]
-                # velocity_y = self.space['y_direct'][row]
-                # velocity_z = self.space['z_direct'][row]
                 if str(self.space['object_id'][row][0]) == 'A':
-                    print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
-                    ax.scatter3D(x, y, z, color='b')
+                    # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][row])
             ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
@@ -292,17 +288,14 @@ class box:
             ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
             ax.set_ylim(ymin=min(self.space['y_coords']), ymax=max(self.space['y_coords']))
             ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
-            # XX, YY, ZZ = np.meshgrid(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'])
             for row in self.space.index:
                 x = self.space['x_coords'][row]
                 y = self.space['y_coords'][row]
                 z = self.space['z_coords'][row]
                 # velocity_x = self.space['x_direct'][row]
-                # velocity_y = self.space['y_direct'][row]
-                # velocity_z = self.space['z_direct'][row]
                 if str(self.space['object_id'][row][0]) == 'A':
-                    print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
-                    ax.scatter3D(x, y, z, color='b')
+                    # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][row])
             # norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
             norm_colors = mpl.colors.Normalize(vmin=1400, vmax=3000)
             colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
@@ -419,7 +412,8 @@ class box:
                             break
                 object_velocity = move_particle(body_type=system_data['object'][row],
                         system_params=system_data).stokes_settling(object=system_data['object'][row], matrix_material=matrix_material,
-                        matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure)
+                        matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure,
+                        object_radius=system_data['object_radius'][row])
 
                 z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coords = system_data['x_coords'][row]
@@ -476,7 +470,7 @@ class box:
                         contents.append(str(self.model_time))
                         for i in self.space:
                             contents.append(str(self.space[i][row]))
-                        formatted_contents = ",".join(i for i in contents)
+                        formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
         elif self.model_time <= 0:
             self.visualize_box()
@@ -526,7 +520,7 @@ class box:
                             contents.append(str(self.model_time))
                             for i in self.space:
                                 contents.append(str(self.space[i][row]))
-                            formatted_contents = ",".join(i for i in contents)
+                            formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                             self.object_output.write("{}\n".format(formatted_contents))
                 if self.object_output == True:
                     self.object_output.close()
@@ -548,7 +542,7 @@ class box:
                         contents.append(str(self.model_time))
                         for i in self.space:
                             contents.append(str(self.space[i][row]))
-                        formatted_contents = ",".join(i for i in contents)
+                        formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
         if auto_update == True:
             if self.model_time == 1:
