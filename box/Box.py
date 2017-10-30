@@ -360,10 +360,10 @@ class box:
 
     @staticmethod
     def swap_rows(system_data, updated_system_data, from_row_index, to_row_index):
+        stationary_columns = ['x_coords', 'y_coords', 'z_coords', 'coord_index', 'nearest_neighbors']
         updated_system = updated_system_data
         for i in updated_system_data:
-            if i != 'x_coords' and i != 'y_coords' and i != 'z_coords':
-                # print("From index: {}       To index: {}".format(from_row_index, to_row_index))
+            if i not in stationary_columns:
                 updated_system[i][to_row_index] = system_data[i][from_row_index]
                 updated_system[i][from_row_index] = system_data[i][to_row_index]
         return updated_system
