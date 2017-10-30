@@ -62,7 +62,7 @@ class box:
             'total_energy_released': np.NAN, # in J
             'mass': np.NAN, # in kg
             'volume': np.NAN # in m^3
-        }, index='coord_index')
+        })
         self.num_coords = len(self.coords)
         self.solution = solution(box_length=self.num_coords)
         self.physical_parameters = pd.read_csv(os.path.dirname(os.path.abspath('.')) + "/fEquilibrium/dynamics/physical_parameters.csv", index_col='Material')
