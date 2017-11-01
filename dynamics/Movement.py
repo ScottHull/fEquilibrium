@@ -79,7 +79,7 @@ class move_particle:
         material_properties = pd.read_csv("dynamics/physical_parameters.csv", index_col='Material')
         density_body = material_properties['Density'][object]
         density_matrix = material_properties['Density'][matrix_material]
-        drag_coeff = 0.2
+        drag_coeff = matrix_material['Drag Coefficient'][object]
         matrix_viscosity = self.viscosity(material=matrix_material, pressure=matrix_material_pressure,
                                         temperature=matrix_material_temp)
         diameter_body = object_radius * 2.0

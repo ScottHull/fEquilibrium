@@ -426,10 +426,9 @@ class box:
                     z_dis_obj_travel = 0
                 system_data['temperature'][row] = float(
                     system_data['temperature'][row]) + energy().stokes_frictional_energy(
-                    body_material=system_data['object'][row], matrix_material=matrix_material,
+                    object=system_data['object'][row], matrix_material=matrix_material,
                     body_radius=system_data['object_radius'][row],
-                    body_mass=system_data['mass'][row], distance_travelled=z_dis_obj_travel
-                )
+                    body_mass=system_data['mass'][row], distance_travelled=z_dis_obj_travel, object_velocity=object_velocity)
                 system_data['object_velocity'][row] = object_velocity
                 system_data['z_direct'][row] = object_velocity
                 system_data['potential_energy'][row] = energy().potential_energy(mass=system_data['mass'][row],
