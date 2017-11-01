@@ -499,12 +499,10 @@ class energy:
         body_density = df['Density'][object]
         matrix_density = df['Density'][matrix_material]
         drag_coeffient = df['Drag Coefficient'][object]
-        F_d = drag_coeffient * 0.5 * matrix_density * (object_velocity**2) * (pi*(body_radius**2))
-        # F_d = drag (frictional) force, F_d = Cd*0.5*rho*velocity*A (source: NASA)
+        F_d = drag_coeffient * 0.5 * matrix_density * (object_velocity**2) * (pi*(body_radius**2)) # F_d = drag (frictional) force, F_d = Cd*0.5*rho*velocity*A (source: NASA)
         # Frictional drag must be converted to energy and added to the body temperature.
         # W = F * d, Units = [J]
-        W = F_d * distance_travelled
-        # convert joules to degK, Q[J]=M[g] * Cp * T[degK] --> T=Q/(M*Cp)
+        W = F_d * distance_travelled # convert joules to degK, Q[J]=M[g] * Cp * T[degK] --> T=Q/(M*Cp)
         degK = W / (body_cp * body_mass) # the temperature to be added to the body
         return degK
 
