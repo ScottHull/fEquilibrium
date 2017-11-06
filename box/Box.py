@@ -17,6 +17,7 @@ import matplotlib.colors
 import matplotlib.colorbar
 import time
 from math import pi
+from multiprocessing import Pool
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -99,6 +100,7 @@ class box:
     def get_box(self):
         return self.space
 
+
     def classify_neighbors(self, animate_neighbors):
         loop_count = 1
         loop_total = len(self.space.index.tolist())
@@ -137,9 +139,9 @@ class box:
         """
         print("Generating coordinates...")
         coords = []
-        x_coords_range = np.arange(0, length + 1, space_resolution)
-        y_coords_range = np.arange(0, width + 1, space_resolution)
-        z_coords_range = np.arange(0, height + 1, space_resolution)
+        x_coords_range = np.arange(0, length + space_resolution, space_resolution) # generate range of x-coords
+        y_coords_range = np.arange(0, width + space_resolution, space_resolution) # generate range of y-coords
+        z_coords_range = np.arange(0, height + space_resolution, space_resolution) # generate range of z-coords
         for i in x_coords_range:
             for j in y_coords_range:
                 for q in z_coords_range:
@@ -198,6 +200,23 @@ class box:
             while object_id in self.space['object_id'].tolist():
                 object_id = random_gen(object_identifier='A')  # matrix material objects begin with a A
             return object_id
+
+
+    # def insert_at_coord(self, x_coord, y_coord, z_coord):
+    #     """
+    #     :param x_coord:
+    #     :param y_coord:
+    #     :param z_coord:
+    #     :return: row, the row index value in the self.space dateframe of the coordinate in question
+    #     """
+    #     space_copy = self.space.copy(deep=True)
+    #     space_copy.set_index(['x_coords', 'y_coords', 'z_coords'], inplace=True)
+    #     row = space_copy.loc(x_coord, y_coord, z_coord)
+    #
+    #     return row
+
+
+
 
     def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, composition, initial_temperature):
         print("Inserting object...")
