@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import ast
 import time
+from multiprocessing import Pool
 
 
 class thermal_eq:
@@ -110,19 +111,27 @@ class thermal_eq:
                 neighbors_dict['z']['z-']['coords'].append(y_coord)
                 neighbors_dict['z']['z-']['coords'].append(z_coord-space_resolution)
 
-        index_count = 0
-        for row in system_data.index:
-            if index_count == 9:
-                break
-            else:
-                for i in neighbors_dict:
-                    for z in neighbors_dict[i]:
-                        if len(neighbors_dict[i][z]['coords']) == 3:
-                            if system_data['x_coords'][row] == neighbors_dict[i][z]['coords'][0] and \
-                            system_data['y_coords'][row] == neighbors_dict[i][z]['coords'][1] and \
-                            system_data['z_coords'][row] == neighbors_dict[i][z]['coords'][2]:
-                                neighbors_dict[i][z]['index'].append(row)
-                                index_count += 1
+        # need to multi-index for quick neighbor data scooping
+        # x, y, z coords will be index values. copy the original form quickly
+        x_coords_copy = system_data['x_coords'].values.tolist()
+        y_coords_copy = system_data['y_coords'].values.tolist()
+        z_coords_copy = system_data['z_coords'].values.tolist()
+        system_data['index'] = list(range(len(system_data['x_coords'])))
+        system_data.set_index(['x_coords', 'y_coords', 'z_coords'], inplace=True) # x, y, z coords now index values
+        for i in neighbors_dict:
+            for r in neighbors_dict[i]:
+                if len(neighbors_dict[i][r]['coords']) == 3:
+                    x = neighbors_dict[i][r]['coords'][0] # neighbor x-coord
+                    y = neighbors_dict[i][r]['coords'][1] # neighbor y-coord
+                    z = neighbors_dict[i][r]['coords'][2] # neighbor z-coord
+                    row = (system_data['index'].loc[[(x,y,z)]]).values[0] # get the original index value of the coords
+                    neighbors_dict[i][r]['index'].append(row) # append that value to the neighbors dictionary
+        # resets indexing to original form
+        system_data.set_index('index', inplace=True)
+        system_data['x_coords'] = x_coords_copy
+        system_data['y_coords'] = y_coords_copy
+        system_data['z_coords'] = z_coords_copy
+
         return neighbors_dict
         
         
@@ -424,12 +433,6 @@ class thermal_eq:
             sample_ycoord = system_data['y_coords'][row]
             sample_zcoord = system_data['z_coords'][row]
             print("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
-            # neighbors = self.nearest_neighboor(system_data=system_data, x_coord=sample_xcoord, y_coord=sample_ycoord,
-            #                                    z_coord=sample_zcoord, space_resolution=space_resolution,
-            #                                    visualize_neighbors=visualize_neighbors,
-            #                                    animate_neighbors=animate_neighbors, data_type='temperature')
-            # gradient = [] # x gradient at index 0, y at 1, z at 2
-            # unsorted_gradient = self.gradient(classified_neighbors=neighbors)
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][row])
             for i in neighbors:
                 for z in neighbors[i]:
@@ -439,9 +442,6 @@ class thermal_eq:
                         neighbors[i][z].update({'temperature': temperature})
             gradient = self.gradient(classified_neighbors=neighbors)
             system_data['T_gradient'][row] = gradient
-            # gradient.append([unsorted_gradient['grad_x'][0]])
-            # gradient.append([unsorted_gradient['grad_y'][0]])
-            # gradient.append([unsorted_gradient['grad_z'][0]])
 
         for row in system_data.index:
             sample_xcoord = system_data['x_coords'][row]
