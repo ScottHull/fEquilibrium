@@ -100,17 +100,26 @@ class box:
     def get_box(self):
         return self.space
 
-    def classify_neighbors(self, animate_neighbors):
+    def classify_neighbors(self, animate_neighbors=False):
         loop_count = 1
         loop_total = len(self.space.index.tolist())
         print("Finding nearest neighbors for all points.  This may take several minutes...")
+        min_xcoords = min(self.space['x_coords'])
+        max_xcoords = max(self.space['x_coords'])
+        min_ycoords = min(self.space['y_coords'])
+        max_ycoords = max(self.space['y_coords'])
+        min_zcoords = min(self.space['z_coords'])
+        max_zcoords = max(self.space['z_coords'])
         for row in self.space.itertuples():
             index = row.Index
             neighbors = thermal_eq.explicit_nearest_neighboor(system_data=self.space,
                                                               x_coord=self.space['x_coords'][index],
                                                               y_coord=self.space['y_coords'][index],
                                                               z_coord=self.space['z_coords'][index],
-                                                              space_resolution=self.space_resolution)
+                                                              space_resolution=self.space_resolution,
+                                                              minx=min_xcoords, maxx=max_xcoords,
+                                                              miny=min_ycoords, maxy=max_ycoords,
+                                                              minz=min_zcoords, maxz=max_zcoords)
             self.space['nearest_neighbors'][index] = str(neighbors)
             print("Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
             if animate_neighbors == True:
@@ -128,31 +137,6 @@ class box:
             animation.write_gif('neighbors.gif', fps=5)
             os.chdir("..")
         return None
-
-    # def classify_neighbors(self, animate_neighbors):
-    #     loop_count = 1
-    #     loop_total = len(self.space.index.tolist())
-    #     print("Finding nearest neighbors for all points.  This may take several minutes...")
-    #     for row in self.space.index:
-    #         neighbors = thermal_eq.explicit_nearest_neighboor(system_data=self.space, x_coord=self.space['x_coords'][row],
-    #                 y_coord=self.space['y_coords'][row], z_coord=self.space['z_coords'][row], space_resolution=self.space_resolution)
-    #         self.space['nearest_neighbors'][row] = str(neighbors)
-    #         print("Found neighbors for {}/{} coordinate points.".format(loop_count, loop_total))
-    #         loop_count += 1
-    #         if animate_neighbors == True:
-    #             self.move_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][row],
-    #                                                     self.space['y_coords'][row], self.space['z_coords'][row]))
-    #     if animate_neighbors == True:
-    #         self.space.to_csv("space2_coords_check.csv")
-    #         import moviepy.editor as mpy
-    #         import os, time
-    #         os.chdir(os.getcwd() + "/mpl_animation3")
-    #         animation = mpy.ImageSequenceClip(self.move_frames3,
-    #                                           fps=5,
-    #                                           load_images=True)
-    #         animation.write_gif('neighbors.gif', fps=5)
-    #         os.chdir("..")
-    #     return None
 
 
 
@@ -329,7 +313,7 @@ class box:
                 y = self.space['y_coords'][index]
                 z = self.space['z_coords'][index]
                 if str(self.space['object_id'][index][0]) == 'A':
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index])
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 2)
             ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
@@ -354,7 +338,7 @@ class box:
                 # velocity_x = self.space['x_direct'][row]
                 if str(self.space['object_id'][index][0]) == 'A':
                     # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index])
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 2)
             # norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
             norm_colors = mpl.colors.Normalize(vmin=1400, vmax=3000)
             colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
@@ -386,7 +370,7 @@ class box:
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Temperature (degK)")
-            ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
+            ax.set_zlim(zmin=1950, zmax=2500)
             ax.set_title("Temperature Distribution at Time {} At Base of Model".format(self.model_time))
             fig.savefig(os.getcwd() + '/mpl_animation4/snap_{}.png'.format(self.model_time), format='png')
             self.move_frames4.append('snap_{}.png'.format(self.model_time))

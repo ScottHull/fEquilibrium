@@ -13,8 +13,8 @@ class thermal_eq:
 
 
     @classmethod
-    def explicit_nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution,
-                          visualize_neighbors=False, animate_neighbors=False):
+    def explicit_nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution, minx, maxx, miny, maxy,
+                          minz, maxz, visualize_neighbors=False, animate_neighbors=False):
         neighbors = []
         # minimum = 0 # Uncomment this code if you'd like explicit distance calculations
         # potential_neighbors = {} # Uncomment this code if you'd like explicit distance calculations
@@ -26,17 +26,17 @@ class thermal_eq:
         potential_yminus_neighbor = y_coord - space_resolution
         potential_zminus_neighbor = z_coord - space_resolution
 
-        if min(system_data['x_coords']) <= potential_xplus_neighbor <= max(system_data['x_coords']):
+        if minx <= potential_xplus_neighbor <= maxx:
             neighbors.append([potential_xplus_neighbor, y_coord, z_coord])
-        if min(system_data['x_coords']) <= potential_xminus_neighbor <= max(system_data['x_coords']):
+        if minx <= potential_xminus_neighbor <= maxx:
             neighbors.append([potential_xminus_neighbor, y_coord, z_coord])
-        if min(system_data['y_coords']) <= potential_yplus_neighbor <= max(system_data['y_coords']):
+        if miny <= potential_yplus_neighbor <= maxy:
             neighbors.append([x_coord, potential_yplus_neighbor, z_coord])
-        if min(system_data['y_coords']) <= potential_yminus_neighbor <= max(system_data['y_coords']):
+        if miny <= potential_yminus_neighbor <= maxy:
             neighbors.append([x_coord, potential_yminus_neighbor, z_coord])
-        if min(system_data['z_coords']) <= potential_zplus_neighbor <= max(system_data['z_coords']):
+        if minz <= potential_zplus_neighbor <= maxz:
             neighbors.append([x_coord, y_coord, potential_zplus_neighbor])
-        if min(system_data['z_coords']) <= potential_zminus_neighbor <= max(system_data['z_coords']):
+        if minz <= potential_zminus_neighbor <= maxz:
             neighbors.append([x_coord, y_coord, potential_zminus_neighbor])
 
         # eliminate potential floating points:
