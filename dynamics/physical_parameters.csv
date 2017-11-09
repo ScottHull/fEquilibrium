@@ -1,4 +1,4 @@
 Material,Density,H*,V*,D_not,Lambda_O,Thermal Diffusivity,Thermal Expansivity,Heat Capacity,Latent Heat of Crystallization,C_p,Viscosity,Drag Coefficient
 Silicate Liquid,3750,267000,0,0.015,2.8,0.005,0.00006,1000,400000,,100,
 Metal Liquid,7800,100000,0.0028,0.000017,,0.000007,0.00001,,,0.45,1.00E+51,0.2
-Denser Silicate Liquid,10000,267000,0,0.015,2.8,0.005,0.00006,1000,400000,,1000,
+Denser Silicate Liquid,5000,267000,0,0.015,2.8,0.005,0.00006,1000,400000,,1000,
