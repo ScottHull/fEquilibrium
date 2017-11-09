@@ -39,6 +39,20 @@ class thermal_eq:
         if min(system_data['z_coords']) <= potential_zminus_neighbor <= max(system_data['z_coords']):
             neighbors.append([x_coord, y_coord, potential_zminus_neighbor])
 
+        # eliminate potential floating points:
+        temp_neighbors = []
+        for i in neighbors:
+            temp = []
+            for j in i: # access elements in sub-lists
+                rounded_coord = round(j, len(str(space_resolution))) # round the coordinates to the spatial resolution
+                temp.append(rounded_coord)
+            temp_neighbors.append(temp)
+        neighbors.clear() # delete the old list with potential floating point contamination
+        for i in temp_neighbors:
+            neighbors.append(i) # replace values in the list
+
+
+
         if visualize_neighbors == True:
             import matplotlib as mpl
             mpl.use('Qt5Agg')
@@ -65,7 +79,6 @@ class thermal_eq:
             fig.clf()
         classified_neighbors = self.explicit_classify_neighbors(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord,
                                 neighbors=neighbors, space_resolution=space_resolution, system_data=system_data)
-        # print("Classified neighbors: {}".format(classified_neighbors))
         return classified_neighbors
 
 
@@ -87,29 +100,29 @@ class thermal_eq:
         neighbors_dict['z']['z']['coords'].append(z_coord)
         for set in neighbors:
             if x_coord + space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
-                neighbors_dict['x']['x+']['coords'].append(x_coord+space_resolution)
-                neighbors_dict['x']['x+']['coords'].append(y_coord)
-                neighbors_dict['x']['x+']['coords'].append(z_coord)
+                neighbors_dict['x']['x+']['coords'].append(round(x_coord + space_resolution, len(str(space_resolution))))
+                neighbors_dict['x']['x+']['coords'].append(round(y_coord, len(str(space_resolution))))
+                neighbors_dict['x']['x+']['coords'].append(round(z_coord, len(str(space_resolution))))
             if x_coord - space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
-                neighbors_dict['x']['x-']['coords'].append(x_coord-space_resolution)
-                neighbors_dict['x']['x-']['coords'].append(y_coord)
-                neighbors_dict['x']['x-']['coords'].append(z_coord)
+                neighbors_dict['x']['x-']['coords'].append(round(x_coord - space_resolution, len(str(space_resolution))))
+                neighbors_dict['x']['x-']['coords'].append(round(y_coord, len(str(space_resolution))))
+                neighbors_dict['x']['x-']['coords'].append(round(z_coord, len(str(space_resolution))))
             if x_coord == set[0] and y_coord + space_resolution == set[1] and z_coord == set[2]:
-                neighbors_dict['y']['y+']['coords'].append(x_coord)
-                neighbors_dict['y']['y+']['coords'].append(y_coord+space_resolution)
-                neighbors_dict['y']['y+']['coords'].append(z_coord)
+                neighbors_dict['y']['y+']['coords'].append(round(x_coord, len(str(space_resolution))))
+                neighbors_dict['y']['y+']['coords'].append(round(y_coord + space_resolution, len(str(space_resolution))))
+                neighbors_dict['y']['y+']['coords'].append(round(z_coord, len(str(space_resolution))))
             if x_coord == set[0] and y_coord - space_resolution == set[1] and z_coord == set[2]:
-                neighbors_dict['y']['y-']['coords'].append(x_coord)
-                neighbors_dict['y']['y-']['coords'].append(y_coord-space_resolution)
-                neighbors_dict['y']['y-']['coords'].append(z_coord)
+                neighbors_dict['y']['y-']['coords'].append(round(x_coord, len(str(space_resolution))))
+                neighbors_dict['y']['y-']['coords'].append(round(y_coord - space_resolution, len(str(space_resolution))))
+                neighbors_dict['y']['y-']['coords'].append(round(z_coord, len(str(space_resolution))))
             if x_coord == set[0] and y_coord == set[1] and z_coord + space_resolution == set[2]:
-                neighbors_dict['z']['z+']['coords'].append(x_coord)
-                neighbors_dict['z']['z+']['coords'].append(y_coord)
-                neighbors_dict['z']['z+']['coords'].append(z_coord+space_resolution)
+                neighbors_dict['z']['z+']['coords'].append(round(x_coord, len(str(space_resolution))))
+                neighbors_dict['z']['z+']['coords'].append(round(y_coord, len(str(space_resolution))))
+                neighbors_dict['z']['z+']['coords'].append(round(z_coord + space_resolution, len(str(space_resolution))))
             if x_coord == set[0] and y_coord == set[1] and z_coord - space_resolution == set[2]:
-                neighbors_dict['z']['z-']['coords'].append(x_coord)
-                neighbors_dict['z']['z-']['coords'].append(y_coord)
-                neighbors_dict['z']['z-']['coords'].append(z_coord-space_resolution)
+                neighbors_dict['z']['z-']['coords'].append(round(x_coord, len(str(space_resolution))))
+                neighbors_dict['z']['z-']['coords'].append(round(y_coord, len(str(space_resolution))))
+                neighbors_dict['z']['z-']['coords'].append(round(z_coord - space_resolution, len(str(space_resolution))))
 
         # need to multi-index for quick neighbor data scooping
         # x, y, z coords will be index values. copy the original form quickly
@@ -131,62 +144,6 @@ class thermal_eq:
         system_data['x_coords'] = x_coords_copy
         system_data['y_coords'] = y_coords_copy
         system_data['z_coords'] = z_coords_copy
-
-        return neighbors_dict
-        
-        
-
-    @classmethod
-    def classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution, data_type):
-        neighbors_dict = {'x': {'x+': {'coords': [], 'index': [], '{}'.format(data_type): []}, 'x': {'coords': [], 'index': [], '{}'.format(data_type): []},
-                    'x-': {'coords': [], 'index': [], '{}'.format(data_type): []}}, 'y': {'y+': {'coords': [], 'index': [], '{}'.format(data_type): []},
-                    'y': {'coords': [], 'index': [], '{}'.format(data_type): []},'y-': {'coords': [], 'index': [], '{}'.format(data_type): []}},
-                    'z': {'z+': {'coords': [], 'index': [], '{}'.format(data_type): []}, 'z': {'coords': [], 'index': [], '{}'.format(data_type): []},
-                    'z-': {'coords': [], 'index': [], '{}'.format(data_type): []}}} # for each dict, x,y,z,index
-        neighbors_dict['x']['x']['coords'].append(x_coord)
-        neighbors_dict['x']['x']['coords'].append(y_coord)
-        neighbors_dict['x']['x']['coords'].append(z_coord)
-        neighbors_dict['y']['y']['coords'].append(x_coord)
-        neighbors_dict['y']['y']['coords'].append(y_coord)
-        neighbors_dict['y']['y']['coords'].append(z_coord)
-        neighbors_dict['z']['z']['coords'].append(x_coord)
-        neighbors_dict['z']['z']['coords'].append(y_coord)
-        neighbors_dict['z']['z']['coords'].append(z_coord)
-        for set in neighbors:
-            if x_coord + space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
-                neighbors_dict['x']['x+']['coords'].append(x_coord+space_resolution)
-                neighbors_dict['x']['x+']['coords'].append(y_coord)
-                neighbors_dict['x']['x+']['coords'].append(z_coord)
-            if x_coord - space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
-                neighbors_dict['x']['x-']['coords'].append(x_coord-space_resolution)
-                neighbors_dict['x']['x-']['coords'].append(y_coord)
-                neighbors_dict['x']['x-']['coords'].append(z_coord)
-            if x_coord == set[0] and y_coord + space_resolution == set[1] and z_coord == set[2]:
-                neighbors_dict['y']['y+']['coords'].append(x_coord)
-                neighbors_dict['y']['y+']['coords'].append(y_coord+space_resolution)
-                neighbors_dict['y']['y+']['coords'].append(z_coord)
-            if x_coord == set[0] and y_coord - space_resolution == set[1] and z_coord == set[2]:
-                neighbors_dict['y']['y-']['coords'].append(x_coord)
-                neighbors_dict['y']['y-']['coords'].append(y_coord-space_resolution)
-                neighbors_dict['y']['y-']['coords'].append(z_coord)
-            if x_coord == set[0] and y_coord == set[1] and z_coord + space_resolution == set[2]:
-                neighbors_dict['z']['z+']['coords'].append(x_coord)
-                neighbors_dict['z']['z+']['coords'].append(y_coord)
-                neighbors_dict['z']['z+']['coords'].append(z_coord+space_resolution)
-            if x_coord == set[0] and y_coord == set[1] and z_coord - space_resolution == set[2]:
-                neighbors_dict['z']['z-']['coords'].append(x_coord)
-                neighbors_dict['z']['z-']['coords'].append(y_coord)
-                neighbors_dict['z']['z-']['coords'].append(z_coord-space_resolution)
-
-        for i in neighbors_dict:
-            for z in neighbors_dict[i]:
-                if len(neighbors_dict[i][z]['coords']) == 3:
-                    for row in system_data.index:
-                        if system_data['x_coords'][row] == neighbors_dict[i][z]['coords'][0] and \
-                        system_data['y_coords'][row] == neighbors_dict[i][z]['coords'][1] and system_data['z_coords'][row] == \
-                        neighbors_dict[i][z]['coords'][2]:
-                            neighbors_dict[i][z]['index'].append(row)
-                            neighbors_dict[i][z]['{}'.format(data_type)].append(system_data['{}'.format(data_type)][row])
 
         return neighbors_dict
 
@@ -349,75 +306,6 @@ class thermal_eq:
         return T
 
 
-
-
-
-
-    @classmethod
-    def nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution, data_type,
-                          visualize_neighbors=False, animate_neighbors=False):
-        neighbors = []
-        minimum = 0
-        potential_neighbors = {}
-        for row in system_data.index:
-            if system_data['x_coords'][row] == x_coord and system_data['y_coords'][row] == y_coord and system_data['z_coords'][row] == z_coord:
-                pass
-            elif len(list(potential_neighbors.keys())) == 6:
-                pass
-            else:
-                sample_xcoord = system_data['x_coords'][row]
-                sample_ycoord = system_data['y_coords'][row]
-                sample_zcoord = system_data['z_coords'][row]
-                distance = round(sqrt(((sample_xcoord - x_coord)**2) + ((sample_ycoord - y_coord)**2) +
-                                      ((sample_zcoord - z_coord)**2)), len(str(space_resolution)))
-                if minimum == 0:
-                    minimum = distance
-                    potential_neighbors.update({system_data['object_id'][row]: distance})
-                elif distance < minimum:
-                    potential_neighbors.clear()
-                    minimum = distance
-                    potential_neighbors.update({system_data['object_id'][row]: distance})
-                elif distance == minimum:
-                    potential_neighbors.update({system_data['object_id'][row]: distance})
-        for row in system_data.index:
-            for i in potential_neighbors:
-                if str(i) == str(system_data['object_id'][row]):
-                    sample_neighbors = []
-                    sample_neighbors.append(round(system_data['x_coords'][row], len(str(space_resolution))))
-                    sample_neighbors.append(round(system_data['y_coords'][row], len(str(space_resolution))))
-                    sample_neighbors.append(round(system_data['z_coords'][row], len(str(space_resolution))))
-                    neighbors.append(sample_neighbors)
-
-        if visualize_neighbors == True:
-            import matplotlib as mpl
-            mpl.use('Qt5Agg')
-            from mpl_toolkits.mplot3d import Axes3D
-            import matplotlib.pyplot as plt
-            import os, shutil
-            fig = plt.figure()
-            ax = Axes3D(fig)
-            ax.set_xlim(xmin=min(system_data['x_coords']), xmax=max(system_data['x_coords']))
-            ax.set_ylim(ymin=min(system_data['y_coords']), ymax=max(system_data['y_coords']))
-            ax.set_zlim(zmin=min(system_data['z_coords']), zmax=max(system_data['z_coords']))
-            ax.scatter3D(x_coord, y_coord, z_coord, color='b')
-            for i in neighbors:
-                ax.scatter3D(i[0], i[1], i[2], color='r')
-            ax.set_title("Nearest neighbors for x:{}, y:{}, z:{}".format(x_coord, y_coord, z_coord))
-            ax.set_xlabel("Box Length")
-            ax.set_ylabel("Box Width")
-            ax.set_zlabel("Box Height")
-            ax.invert_zaxis()
-            if visualize_neighbors == True and animate_neighbors == False:
-                fig.show()
-            if animate_neighbors == True:
-                fig.savefig(os.getcwd()+'/mpl_animation3/snap_{}-{}-{}.png'.format(x_coord, y_coord, z_coord), format='png')
-            fig.clf()
-        classified_neighbors = self.classify_neighbors(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord,
-                                neighbors=neighbors, space_resolution=space_resolution, system_data=system_data, data_type=data_type)
-        return classified_neighbors
-        # return neighbors # for each coordinate set in neighbors, x at position 0, y at 1, z and 2
-
-
     def D3_thermal_eq(self, system_data, deltaTime, space_resolution):
         print("Thermally equilibrating system...")
         system_data['neighbors'] = np.NAN
@@ -428,43 +316,45 @@ class thermal_eq:
         new_thermal_df = system_data.copy(deep=True)
         frames = []
         material_properties = pd.read_csv("dynamics/physical_parameters.csv", index_col='Material')
-        for row in system_data.index:
-            sample_xcoord = system_data['x_coords'][row]
-            sample_ycoord = system_data['y_coords'][row]
-            sample_zcoord = system_data['z_coords'][row]
+        for row in system_data.itertuples():
+            index = row.Index
+            sample_xcoord = system_data['x_coords'][index]
+            sample_ycoord = system_data['y_coords'][index]
+            sample_zcoord = system_data['z_coords'][index]
             print("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
-            neighbors = ast.literal_eval(system_data['nearest_neighbors'][row])
+            neighbors = ast.literal_eval(system_data['nearest_neighbors'][index]) # interpret the dictionary stored in the dataframe
             for i in neighbors:
                 for z in neighbors[i]:
                     if len(neighbors[i][z]['coords']) != 0:
-                        index = neighbors[i][z]['index']
-                        temperature = [system_data['temperature'][index].item()]
+                        ind = neighbors[i][z]['index']
+                        temperature = [system_data['temperature'][ind].item()]
                         neighbors[i][z].update({'temperature': temperature})
             gradient = self.gradient(classified_neighbors=neighbors)
-            system_data['T_gradient'][row] = gradient
+            system_data['T_gradient'][index] = gradient
 
-        for row in system_data.index:
-            sample_xcoord = system_data['x_coords'][row]
-            sample_ycoord = system_data['y_coords'][row]
-            sample_zcoord = system_data['z_coords'][row]
+        for row in system_data.itertuples():
+            index = row.Index
+            sample_xcoord = system_data['x_coords'][index]
+            sample_ycoord = system_data['y_coords'][index]
+            sample_zcoord = system_data['z_coords'][index]
             print("Calculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                sample_zcoord))
-            neighbors = ast.literal_eval(system_data['nearest_neighbors'][row])
+            neighbors = ast.literal_eval(system_data['nearest_neighbors'][index])
             for i in neighbors:
                 for z in neighbors[i]:
                     if len(neighbors[i][z]['coords']) != 0:
                         structured_grad = []
-                        index = neighbors[i][z]['index']
-                        grad = system_data['T_gradient'][index].item()
+                        ind = neighbors[i][z]['index']
+                        grad = system_data['T_gradient'][ind].item()
                         structured_grad.append(grad['grad_x'][0])
                         structured_grad.append(grad['grad_y'][0])
                         structured_grad.append(grad['grad_z'][0])
                         neighbors[i][z].update({'T_gradient': structured_grad})
             laplacian = self.laplacian(classified_neighbors=neighbors)
-            system_data['T_laplacian'][row] = laplacian
-            system_data['temperature'][row] = self.change_temperature(laplacian=laplacian,
-                point_temperature=system_data['temperature'][row], deltaTime=deltaTime,
-                                thermal_diffusivity=material_properties['Thermal Diffusivity'][system_data['object'][row]])
+            system_data['T_laplacian'][index] = laplacian
+            system_data['temperature'][index] = self.change_temperature(laplacian=laplacian,
+                point_temperature=system_data['temperature'][index], deltaTime=deltaTime,
+                                thermal_diffusivity=material_properties['Thermal Diffusivity'][system_data['object'][index]])
             
             
             
