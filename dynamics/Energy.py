@@ -122,7 +122,7 @@ class thermal_eq:
                 neighbors_dict['z']['z+']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(z_coord + space_resolution, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution)))  and y_coord == round(set[1], len(str(space_resolution)))  and z_coord - space_resolution == round(set[2], len(str(space_resolution))) :
+            if x_coord == round(set[0], len(str(space_resolution)))  and y_coord == round(set[1], len(str(space_resolution))) and z_coord - space_resolution == round(set[2], len(str(space_resolution))) :
                 neighbors_dict['z']['z-']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(z_coord - space_resolution, len(str(space_resolution))))
