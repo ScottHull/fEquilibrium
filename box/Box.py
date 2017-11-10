@@ -17,7 +17,7 @@ import matplotlib.colors
 import matplotlib.colorbar
 import time
 from math import pi
-from multiprocessing import Pool
+import multiprocessing
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -100,20 +100,32 @@ class box:
     def get_box(self):
         return self.space
 
-
-    def classify_neighbors(self, animate_neighbors):
+    def classify_neighbors(self, animate_neighbors=False):
         loop_count = 1
         loop_total = len(self.space.index.tolist())
         print("Finding nearest neighbors for all points.  This may take several minutes...")
-        for row in self.space.index:
-            neighbors = thermal_eq.explicit_nearest_neighboor(system_data=self.space, x_coord=self.space['x_coords'][row],
-                    y_coord=self.space['y_coords'][row], z_coord=self.space['z_coords'][row], space_resolution=self.space_resolution)
-            self.space['nearest_neighbors'][row] = str(neighbors)
-            print("Found neighbors for {}/{} coordinate points.".format(loop_count, loop_total))
-            loop_count += 1
+        min_xcoords = min(self.space['x_coords'])
+        max_xcoords = max(self.space['x_coords'])
+        min_ycoords = min(self.space['y_coords'])
+        max_ycoords = max(self.space['y_coords'])
+        min_zcoords = min(self.space['z_coords'])
+        max_zcoords = max(self.space['z_coords'])
+        for row in self.space.itertuples():
+            index = row.Index
+            neighbors = thermal_eq.explicit_nearest_neighboor(system_data=self.space,
+                                                              x_coord=self.space['x_coords'][index],
+                                                              y_coord=self.space['y_coords'][index],
+                                                              z_coord=self.space['z_coords'][index],
+                                                              space_resolution=self.space_resolution,
+                                                              minx=min_xcoords, maxx=max_xcoords,
+                                                              miny=min_ycoords, maxy=max_ycoords,
+                                                              minz=min_zcoords, maxz=max_zcoords)
+            self.space['nearest_neighbors'][index] = str(neighbors)
+            print("Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
             if animate_neighbors == True:
-                self.move_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][row],
-                                                        self.space['y_coords'][row], self.space['z_coords'][row]))
+                self.move_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][index],
+                                                                    self.space['y_coords'][index],
+                                                                    self.space['z_coords'][index]))
         if animate_neighbors == True:
             self.space.to_csv("space2_coords_check.csv")
             import moviepy.editor as mpy
@@ -222,23 +234,24 @@ class box:
         print("Inserting object...")
         if object in self.physical_parameters.index:
             if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
-                for row in self.space.index:
-                    if self.space['x_coords'][row] == x_coord:
-                        if self.space['y_coords'][row] == y_coord:
-                            if self.space['z_coords'][row] == z_coord: # verifies that coordinates match to Dataframe
-                                self.space['object'][row] = object # the name of the object, as defined in dynamics/physical_parameters.csv
-                                self.space['object_id'][row] = self.generate_object_id(matrix=False) # generates object ID
-                                self.space['object_radius'][row] = object_radius # in m
-                                self.space['volume'][row] = (4/3) * pi * (object_radius)**3 # assume volume of object is a perfect sphere
-                                self.space['mass'][row] = self.physical_parameters['Density'][object] * self.space['volume'][row] # mass = density * volume
-                                self.space['temperature'][row] = initial_temperature
-                                self.space['object_density'] = float(self.space['mass'][row]) / ((4/3) * pi *
-                                                float(self.space['object_radius'][row])**3) # assume object is a perfect sphere
-                                self.solution.create_solution(box=self.space, composition=composition, row=row, object=object)
-                                print("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row],
-                                                                                               self.space['x_coords'][row],
-                                                                                               self.space['y_coords'][row],
-                                                                                               self.space['z_coords'][row]))
+                for row in self.space.itertuples():
+                    index = row.Index
+                    if self.space['x_coords'][index] == x_coord:
+                        if self.space['y_coords'][index] == y_coord:
+                            if self.space['z_coords'][index] == z_coord: # verifies that coordinates match to Dataframe
+                                self.space['object'][index] = object # the name of the object, as defined in dynamics/physical_parameters.csv
+                                self.space['object_id'][index] = self.generate_object_id(matrix=False) # generates object ID
+                                self.space['object_radius'][index] = object_radius # in m
+                                self.space['volume'][index] = (4/3) * pi * (object_radius)**3 # assume volume of object is a perfect sphere
+                                self.space['mass'][index] = self.physical_parameters['Density'][object] * self.space['volume'][index] # mass = density * volume
+                                self.space['temperature'][index] = initial_temperature
+                                self.space['object_density'] = float(self.space['mass'][index]) / ((4/3) * pi *
+                                                float(self.space['object_radius'][index])**3) # assume object is a perfect sphere
+                                self.solution.create_solution(box=self.space, composition=composition, row=index, object=object)
+                                print("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                                                                               self.space['x_coords'][index],
+                                                                                               self.space['y_coords'][index],
+                                                                                               self.space['z_coords'][index]))
             else:
                 print("Could not insert object!  Outside of defined coordinate points!")
                 sys.exit(1)
@@ -247,29 +260,39 @@ class box:
                                                     os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
 
+
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
     def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0,0]):
         print("Inserting matrix...")
         if matrix_material in self.physical_parameters.index:
-            if z_range[0] != 0 and z_range[1] != 0: # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
-                for row in self.space.index:
-                    if self.space['z_coords'][row] >= z_range[0] and self.space['z_coords'][row] <= z_range[1]:
-                        self.space['object_id'][row] = self.generate_object_id(matrix=True)
-                        self.space['object'][row] = matrix_material
-                        self.space['temperature'][row] = initial_temperature
-                        self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
-                        print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row], self.space['x_coords'][row],
-                                                            self.space['y_coords'][row], self.space['z_coords'][row]))
+            if z_range[0] == 0 and z_range[1] == 0:# z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
+                for row in self.space.itertuples():
+                    index = row.Index
+                    self.space['object_id'][index] = self.generate_object_id(matrix=True)
+                    self.space['object'][index] = matrix_material
+                    self.space['temperature'][index] = initial_temperature
+                    self.solution.create_solution(box=self.space, composition=composition, row=index,
+                                                  object=matrix_material)
+                    print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                                                                        self.space['x_coords'][index],
+                                                                                        self.space['y_coords'][index],
+                                                                                        self.space['z_coords'][
+                                                                                            index]))
             else:
-                for row in self.space.index:
-                    self.space['object_id'][row] = self.generate_object_id(matrix=True)
-                    self.space['object'][row] = matrix_material
-                    self.space['temperature'][row] = initial_temperature
-                    self.solution.create_solution(box=self.space, composition=composition, row=row, object=matrix_material)
-                    print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][row], self.space['x_coords'][row],
-                                                            self.space['y_coords'][row], self.space['z_coords'][row]))
+                for row in self.space.itertuples():
+                    index = row.Index
+                    self.space['object_id'][index] = self.generate_object_id(matrix=True)
+                    self.space['object'][index] = matrix_material
+                    self.space['temperature'][index] = initial_temperature
+                    self.solution.create_solution(box=self.space, composition=composition, row=index,
+                                                  object=matrix_material)
+                    print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                                                                        self.space['x_coords'][index],
+                                                                                        self.space['y_coords'][index],
+                                                                                        self.space['z_coords'][
+                                                                                            index]))
 
-            print("Matrix inserted!")
+            print("Matrix material(s) inserted!")
 
         else:
             print("Matrix material not defined in {}!  Cannot insert matrix material!".format(
@@ -284,13 +307,13 @@ class box:
             ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
             ax.set_ylim(ymin=min(self.space['y_coords']), ymax=max(self.space['y_coords']))
             ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
-            for row in self.space.index:
-                x = self.space['x_coords'][row]
-                y = self.space['y_coords'][row]
-                z = self.space['z_coords'][row]
-                if str(self.space['object_id'][row][0]) == 'A':
-                    # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][row])
+            for row in self.space.itertuples():
+                index = row.Index
+                x = self.space['x_coords'][index]
+                y = self.space['y_coords'][index]
+                z = self.space['z_coords'][index]
+                if str(self.space['object_id'][index][0]) == 'A':
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 2)
             ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
@@ -307,14 +330,15 @@ class box:
             ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
             ax.set_ylim(ymin=min(self.space['y_coords']), ymax=max(self.space['y_coords']))
             ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
-            for row in self.space.index:
-                x = self.space['x_coords'][row]
-                y = self.space['y_coords'][row]
-                z = self.space['z_coords'][row]
+            for row in self.space.itertuples():
+                index = row.Index
+                x = self.space['x_coords'][index]
+                y = self.space['y_coords'][index]
+                z = self.space['z_coords'][index]
                 # velocity_x = self.space['x_direct'][row]
-                if str(self.space['object_id'][row][0]) == 'A':
+                if str(self.space['object_id'][index][0]) == 'A':
                     # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][row])
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 2)
             # norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
             norm_colors = mpl.colors.Normalize(vmin=1400, vmax=3000)
             colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
@@ -334,18 +358,19 @@ class box:
             x_coords = []
             y_coords = []
             temperature = []
-            for row in self.space.index:
-                if float(self.space['z_coords'][row]) == float(self.height):
-                    x_coords.append(self.space['x_coords'][row])
-                    y_coords.append(self.space['y_coords'][row])
-                    temperature.append(self.space['temperature'][row])
+            for row in self.space.itertuples():
+                index = row.Index
+                if float(self.space['z_coords'][index]) == float(self.height):
+                    x_coords.append(self.space['x_coords'][index])
+                    y_coords.append(self.space['y_coords'][index])
+                    temperature.append(self.space['temperature'][index])
             fig = plt.figure()
             ax = Axes3D(fig)
             ax.plot_trisurf(x_coords, y_coords, temperature)
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Temperature (degK)")
-            ax.set_zlim(zmin=min(self.space['z_coords']), zmax=max(self.space['z_coords']))
+            ax.set_zlim(zmin=1950, zmax=2500)
             ax.set_title("Temperature Distribution at Time {} At Base of Model".format(self.model_time))
             fig.savefig(os.getcwd() + '/mpl_animation4/snap_{}.png'.format(self.model_time), format='png')
             self.move_frames4.append('snap_{}.png'.format(self.model_time))
@@ -364,11 +389,12 @@ class box:
         :param z_coord:
         :return: row, the index
         """
-        for row in system_data.index:
-            if system_data['x_coords'][row] == x_coord:
-                if system_data['y_coords'][row] == y_coord:
-                    if system_data['z_coords'][row] == z_coord:
-                        return row
+        for row in system_data.itertuples():
+            index = row.Index
+            if system_data['x_coords'][index] == x_coord:
+                if system_data['y_coords'][index] == y_coord:
+                    if system_data['z_coords'][index] == z_coord:
+                        return index
 
     @staticmethod
     def swap_rows(system_data, updated_system_data, from_row_index, to_row_index):
@@ -408,11 +434,12 @@ class box:
     @classmethod
     def move_systems(clf, system_data, update_space, deltaTime, box_height, space_resolution, default_matrix_material='Silicate Liquid'):
         update_space_copy = update_space.copy(deep=True)
-        for row in system_data.index:
-            if str(system_data['object_id'][row][0]) == 'A':
-                curr_x_coords = system_data['x_coords'][row]
-                curr_y_coords = system_data['y_coords'][row]
-                curr_z_coords = system_data['z_coords'][row]
+        for row in system_data.itertuples():
+            index = row.Index
+            if str(system_data['object_id'][index][0]) == 'A':
+                curr_x_coords = system_data['x_coords'][index]
+                curr_y_coords = system_data['y_coords'][index]
+                curr_z_coords = system_data['z_coords'][index]
                 object_velocity = 0
 
                 matrix_material = default_matrix_material # the default matrix matrial until overwritten
@@ -420,50 +447,51 @@ class box:
                 matrix_material_pressure = 0.0
                 # assumption is that object will travel through matrix most like that occupying z coord below it.
                 # code block below attempts to idenfity that material
-                if (system_data['z_coords'][row] + space_resolution) in system_data['z_coords']:
-                    searchfor_coord = (system_data['z_coords'][row] + space_resolution)
-                    for row2 in system_data.index:
-                        if system_data['z_coords'][row2] == searchfor_coord and system_data['y_coords'][row2] \
-                        == curr_y_coords and system_data['x_coords'][row2] == curr_x_coords:
-                            matrix_material = system_data['object'][row2]
-                            matrix_material_temp = system_data['temperature'][row2]
-                            matrix_material_pressure = system_data['pressure'][row2]
+                if (system_data['z_coords'][index] + space_resolution) in system_data['z_coords']:
+                    searchfor_coord = (system_data['z_coords'][index] + space_resolution)
+                    for row2 in system_data.itertuples():
+                        index2 = row2.Index
+                        if system_data['z_coords'][index2] == searchfor_coord and system_data['y_coords'][index2] \
+                        == curr_y_coords and system_data['x_coords'][index2] == curr_x_coords:
+                            matrix_material = system_data['object'][index2]
+                            matrix_material_temp = system_data['temperature'][index2]
+                            matrix_material_pressure = system_data['pressure'][index2]
                             break
-                object_velocity = move_particle(body_type=system_data['object'][row],
-                        system_params=system_data).stokes_settling(object=system_data['object'][row], matrix_material=matrix_material,
+                object_velocity = move_particle(body_type=system_data['object'][index],
+                        system_params=system_data).stokes_settling(object=system_data['object'][index], matrix_material=matrix_material,
                         matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure,
-                        object_radius=system_data['object_radius'][row])
+                        object_radius=system_data['object_radius'][index])
 
                 z_dis_obj_travel = object_velocity * deltaTime
-                updated_x_coords = system_data['x_coords'][row]
-                updated_y_coords = system_data['y_coords'][row]
-                updated_z_coords = clf.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][row]),
+                updated_x_coords = system_data['x_coords'][index]
+                updated_y_coords = system_data['y_coords'][index]
+                updated_z_coords = clf.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
                                                              system_data=system_data, coordinate_type='z_coords')
-                rounded_distance_travelled = updated_z_coords - curr_z_coords
-                if rounded_distance_travelled == 0:
+                rounded_z_distance_travelled = updated_z_coords - curr_z_coords # use this distance for distance travelled, as it is more self-consistent within the model
+                if rounded_z_distance_travelled == 0: # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity = 0
                     object_velocity = 0
                     z_dis_obj_travel = 0
-                system_data['temperature'][row] = float(
-                    system_data['temperature'][row]) + energy().stokes_frictional_energy(
-                    object=system_data['object'][row], matrix_material=matrix_material,
-                    body_radius=system_data['object_radius'][row],
-                    body_mass=system_data['mass'][row], distance_travelled=z_dis_obj_travel, object_velocity=object_velocity)
-                system_data['object_velocity'][row] = object_velocity
-                system_data['z_direct'][row] = object_velocity
-                system_data['potential_energy'][row] = energy().potential_energy(mass=system_data['mass'][row],
-                                                                                 height=system_data['z_coords'][row],
+                system_data['temperature'][index] = float(
+                    system_data['temperature'][index]) + energy().stokes_frictional_energy(
+                    object=system_data['object'][index], matrix_material=matrix_material,
+                    body_radius=system_data['object_radius'][index],
+                    body_mass=system_data['mass'][index], distance_travelled=rounded_z_distance_travelled, object_velocity=object_velocity)
+                system_data['object_velocity'][index] = object_velocity
+                system_data['z_direct'][index] = object_velocity
+                system_data['potential_energy'][index] = energy().potential_energy(mass=system_data['mass'][index],
+                                                                                 height=system_data['z_coords'][index],
                                                                                  box_height=box_height)
-                system_data['kinetic_energy'][row] = energy().kinetic_energy(mass=system_data['mass'][row],
+                system_data['kinetic_energy'][index] = energy().kinetic_energy(mass=system_data['mass'][index],
                                                                              velocity=system_data['object_velocity'][
-                                                                                 row])
+                                                                                 index])
                 print("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
-                    system_data['object_id'][row], system_data['object'][row], system_data['x_coords'][row],
-                    system_data['y_coords'][row], system_data['z_coords'][row], updated_x_coords, updated_y_coords,
+                    system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
+                    system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coords, updated_y_coords,
                     updated_z_coords))
                 from_row_index = clf.grab_row_index_by_coord(system_data=system_data,
-                                                              x_coord=system_data['x_coords'][row],
-                                                              y_coord=system_data['y_coords'][row],
-                                                              z_coord=system_data['z_coords'][row])
+                                                              x_coord=system_data['x_coords'][index],
+                                                              y_coord=system_data['y_coords'][index],
+                                                              z_coord=system_data['z_coords'][index])
                 to_row_index = clf.grab_row_index_by_coord(system_data=system_data,
                                                             x_coord=updated_x_coords,
                                                             y_coord=updated_y_coords,
@@ -477,17 +505,22 @@ class box:
     # TODO: update x and y coords
     def update_system(self, auto_update=True, deltaTime=1.0):
         print("Model time at: {}".format(self.model_time))
+        # space_stats = self.space.info(memory_usage='deep')
+        # print("\n[!] SPACE DATAFRAME STATS:\n")
+        # print(space_stats)
+        # print("\n")
         update_space = self.space.copy(deep=True)
         if self.model_time == self.initial_time:
             self.classify_neighbors(animate_neighbors=False)
             self.visualize_box()
             if self.object_history == True:
-                for row in self.space.index:
-                    if 'A' in self.space['object_id'][row]:
+                for row in self.space.itertuples():
+                    index = row.Index
+                    if 'A' in self.space['object_id'][index]:
                         contents = []
                         contents.append(str(self.model_time))
                         for i in self.space:
-                            contents.append(str(self.space[i][row]))
+                            contents.append(str(self.space[i][index]))
                         formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
         elif self.model_time <= 0:
@@ -532,12 +565,13 @@ class box:
                 self.space.to_csv("space.csv")
                 self.solution.get_solution().to_csv("solution.csv")
                 if self.object_history == True:
-                    for row in self.space.index:
-                        if 'A' in self.space['object_id'][row]:
+                    for row in self.space.itertuples():
+                        index = row.Index
+                        if 'A' in self.space['object_id'][index]:
                             contents = []
                             contents.append(str(self.model_time))
                             for i in self.space:
-                                contents.append(str(self.space[i][row]))
+                                contents.append(str(self.space[i][index]))
                             formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                             self.object_output.write("{}\n".format(formatted_contents))
                 if self.object_output == True:
@@ -548,18 +582,20 @@ class box:
                                              box_height=self.height, space_resolution=self.space_resolution)
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
-            for row in update_space.index:
-                if update_space['object'][row] == 'Metal Liquid':
-                    self.velocity_output.write("\n{}".format(update_space['object_velocity'][row]))
+            for row in update_space.itertuples():
+                index = row.Index
+                if update_space['object'][index] == 'Metal Liquid':
+                    self.velocity_output.write("\n{}".format(update_space['object_velocity'][index]))
             self.visualize_box()
             self.space = update_space
             if self.object_history == True:
-                for row in self.space.index:
-                    if 'A' in self.space['object_id'][row]:
+                for row in self.space.itertuples():
+                    index = row.Index
+                    if 'A' in self.space['object_id'][index]:
                         contents = []
                         contents.append(str(self.model_time))
                         for i in self.space:
-                            contents.append(str(self.space[i][row]))
+                            contents.append(str(self.space[i][index]))
                         formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
         if auto_update == True:
