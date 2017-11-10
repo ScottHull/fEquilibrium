@@ -19,12 +19,12 @@ class thermal_eq:
         # minimum = 0 # Uncomment this code if you'd like explicit distance calculations
         # potential_neighbors = {} # Uncomment this code if you'd like explicit distance calculations
 
-        potential_xplus_neighbor = x_coord + space_resolution
-        potential_yplus_neighbor = y_coord + space_resolution
-        potential_zplus_neighbor = z_coord + space_resolution
-        potential_xminus_neighbor = x_coord - space_resolution
-        potential_yminus_neighbor = y_coord - space_resolution
-        potential_zminus_neighbor = z_coord - space_resolution
+        potential_xplus_neighbor = round(x_coord + space_resolution, len(str(space_resolution)))
+        potential_yplus_neighbor = round(y_coord + space_resolution, len(str(space_resolution)))
+        potential_zplus_neighbor = round(z_coord + space_resolution, len(str(space_resolution)))
+        potential_xminus_neighbor = round(x_coord - space_resolution, len(str(space_resolution)))
+        potential_yminus_neighbor = round(y_coord - space_resolution, len(str(space_resolution)))
+        potential_zminus_neighbor = round(z_coord - space_resolution, len(str(space_resolution)))
 
         if minx <= potential_xplus_neighbor <= maxx:
             neighbors.append([potential_xplus_neighbor, y_coord, z_coord])
@@ -89,6 +89,9 @@ class thermal_eq:
                     'y': {'coords': [], 'index': []},'y-': {'coords': [], 'index': []}},
                     'z': {'z+': {'coords': [], 'index': []}, 'z': {'coords': [], 'index': []},
                     'z-': {'coords': [], 'index': []}}} # for each dict, x,y,z,index
+        x_coord = round(x_coord, len(str(space_resolution)))
+        y_coord = round(y_coord, len(str(space_resolution)))
+        z_coord = round(z_coord, len(str(space_resolution)))
         neighbors_dict['x']['x']['coords'].append(x_coord)
         neighbors_dict['x']['x']['coords'].append(y_coord)
         neighbors_dict['x']['x']['coords'].append(z_coord)
@@ -99,27 +102,27 @@ class thermal_eq:
         neighbors_dict['z']['z']['coords'].append(y_coord)
         neighbors_dict['z']['z']['coords'].append(z_coord)
         for set in neighbors:
-            if x_coord + space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
+            if x_coord + space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['x']['x+']['coords'].append(round(x_coord + space_resolution, len(str(space_resolution))))
                 neighbors_dict['x']['x+']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['x']['x+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord - space_resolution == set[0] and y_coord == set[1] and z_coord == set[2]:
+            if x_coord - space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['x']['x-']['coords'].append(round(x_coord - space_resolution, len(str(space_resolution))))
                 neighbors_dict['x']['x-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['x']['x-']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == set[0] and y_coord + space_resolution == set[1] and z_coord == set[2]:
+            if x_coord == round(set[0], len(str(space_resolution))) and y_coord + space_resolution == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['y']['y+']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['y']['y+']['coords'].append(round(y_coord + space_resolution, len(str(space_resolution))))
                 neighbors_dict['y']['y+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == set[0] and y_coord - space_resolution == set[1] and z_coord == set[2]:
+            if x_coord == round(set[0], len(str(space_resolution))) and y_coord - space_resolution == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['y']['y-']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['y']['y-']['coords'].append(round(y_coord - space_resolution, len(str(space_resolution))))
                 neighbors_dict['y']['y-']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == set[0] and y_coord == set[1] and z_coord + space_resolution == set[2]:
+            if x_coord == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and z_coord + space_resolution == round(set[2], len(str(space_resolution))):
                 neighbors_dict['z']['z+']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(z_coord + space_resolution, len(str(space_resolution))))
-            if x_coord == set[0] and y_coord == set[1] and z_coord - space_resolution == set[2]:
+            if x_coord == round(set[0], len(str(space_resolution)))  and y_coord == round(set[1], len(str(space_resolution)))  and z_coord - space_resolution == round(set[2], len(str(space_resolution))) :
                 neighbors_dict['z']['z-']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(z_coord - space_resolution, len(str(space_resolution))))
@@ -346,9 +349,14 @@ class thermal_eq:
                         structured_grad = []
                         ind = neighbors[i][z]['index']
                         grad = system_data['T_gradient'][ind].item()
-                        structured_grad.append(grad['grad_x'][0])
-                        structured_grad.append(grad['grad_y'][0])
-                        structured_grad.append(grad['grad_z'][0])
+                        try:
+                            structured_grad.append(grad['grad_x'][0])
+                            structured_grad.append(grad['grad_y'][0])
+                            structured_grad.append(grad['grad_z'][0])
+                        except:
+                            import sys
+                            system_data.to_csv("space.csv")
+                            sys.exit()
                         neighbors[i][z].update({'T_gradient': structured_grad})
             laplacian = self.laplacian(classified_neighbors=neighbors)
             system_data['T_laplacian'][index] = laplacian
