@@ -121,11 +121,14 @@ class box:
                                                               miny=min_ycoords, maxy=max_ycoords,
                                                               minz=min_zcoords, maxz=max_zcoords)
             self.space['nearest_neighbors'][index] = str(neighbors)
-            print("Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
+            sys.stdout.write("\rFound neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
+            sys.stdout.flush()
+            # print("Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
             if animate_neighbors == True:
                 self.move_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][index],
                                                                     self.space['y_coords'][index],
                                                                     self.space['z_coords'][index]))
+        print("")
         if animate_neighbors == True:
             self.space.to_csv("space2_coords_check.csv")
             import moviepy.editor as mpy
@@ -248,10 +251,13 @@ class box:
                                 self.space['object_density'] = float(self.space['mass'][index]) / ((4/3) * pi *
                                                 float(self.space['object_radius'][index])**3) # assume object is a perfect sphere
                                 self.solution.create_solution(box=self.space, composition=composition, row=index, object=object)
-                                print("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                sys.stdout.write("\rInserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                                                                                                self.space['x_coords'][index],
                                                                                                self.space['y_coords'][index],
                                                                                                self.space['z_coords'][index]))
+                                sys.stdout.flush()
+                print("")
+
             else:
                 print("Could not insert object!  Outside of defined coordinate points!")
                 sys.exit(1)
@@ -273,11 +279,12 @@ class box:
                     self.space['temperature'][index] = initial_temperature
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
-                    print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                    sys.stdout.write("\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                                                                                         self.space['x_coords'][index],
                                                                                         self.space['y_coords'][index],
                                                                                         self.space['z_coords'][
                                                                                             index]))
+                    sys.stdout.flush()
             else:
                 for row in self.space.itertuples():
                     index = row.Index
@@ -286,12 +293,14 @@ class box:
                     self.space['temperature'][index] = initial_temperature
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
-                    print("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                    sys.stdout.write(
+                        "\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                                                                                         self.space['x_coords'][index],
                                                                                         self.space['y_coords'][index],
                                                                                         self.space['z_coords'][
                                                                                             index]))
-
+                    sys.stdout.flush()
+            print("")
             print("Matrix material(s) inserted!")
 
         else:

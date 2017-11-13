@@ -316,6 +316,7 @@ class thermal_eq:
 
 
     def D3_thermal_eq(self, system_data, deltaTime, space_resolution):
+        import sys
         print("Thermally equilibrating system...")
         system_data['neighbors'] = np.NAN
         system_data['T_gradient'] = [[] for i in list(range(len(system_data['x_coords'])))]
@@ -330,7 +331,8 @@ class thermal_eq:
             sample_xcoord = system_data['x_coords'][index]
             sample_ycoord = system_data['y_coords'][index]
             sample_zcoord = system_data['z_coords'][index]
-            print("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
+            sys.stdout.write("\rCalculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
+            sys.stdout.flush()
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][index]) # interpret the dictionary stored in the dataframe
             for i in neighbors:
                 for z in neighbors[i]:
@@ -340,14 +342,15 @@ class thermal_eq:
                         neighbors[i][z].update({'temperature': temperature})
             gradient = self.gradient(classified_neighbors=neighbors)
             system_data['T_gradient'][index] = gradient
-
+        print("")
         for row in system_data.itertuples():
             index = row.Index
             sample_xcoord = system_data['x_coords'][index]
             sample_ycoord = system_data['y_coords'][index]
             sample_zcoord = system_data['z_coords'][index]
-            print("Calculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
+            sys.stdout.write("\rCalculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                sample_zcoord))
+            sys.stdout.flush()
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][index])
             for i in neighbors:
                 for z in neighbors[i]:
@@ -369,6 +372,7 @@ class thermal_eq:
             system_data['temperature'][index] = self.change_temperature(laplacian=laplacian,
                 point_temperature=system_data['temperature'][index], deltaTime=deltaTime,
                                 thermal_diffusivity=material_properties['Thermal Diffusivity'][system_data['object'][index]])
+        print("")
             
             
             
