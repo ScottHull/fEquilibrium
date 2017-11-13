@@ -256,6 +256,7 @@ class box:
                                                                                                self.space['y_coords'][index],
                                                                                                self.space['z_coords'][index]))
                                 sys.stdout.flush()
+                                break
                 print("")
 
             else:
@@ -507,6 +508,7 @@ class box:
                                                             z_coord=updated_z_coords)
                 update_space_copy = clf.swap_rows(system_data=system_data, updated_system_data=update_space,
                                               from_row_index=from_row_index, to_row_index=to_row_index)
+                
         return update_space_copy
 
 
