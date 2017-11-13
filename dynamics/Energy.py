@@ -102,27 +102,33 @@ class thermal_eq:
         neighbors_dict['z']['z']['coords'].append(y_coord)
         neighbors_dict['z']['z']['coords'].append(z_coord)
         for set in neighbors:
-            if x_coord + space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
+            if x_coord + space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and \
+                            z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['x']['x+']['coords'].append(round(x_coord + space_resolution, len(str(space_resolution))))
                 neighbors_dict['x']['x+']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['x']['x+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord - space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
+            if x_coord - space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and \
+                            z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['x']['x-']['coords'].append(round(x_coord - space_resolution, len(str(space_resolution))))
                 neighbors_dict['x']['x-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['x']['x-']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and y_coord + space_resolution == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
+            if x_coord == round(set[0], len(str(space_resolution))) and y_coord + space_resolution == round(set[1], len(str(space_resolution))) and \
+                            z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['y']['y+']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['y']['y+']['coords'].append(round(y_coord + space_resolution, len(str(space_resolution))))
                 neighbors_dict['y']['y+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and y_coord - space_resolution == round(set[1], len(str(space_resolution))) and z_coord == round(set[2], len(str(space_resolution))):
+            if x_coord == round(set[0], len(str(space_resolution))) and y_coord - space_resolution == round(set[1], len(str(space_resolution))) and \
+                            z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['y']['y-']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['y']['y-']['coords'].append(round(y_coord - space_resolution, len(str(space_resolution))))
                 neighbors_dict['y']['y-']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and z_coord + space_resolution == round(set[2], len(str(space_resolution))):
+            if x_coord == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and \
+                                    z_coord + space_resolution == round(set[2], len(str(space_resolution))):
                 neighbors_dict['z']['z+']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(z_coord + space_resolution, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution)))  and y_coord == round(set[1], len(str(space_resolution))) and z_coord - space_resolution == round(set[2], len(str(space_resolution))) :
+            if x_coord == round(set[0], len(str(space_resolution)))  and y_coord == round(set[1], len(str(space_resolution))) and \
+                                    z_coord - space_resolution == round(set[2], len(str(space_resolution))):
                 neighbors_dict['z']['z-']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(z_coord - space_resolution, len(str(space_resolution))))
