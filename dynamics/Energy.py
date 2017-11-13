@@ -40,16 +40,16 @@ class thermal_eq:
             neighbors.append([x_coord, y_coord, potential_zminus_neighbor])
 
         # eliminate potential floating points:
-        temp_neighbors = []
-        for i in neighbors:
-            temp = []
-            for j in i: # access elements in sub-lists
-                rounded_coord = round(j, len(str(space_resolution))) # round the coordinates to the spatial resolution
-                temp.append(rounded_coord)
-            temp_neighbors.append(temp)
-        neighbors.clear() # delete the old list with potential floating point contamination
-        for i in temp_neighbors:
-            neighbors.append(i) # replace values in the list
+        # temp_neighbors = []
+        # for i in neighbors:
+        #     temp = []
+        #     for j in i: # access elements in sub-lists
+        #         rounded_coord = round(j, len(str(space_resolution))) # round the coordinates to the spatial resolution
+        #         temp.append(rounded_coord)
+        #     temp_neighbors.append(temp)
+        # neighbors.clear() # delete the old list with potential floating point contamination
+        # for i in temp_neighbors:
+        #     neighbors.append(i) # replace values in the list
 
 
 
@@ -84,14 +84,20 @@ class thermal_eq:
 
     @classmethod
     def explicit_classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution):
+
+        # this dictionary will be stored for reference in the dataframe for quick index access
         neighbors_dict = {'x': {'x+': {'coords': [], 'index': []}, 'x': {'coords': [], 'index': []},
                     'x-': {'coords': [], 'index': []}}, 'y': {'y+': {'coords': [], 'index': []},
                     'y': {'coords': [], 'index': []},'y-': {'coords': [], 'index': []}},
                     'z': {'z+': {'coords': [], 'index': []}, 'z': {'coords': [], 'index': []},
                     'z-': {'coords': [], 'index': []}}} # for each dict, x,y,z,index
+
+        # round coordinates to avoid floating point conflictions
         x_coord = round(x_coord, len(str(space_resolution)))
         y_coord = round(y_coord, len(str(space_resolution)))
         z_coord = round(z_coord, len(str(space_resolution)))
+
+        # add coordinates to the dictionary
         neighbors_dict['x']['x']['coords'].append(x_coord)
         neighbors_dict['x']['x']['coords'].append(y_coord)
         neighbors_dict['x']['x']['coords'].append(z_coord)
@@ -101,34 +107,40 @@ class thermal_eq:
         neighbors_dict['z']['z']['coords'].append(x_coord)
         neighbors_dict['z']['z']['coords'].append(y_coord)
         neighbors_dict['z']['z']['coords'].append(z_coord)
+
+        # iterate over the neighbors to classify their direction, specifically for directional gradients
         for set in neighbors:
-            if x_coord + space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and \
+            if round(x_coord + space_resolution, len(str(space_resolution))) == round(set[0], len(str(space_resolution))) and \
+                            y_coord == round(set[1], len(str(space_resolution))) and \
                             z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['x']['x+']['coords'].append(round(x_coord + space_resolution, len(str(space_resolution))))
                 neighbors_dict['x']['x+']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['x']['x+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord - space_resolution == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and \
+            if round(x_coord - space_resolution, len(str(space_resolution))) == round(set[0], len(str(space_resolution))) and \
+                            y_coord == round(set[1], len(str(space_resolution))) and \
                             z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['x']['x-']['coords'].append(round(x_coord - space_resolution, len(str(space_resolution))))
                 neighbors_dict['x']['x-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['x']['x-']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and y_coord + space_resolution == round(set[1], len(str(space_resolution))) and \
+            if x_coord == round(set[0], len(str(space_resolution))) and round(y_coord + space_resolution, len(str(space_resolution))) == \
+                    round(set[1], len(str(space_resolution))) and \
                             z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['y']['y+']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['y']['y+']['coords'].append(round(y_coord + space_resolution, len(str(space_resolution))))
                 neighbors_dict['y']['y+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and y_coord - space_resolution == round(set[1], len(str(space_resolution))) and \
+            if x_coord == round(set[0], len(str(space_resolution))) and round(y_coord - space_resolution, len(str(space_resolution))) == \
+                    round(set[1], len(str(space_resolution))) and \
                             z_coord == round(set[2], len(str(space_resolution))):
                 neighbors_dict['y']['y-']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['y']['y-']['coords'].append(round(y_coord - space_resolution, len(str(space_resolution))))
                 neighbors_dict['y']['y-']['coords'].append(round(z_coord, len(str(space_resolution))))
             if x_coord == round(set[0], len(str(space_resolution))) and y_coord == round(set[1], len(str(space_resolution))) and \
-                                    z_coord + space_resolution == round(set[2], len(str(space_resolution))):
+                                    round(z_coord + space_resolution, len(str(space_resolution))) == round(set[2], len(str(space_resolution))):
                 neighbors_dict['z']['z+']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z+']['coords'].append(round(z_coord + space_resolution, len(str(space_resolution))))
             if x_coord == round(set[0], len(str(space_resolution)))  and y_coord == round(set[1], len(str(space_resolution))) and \
-                                    z_coord - space_resolution == round(set[2], len(str(space_resolution))):
+                                    round(z_coord - space_resolution, len(str(space_resolution))) == round(set[2], len(str(space_resolution))):
                 neighbors_dict['z']['z-']['coords'].append(round(x_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(z_coord - space_resolution, len(str(space_resolution))))
@@ -328,9 +340,9 @@ class thermal_eq:
         material_properties = pd.read_csv("dynamics/physical_parameters.csv", index_col='Material')
         for row in system_data.itertuples():
             index = row.Index
-            sample_xcoord = system_data['x_coords'][index]
-            sample_ycoord = system_data['y_coords'][index]
-            sample_zcoord = system_data['z_coords'][index]
+            sample_xcoord = round(system_data['x_coords'][index], len(str(space_resolution)))
+            sample_ycoord = round(system_data['y_coords'][index], len(str(space_resolution)))
+            sample_zcoord = round(system_data['z_coords'][index], len(str(space_resolution)))
             sys.stdout.write("\rCalculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
             sys.stdout.flush()
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][index]) # interpret the dictionary stored in the dataframe
@@ -342,6 +354,9 @@ class thermal_eq:
                         neighbors[i][z].update({'temperature': temperature})
             gradient = self.gradient(classified_neighbors=neighbors)
             system_data['T_gradient'][index] = gradient
+            # if index == 41:
+            #     system_data.to_csv('asdfasdfhdddddddd.csv')
+            #     sys.exit(1)
         print("")
         for row in system_data.itertuples():
             index = row.Index

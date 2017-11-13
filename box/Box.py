@@ -104,12 +104,12 @@ class box:
         loop_count = 1
         loop_total = len(self.space.index.tolist())
         print("Finding nearest neighbors for all points.  This may take several minutes...")
-        min_xcoords = min(self.space['x_coords'])
-        max_xcoords = max(self.space['x_coords'])
-        min_ycoords = min(self.space['y_coords'])
-        max_ycoords = max(self.space['y_coords'])
-        min_zcoords = min(self.space['z_coords'])
-        max_zcoords = max(self.space['z_coords'])
+        min_xcoords = 0.0
+        max_xcoords = float(self.length)
+        min_ycoords = 0.0
+        max_ycoords = float(self.width)
+        min_zcoords = 0.0
+        max_zcoords = float(self.height)
         for row in self.space.itertuples():
             index = row.Index
             neighbors = thermal_eq.explicit_nearest_neighboor(system_data=self.space,
@@ -154,9 +154,9 @@ class box:
         """
         print("Generating coordinates...")
         coords = []
-        x_coords_range = np.arange(0, length + space_resolution, space_resolution) # generate range of x-coords
-        y_coords_range = np.arange(0, width + space_resolution, space_resolution) # generate range of y-coords
-        z_coords_range = np.arange(0, height + space_resolution, space_resolution) # generate range of z-coords
+        x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))), space_resolution) # generate range of x-coords
+        y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))), space_resolution) # generate range of y-coords
+        z_coords_range = np.arange(0, round((height + space_resolution), len(str(space_resolution))), space_resolution) # generate range of z-coords
         for i in x_coords_range:
             for j in y_coords_range:
                 for q in z_coords_range:
