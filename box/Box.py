@@ -35,7 +35,7 @@ class box:
 
         """
         self.console = console()
-        self.console.pm_header("\n\n\nfEquilibirum\nScott D. Hull, 2017\n\n")
+        self.console.pm_header("\n\n\nfEquilibrium\nScott D. Hull, 2017\n\n")
         self.console.pm_stat("Instantiating box. Please sit tight.")
         self.length = length
         self.width = width
@@ -340,7 +340,7 @@ class box:
                 y = self.space['y_coords'][index]
                 z = self.space['z_coords'][index]
                 if str(self.space['object_id'][index])[0] == 'A':
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 2)
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 100)
             ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length")
             ax.set_ylabel("Box Width")
@@ -365,9 +365,9 @@ class box:
                 # velocity_x = self.space['x_direct'][row]
                 if str(self.space['object_id'][index][0]) == 'A':
                     # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 2)
+                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 100)
             # norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
-            norm_colors = mpl.colors.Normalize(vmin=1400, vmax=3000)
+            norm_colors = mpl.colors.Normalize(vmin=1900, vmax=2200)
             colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
             colorsmap.set_array(self.space['temperature'])
             ax.scatter(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'], marker='s', s=140,
