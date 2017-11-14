@@ -358,9 +358,6 @@ class thermal_eq:
                         neighbors[i][z].update({'temperature': temperature})
             gradient = self.gradient(classified_neighbors=neighbors)
             system_data['T_gradient'][index] = gradient
-            # if index == 41:
-            #     system_data.to_csv('asdfasdfhdddddddd.csv')
-            #     sys.exit(1)
         print("")
         for row in system_data.itertuples():
             index = row.Index
@@ -379,14 +376,9 @@ class thermal_eq:
                         structured_grad = []
                         ind = neighbors[i][z]['index']
                         grad = system_data['T_gradient'][ind].item()
-                        try:
-                            structured_grad.append(grad['grad_x'][0])
-                            structured_grad.append(grad['grad_y'][0])
-                            structured_grad.append(grad['grad_z'][0])
-                        except:
-                            import sys
-                            system_data.to_csv("space.csv")
-                            sys.exit()
+                        structured_grad.append(grad['grad_x'][0])
+                        structured_grad.append(grad['grad_y'][0])
+                        structured_grad.append(grad['grad_z'][0])
                         neighbors[i][z].update({'T_gradient': structured_grad})
             laplacian = self.laplacian(classified_neighbors=neighbors)
             system_data['T_laplacian'][index] = laplacian

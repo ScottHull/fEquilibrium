@@ -307,23 +307,17 @@ class box:
             else:
                 for row in self.space.itertuples():
                     index = row.Index
-                    self.space['object_id'][index] = self.generate_object_id(matrix=True)
-                    self.space['object'][index] = matrix_material
-                    self.space['temperature'][index] = initial_temperature
-                    self.solution.create_solution(box=self.space, composition=composition, row=index,
-                                                  object=matrix_material)
-                    self.console.pm_flush("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
-                                                                                        self.space['x_coords'][index],
-                                                                                        self.space['y_coords'][index],
-                                                                                        self.space['z_coords'][
-                                                                                            index]))
-                    # sys.stdout.write(
-                    #     "\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
-                    #                                                                     self.space['x_coords'][index],
-                    #                                                                     self.space['y_coords'][index],
-                    #                                                                     self.space['z_coords'][
-                    #                                                                         index]))
-                    # sys.stdout.flush()
+                    if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(z_range[1], len(str(self.space_resolution))):
+                        self.space['object_id'][index] = self.generate_object_id(matrix=True)
+                        self.space['object'][index] = matrix_material
+                        self.space['temperature'][index] = initial_temperature
+                        self.solution.create_solution(box=self.space, composition=composition, row=index,
+                                                      object=matrix_material)
+                        self.console.pm_flush("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                                                                            self.space['x_coords'][index],
+                                                                                            self.space['y_coords'][index],
+                                                                                            self.space['z_coords'][
+                                                                                                index]))
             print("")
             self.console.pm_stat("Matrix material(s) ({}) inserted!".format(matrix_material))
 
@@ -345,7 +339,7 @@ class box:
                 x = self.space['x_coords'][index]
                 y = self.space['y_coords'][index]
                 z = self.space['z_coords'][index]
-                if str(self.space['object_id'][index][0]) == 'A':
+                if str(self.space['object_id'][index])[0] == 'A':
                     ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 2)
             ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length")
