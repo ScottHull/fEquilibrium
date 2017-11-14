@@ -24,3 +24,7 @@ class console:
         t = datetime.now()
         print('[X] ({})      {}'.format(t, message))
         return None
+
+    def pm_header(self, message):
+        print('{}'.format(message))
+        return None

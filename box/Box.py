@@ -35,6 +35,8 @@ class box:
 
         """
         self.console = console()
+        self.console.pm_header("\n\n\nfEquilibirum\nScott D. Hull, 2017\n\n")
+        self.console.pm_stat("Instantiating box. Please sit tight.")
         self.length = length
         self.width = width
         self.height = height
@@ -102,6 +104,7 @@ class box:
 
     def get_box(self):
         return self.space
+
 
     def classify_neighbors(self, animate_neighbors=False):
         loop_count = 1
