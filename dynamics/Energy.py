@@ -1,15 +1,18 @@
 from math import pi, sqrt
+import os
 import pandas as pd
 import numpy as np
 import ast
 import time
 from multiprocessing import Pool
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from meta.Console import console
 
 
 class thermal_eq:
 
     def __init__(self):
-        pass
+
+        self.console = console()
 
 
     @classmethod
@@ -329,7 +332,7 @@ class thermal_eq:
 
     def D3_thermal_eq(self, system_data, deltaTime, space_resolution):
         import sys
-        print("Thermally equilibrating system...")
+        self.console.pm_stat("Thermally equilibrating system...")
         system_data['neighbors'] = np.NAN
         system_data['T_gradient'] = [[] for i in list(range(len(system_data['x_coords'])))]
         system_data['T_laplacian'] = [[] for i in list(range(len(system_data['x_coords'])))]
@@ -343,8 +346,9 @@ class thermal_eq:
             sample_xcoord = round(system_data['x_coords'][index], len(str(space_resolution)))
             sample_ycoord = round(system_data['y_coords'][index], len(str(space_resolution)))
             sample_zcoord = round(system_data['z_coords'][index], len(str(space_resolution)))
-            sys.stdout.write("\rCalculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
-            sys.stdout.flush()
+            self.console.pm_flush("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
+            # sys.stdout.write("\rCalculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
+            # sys.stdout.flush()
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][index]) # interpret the dictionary stored in the dataframe
             for i in neighbors:
                 for z in neighbors[i]:
@@ -363,9 +367,11 @@ class thermal_eq:
             sample_xcoord = system_data['x_coords'][index]
             sample_ycoord = system_data['y_coords'][index]
             sample_zcoord = system_data['z_coords'][index]
-            sys.stdout.write("\rCalculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
+            self.console.pm_flush("Calculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                sample_zcoord))
-            sys.stdout.flush()
+            # sys.stdout.write("\rCalculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
+            #                                                                    sample_zcoord))
+            # sys.stdout.flush()
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][index])
             for i in neighbors:
                 for z in neighbors[i]:

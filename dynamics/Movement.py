@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from math import pi, sqrt, exp
 import time
+import os
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from meta.Console import console
 
 # Some methods extracted from:
 # Mechanisms of metal-silicate equilibration in the terrestrial magma ocean

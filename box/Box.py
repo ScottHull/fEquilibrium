@@ -8,6 +8,7 @@ import moviepy.editor as mpy
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movement import move_particle
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Energy import energy, thermal_eq
 os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from thermodynamics.Solution import solution
+os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from meta.Console import console
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
@@ -18,6 +19,7 @@ import matplotlib.colorbar
 import time
 from math import pi
 import multiprocessing
+import datetime
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
@@ -32,6 +34,7 @@ class box:
         :param visualize_system: optional parameter to turn on movie generation of the evolution of the system
 
         """
+        self.console = console()
         self.length = length
         self.width = width
         self.height = height
@@ -103,7 +106,8 @@ class box:
     def classify_neighbors(self, animate_neighbors=False):
         loop_count = 1
         loop_total = len(self.space.index.tolist())
-        print("Finding nearest neighbors for all points.  This may take several minutes...")
+        self.console.pm_stat("Finding nearest neighbors for all points.  This may take several minutes...")
+        # print("Finding nearest neighbors for all points.  This may take several minutes...")
         min_xcoords = 0.0
         max_xcoords = float(self.length)
         min_ycoords = 0.0
@@ -121,15 +125,16 @@ class box:
                                                               miny=min_ycoords, maxy=max_ycoords,
                                                               minz=min_zcoords, maxz=max_zcoords)
             self.space['nearest_neighbors'][index] = str(neighbors)
-            sys.stdout.write("\rFound neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
-            sys.stdout.flush()
+            self.console.pm_flush(message="Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
+            # sys.stdout.write("\rFound neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
+            # sys.stdout.flush()
             # print("Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
             if animate_neighbors == True:
                 self.move_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][index],
                                                                     self.space['y_coords'][index],
                                                                     self.space['z_coords'][index]))
         print("")
-        if animate_neighbors == True:
+        if animate_neighbors is True:
             self.space.to_csv("space2_coords_check.csv")
             import moviepy.editor as mpy
             import os, time
@@ -143,8 +148,7 @@ class box:
 
 
 
-    @staticmethod
-    def generate_coordinate_points(length, width, height, space_resolution):
+    def generate_coordinate_points(self, length, width, height, space_resolution):
         """
         :param length: length of the system, in m
         :param width: width of the system, in m
@@ -152,7 +156,8 @@ class box:
         :param space_resolution: spatial resolution of the system, in m
         :return: coords, a list of all coordinate points available in the system
         """
-        print("Generating coordinates...")
+        self.console.pm_stat("Generating coordinates...")
+        # print("Generating coordinates...")
         coords = []
         x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))), space_resolution) # generate range of x-coords
         y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))), space_resolution) # generate range of y-coords
@@ -165,11 +170,12 @@ class box:
                     temp_coords.append(round(j, len(str(space_resolution))))
                     temp_coords.append(round(q, len(str(space_resolution))))
                     coords.append(temp_coords)
-        print("Coordinates generated!")
+        self.console.pm_stat("Coordinates generated!")
+        # print("Coordinates generated!")
         return coords
 
-    @staticmethod
-    def round_coord_arbitrary(coordinate, system_data, coordinate_type):
+
+    def round_coord_arbitrary(self, coordinate, system_data, coordinate_type):
         rounded_coordinate = ''
         found_min = ''
         for i in system_data[coordinate_type]:
@@ -186,17 +192,17 @@ class box:
 
 
     def check_coords(self, x_coord, y_coord, z_coord):
-        print("Checking if coordinates are valid for object insertion...")
+        self.console.pm_stat("Checking if coordinates are valid for object insertion...")
         x_min, x_max = self.space['x_coords'][0], self.space['x_coords'][len(self.coords) - 1]
         y_min, y_max = self.space['y_coords'][0], self.space['y_coords'][len(self.coords) -1]
         z_min, z_max = self.space['z_coords'][0], self.space['z_coords'][len(self.coords) -1]
         if x_coord >= x_min and x_coord <= x_max:
             if y_coord >= y_min and y_coord <= y_max:
                 if z_coord >= z_min and z_coord <= z_max:
-                    print("Coordinates validated for object insertion!")
+                    self.console.pm_stat("Coordinates validated for object insertion!")
                     return True
         else:
-            print("Coordinates invalid!")
+            self.console.pm_err("Coordinates invalid!")
             return False
 
     def generate_object_id(self, matrix):
@@ -234,7 +240,7 @@ class box:
 
 
     def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, composition, initial_temperature):
-        print("Inserting object...")
+        self.console.pm_stat("Inserting object...")
         if object in self.physical_parameters.index:
             if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
                 for row in self.space.itertuples():
@@ -251,26 +257,30 @@ class box:
                                 self.space['object_density'] = float(self.space['mass'][index]) / ((4/3) * pi *
                                                 float(self.space['object_radius'][index])**3) # assume object is a perfect sphere
                                 self.solution.create_solution(box=self.space, composition=composition, row=index, object=object)
-                                sys.stdout.write("\rInserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                self.console.pm_flush("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                                                                                                self.space['x_coords'][index],
                                                                                                self.space['y_coords'][index],
                                                                                                self.space['z_coords'][index]))
-                                sys.stdout.flush()
+                                # sys.stdout.write("\rInserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                #                                                                self.space['x_coords'][index],
+                                #                                                                self.space['y_coords'][index],
+                                #                                                                self.space['z_coords'][index]))
+                                # sys.stdout.flush()
                                 break
                 print("")
 
             else:
-                print("Could not insert object!  Outside of defined coordinate points!")
+                self.console.pm_err("Could not insert object!  Outside of defined coordinate points!")
                 sys.exit(1)
         else:
-            print("Object not defined in {}!  Cannot insert object!".format(
+            self.console.pm_err("Object not defined in {}!  Cannot insert object!".format(
                                                     os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
 
 
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
     def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0,0]):
-        print("Inserting matrix...")
+        self.console.pm_stat("Inserting matrix...")
         if matrix_material in self.physical_parameters.index:
             if z_range[0] == 0 and z_range[1] == 0:# z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
                 for row in self.space.itertuples():
@@ -280,12 +290,17 @@ class box:
                     self.space['temperature'][index] = initial_temperature
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
-                    sys.stdout.write("\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                    self.console.pm_flush("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                                                                                         self.space['x_coords'][index],
                                                                                         self.space['y_coords'][index],
                                                                                         self.space['z_coords'][
                                                                                             index]))
-                    sys.stdout.flush()
+                    # sys.stdout.write("\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                    #                                                                     self.space['x_coords'][index],
+                    #                                                                     self.space['y_coords'][index],
+                    #                                                                     self.space['z_coords'][
+                    #                                                                         index]))
+                    # sys.stdout.flush()
             else:
                 for row in self.space.itertuples():
                     index = row.Index
@@ -294,18 +309,23 @@ class box:
                     self.space['temperature'][index] = initial_temperature
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
-                    sys.stdout.write(
-                        "\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                    self.console.pm_flush("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                                                                                         self.space['x_coords'][index],
                                                                                         self.space['y_coords'][index],
                                                                                         self.space['z_coords'][
                                                                                             index]))
-                    sys.stdout.flush()
+                    # sys.stdout.write(
+                    #     "\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                    #                                                                     self.space['x_coords'][index],
+                    #                                                                     self.space['y_coords'][index],
+                    #                                                                     self.space['z_coords'][
+                    #                                                                         index]))
+                    # sys.stdout.flush()
             print("")
-            print("Matrix material(s) inserted!")
+            self.console.pm_stat("Matrix material(s) ({}) inserted!".format(matrix_material))
 
         else:
-            print("Matrix material not defined in {}!  Cannot insert matrix material!".format(
+            self.console.pm_err("Matrix material not defined in {}!  Cannot insert matrix material!".format(
                 os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
 
@@ -332,7 +352,7 @@ class box:
             fig.savefig(os.getcwd()+'/mpl_animation1/snap_{}.png'.format(self.model_time), format='png')
             fig.clf()
             self.move_frames1.append('snap_{}.png'.format(self.model_time))
-            print("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
+            self.console.pm_stat("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
 
 
             fig = plt.figure()
@@ -441,8 +461,7 @@ class box:
 
 
 
-    @classmethod
-    def move_systems(clf, system_data, update_space, deltaTime, box_height, space_resolution, default_matrix_material='Silicate Liquid'):
+    def move_systems(self, system_data, update_space, deltaTime, box_height, space_resolution, default_matrix_material='Silicate Liquid'):
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.itertuples():
             index = row.Index
@@ -475,7 +494,7 @@ class box:
                 z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coords = system_data['x_coords'][index]
                 updated_y_coords = system_data['y_coords'][index]
-                updated_z_coords = clf.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
+                updated_z_coords = self.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
                                                              system_data=system_data, coordinate_type='z_coords')
                 rounded_z_distance_travelled = updated_z_coords - curr_z_coords # use this distance for distance travelled, as it is more self-consistent within the model
                 if rounded_z_distance_travelled == 0: # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity = 0
@@ -494,19 +513,19 @@ class box:
                 system_data['kinetic_energy'][index] = energy().kinetic_energy(mass=system_data['mass'][index],
                                                                              velocity=system_data['object_velocity'][
                                                                                  index])
-                print("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
+                self.console.pm_stat("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
                     system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                     system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coords, updated_y_coords,
                     updated_z_coords))
-                from_row_index = clf.grab_row_index_by_coord(system_data=system_data,
+                from_row_index = self.grab_row_index_by_coord(system_data=system_data,
                                                               x_coord=system_data['x_coords'][index],
                                                               y_coord=system_data['y_coords'][index],
                                                               z_coord=system_data['z_coords'][index])
-                to_row_index = clf.grab_row_index_by_coord(system_data=system_data,
+                to_row_index = self.grab_row_index_by_coord(system_data=system_data,
                                                             x_coord=updated_x_coords,
                                                             y_coord=updated_y_coords,
                                                             z_coord=updated_z_coords)
-                update_space_copy = clf.swap_rows(system_data=system_data, updated_system_data=update_space,
+                update_space_copy = self.swap_rows(system_data=system_data, updated_system_data=update_space,
                                               from_row_index=from_row_index, to_row_index=to_row_index)
                 
         return update_space_copy
@@ -515,7 +534,7 @@ class box:
 
     # TODO: update x and y coords
     def update_system(self, auto_update=True, deltaTime=1.0):
-        print("Model time at: {}".format(self.model_time))
+        self.console.pm_stat("Model time at: {}".format(self.model_time))
         # space_stats = self.space.info(memory_usage='deep')
         # print("\n[!] SPACE DATAFRAME STATS:\n")
         # print(space_stats)
@@ -536,9 +555,9 @@ class box:
                         self.object_output.write("{}\n".format(formatted_contents))
         elif self.model_time <= 0:
             self.visualize_box()
-            print("Model at minimum time!")
+            self.console.pm_stat("Model at minimum time!")
             if self.visualize_system == True:
-                print("Writing animations...")
+                self.console.pm_stat("Writing animations...")
 
                 # dynamics animation
                 os.chdir(os.getcwd()+'/mpl_animation1')
@@ -547,7 +566,7 @@ class box:
                 animation.write_videofile('fEquilibrium_animation.mp4',
                                           fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
-                print("Animation created & available in {}!".format(os.getcwd()))
+                self.console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d heatmap animation
                 os.chdir(os.getcwd() + '/mpl_animation2')
@@ -559,7 +578,7 @@ class box:
                                           fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('thermal_fEquilibrium_animation.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
-                print("Animation created & available in {}!".format(os.getcwd()))
+                self.console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d surface heat distribution animation
                 os.chdir(os.getcwd() + '/mpl_animation4')
@@ -571,7 +590,7 @@ class box:
                                           fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('time_t_distrib.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
-                print("Animation created & available in {}!".format(os.getcwd()))
+                self.console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 self.space.to_csv("space.csv")
                 self.solution.get_solution().to_csv("solution.csv")
@@ -610,12 +629,12 @@ class box:
                         formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
         if auto_update == True:
-            if self.model_time == 1:
+            if self.model_time == deltaTime:
                 self.model_time -= deltaTime
-                self.update_system(auto_update=False, deltaTime=1)
-            elif self.model_time > 1:
+                self.update_system(auto_update=False, deltaTime=deltaTime)
+            elif self.model_time > deltaTime:
                 self.model_time -= deltaTime
-                self.update_system(auto_update=auto_update, deltaTime=(self.model_time/self.model_time))
+                self.update_system(auto_update=auto_update, deltaTime=deltaTime)
             else:
                 return self.model_time, self.space
         else:
