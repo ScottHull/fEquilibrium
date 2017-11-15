@@ -304,6 +304,7 @@ class box:
                     #                                                                     self.space['z_coords'][
                     #                                                                         index]))
                     # sys.stdout.flush()
+                print("")
             else:
                 for row in self.space.itertuples():
                     index = row.Index
@@ -318,6 +319,7 @@ class box:
                                                                                             self.space['y_coords'][index],
                                                                                             self.space['z_coords'][
                                                                                                 index]))
+                print("")
             print("")
             self.console.pm_stat("Matrix material(s) ({}) inserted!".format(matrix_material))
 
@@ -510,7 +512,7 @@ class box:
                 system_data['kinetic_energy'][index] = energy().kinetic_energy(mass=system_data['mass'][index],
                                                                              velocity=system_data['object_velocity'][
                                                                                  index])
-                self.console.pm_stat("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
+                self.console.pm_flush("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
                     system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                     system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coords, updated_y_coords,
                     updated_z_coords))
