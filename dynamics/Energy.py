@@ -11,16 +11,13 @@ os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from meta.Console imp
 class thermal_eq:
 
     def __init__(self):
-
-        self.console = console()
+        pass
 
 
     @classmethod
     def explicit_nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution, minx, maxx, miny, maxy,
-                          minz, maxz, visualize_neighbors=False, animate_neighbors=False):
+                          minz, maxz, visualize_neighbors, animate_neighbors):
         neighbors = []
-        # minimum = 0 # Uncomment this code if you'd like explicit distance calculations
-        # potential_neighbors = {} # Uncomment this code if you'd like explicit distance calculations
 
         potential_xplus_neighbor = round(x_coord + space_resolution, len(str(space_resolution)))
         potential_yplus_neighbor = round(y_coord + space_resolution, len(str(space_resolution)))
@@ -31,16 +28,28 @@ class thermal_eq:
 
         if minx <= potential_xplus_neighbor <= maxx:
             neighbors.append([potential_xplus_neighbor, y_coord, z_coord])
+        elif potential_xplus_neighbor > maxx:
+            neighbors.append([minx, y_coord, z_coord])
         if minx <= potential_xminus_neighbor <= maxx:
             neighbors.append([potential_xminus_neighbor, y_coord, z_coord])
+        elif potential_xminus_neighbor < minx:
+            neighbors.append([maxx, y_coord, z_coord])
         if miny <= potential_yplus_neighbor <= maxy:
             neighbors.append([x_coord, potential_yplus_neighbor, z_coord])
+        elif potential_yplus_neighbor > maxy:
+            neighbors.append([x_coord, miny, z_coord])
         if miny <= potential_yminus_neighbor <= maxy:
             neighbors.append([x_coord, potential_yminus_neighbor, z_coord])
+        elif potential_yminus_neighbor < miny:
+            neighbors.append([x_coord, maxy, z_coord])
         if minz <= potential_zplus_neighbor <= maxz:
             neighbors.append([x_coord, y_coord, potential_zplus_neighbor])
+        elif potential_zplus_neighbor > maxz:
+            neighbors.append([x_coord, y_coord, minz])
         if minz <= potential_zminus_neighbor <= maxz:
             neighbors.append([x_coord, y_coord, potential_zminus_neighbor])
+        elif potential_zplus_neighbor < maxz:
+            neighbors.append([x_coord, y_coord, maxz])
 
         # eliminate potential floating points:
         # temp_neighbors = []
@@ -56,12 +65,12 @@ class thermal_eq:
 
 
 
-        if visualize_neighbors == True:
+        if visualize_neighbors is True:
             import matplotlib as mpl
             mpl.use('Qt5Agg')
             from mpl_toolkits.mplot3d import Axes3D
             import matplotlib.pyplot as plt
-            import os, shutil
+            import os
             fig = plt.figure()
             ax = Axes3D(fig)
             ax.set_xlim(xmin=min(system_data['x_coords']), xmax=max(system_data['x_coords']))
@@ -75,18 +84,20 @@ class thermal_eq:
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
             ax.invert_zaxis()
-            if visualize_neighbors == True and animate_neighbors == False:
+            if visualize_neighbors is True and animate_neighbors is False:
                 fig.show()
-            if animate_neighbors == True:
+            if animate_neighbors is True:
                 fig.savefig(os.getcwd()+'/mpl_animation3/snap_{}-{}-{}.png'.format(x_coord, y_coord, z_coord), format='png')
             fig.clf()
         classified_neighbors = self.explicit_classify_neighbors(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord,
-                                neighbors=neighbors, space_resolution=space_resolution, system_data=system_data)
+                                neighbors=neighbors, space_resolution=space_resolution, system_data=system_data,
+                                minx=minx, maxx=maxx, miny=miny, maxy=maxy, minz=minz, maxz=maxz)
         return classified_neighbors
 
 
     @classmethod
-    def explicit_classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution):
+    def explicit_classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution,
+                                    minx, maxx, miny, maxy, minz, maxz):
 
         # this dictionary will be stored for reference in the dataframe for quick index access
         neighbors_dict = {'x': {'x+': {'coords': [], 'index': []}, 'x': {'coords': [], 'index': []},
@@ -148,6 +159,37 @@ class thermal_eq:
                 neighbors_dict['z']['z-']['coords'].append(round(y_coord, len(str(space_resolution))))
                 neighbors_dict['z']['z-']['coords'].append(round(z_coord - space_resolution, len(str(space_resolution))))
 
+        # add periodicity to the boundaries by providing anti-linear coordinate to the direction in question
+
+        # def periodic_add(x, y, z):
+        #     coord = []
+        #     x = minx
+        #     y = y_coord
+        #     z = z_coord
+        #     coord.append(x)
+        #     coord.append(y)
+        #     coord.append(z)
+        #     return coord
+        #
+        # for i in neighbors_dict:
+        #     for r in neighbors_dict[i]:
+        #         if len(neighbors_dict[i][r]['coords']) == 0:
+        #             if neighbors_dict[i][r] == 'x+':
+        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=minx, y=y_coord, z=z_coord)
+        #             elif neighbors_dict[i][r] == 'x-':
+        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=maxx, y=y_coord, z=z_coord)
+        #             elif neighbors_dict[i][r] == 'y+':
+        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=miny, z=z_coord)
+        #             elif neighbors_dict[i][r] == 'y-':
+        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=maxy, z=z_coord)
+        #             elif neighbors_dict[i][r] == 'z+':
+        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=y_coord, z=minz)
+        #             elif neighbors_dict[i][r] == 'z-':
+        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=y_coord, z=maxz)
+
+
+
+
         # need to multi-index for quick neighbor data scooping
         # x, y, z coords will be index values. copy the original form quickly
         x_coords_copy = system_data['x_coords'].values.tolist()
@@ -163,6 +205,7 @@ class thermal_eq:
                     z = neighbors_dict[i][r]['coords'][2] # neighbor z-coord
                     row = (system_data['index'].loc[[(x,y,z)]]).values[0] # get the original index value of the coords
                     neighbors_dict[i][r]['index'].append(row) # append that value to the neighbors dictionary
+
         # resets indexing to original form
         system_data.set_index('index', inplace=True)
         system_data['x_coords'] = x_coords_copy
@@ -331,22 +374,20 @@ class thermal_eq:
 
 
     def D3_thermal_eq(self, system_data, deltaTime, space_resolution):
-        import sys
-        self.console.pm_stat("Thermally equilibrating system...")
+        console.pm_stat("Thermally equilibrating system...")
         system_data['neighbors'] = np.NAN
         system_data['T_gradient'] = [[] for i in list(range(len(system_data['x_coords'])))]
         system_data['T_laplacian'] = [[] for i in list(range(len(system_data['x_coords'])))]
         system_data['dT/dt'] = np.NAN
         system_data['K'] = np.NAN
         new_thermal_df = system_data.copy(deep=True)
-        frames = []
         material_properties = pd.read_csv("dynamics/physical_parameters.csv", index_col='Material')
         for row in system_data.itertuples():
             index = row.Index
             sample_xcoord = round(system_data['x_coords'][index], len(str(space_resolution)))
             sample_ycoord = round(system_data['y_coords'][index], len(str(space_resolution)))
             sample_zcoord = round(system_data['z_coords'][index], len(str(space_resolution)))
-            self.console.pm_flush("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
+            console.pm_flush("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
             # sys.stdout.write("\rCalculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
             # sys.stdout.flush()
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][index]) # interpret the dictionary stored in the dataframe
@@ -364,11 +405,8 @@ class thermal_eq:
             sample_xcoord = system_data['x_coords'][index]
             sample_ycoord = system_data['y_coords'][index]
             sample_zcoord = system_data['z_coords'][index]
-            self.console.pm_flush("Calculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
+            console.pm_flush("Calculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                sample_zcoord))
-            # sys.stdout.write("\rCalculating temperature laplacian for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
-            #                                                                    sample_zcoord))
-            # sys.stdout.flush()
             neighbors = ast.literal_eval(system_data['nearest_neighbors'][index])
             for i in neighbors:
                 for z in neighbors[i]:
