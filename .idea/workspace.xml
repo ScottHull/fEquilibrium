@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -140,6 +139,9 @@
   <component name="Git.Settings">
     <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <push-targets>
+      <push-target-info target-remote="fequilibrium" target-branch="dev" repo="$PROJECT_DIR$" source="master" />
+    </push-targets>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -689,7 +691,14 @@
       <option name="project" value="LOCAL" />
       <updated>1510939325768</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="Stable Version 1.0">
+      <created>1511291856795</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1511291856796</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -720,7 +729,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Good!" />
     <MESSAGE value="Began integrating energy calculations into the code.  Currently not usable." />
     <MESSAGE value="Code currently not functional." />
     <MESSAGE value="Basis for thermal equilibrium added." />
@@ -745,7 +753,8 @@
     <MESSAGE value="Fixed floating point issue for small resolutions." />
     <MESSAGE value="Fixed deltaTime error and added meta console printing." />
     <MESSAGE value="Box now has periodic boundaries." />
-    <option name="LAST_COMMIT_MESSAGE" value="Box now has periodic boundaries." />
+    <MESSAGE value="Stable Version 1.0" />
+    <option name="LAST_COMMIT_MESSAGE" value="Stable Version 1.0" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
