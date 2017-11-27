@@ -51,6 +51,7 @@ class box:
         self.length = length
         self.width = width
         self.height = height
+        self.model_base = height
         self.space_resolution = space_resolution
         self.model_time = float(model_time)
         self.initial_time = float(model_time)
@@ -346,9 +347,10 @@ class box:
             sys.exit(1)
 
     def insert_boundary(self, temperature, z_range):
-        for row in self.space.itertuples():
-            index = row.Index
-            if z_range[0] != 0 and z_range[1] != 0:
+        if z_range[0] != 0 and z_range[1] != 0:
+            self.model_base = z_range[0] # base of model considered to be the top (highest z-coordinate) of boundary layer
+            for row in self.space.itertuples():
+                index = row.Index
                 if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
                         z_range[1], len(str(self.space_resolution))):
                     self.space['object_id'][index] = 'C'
@@ -422,7 +424,7 @@ class box:
             temperature = []
             for row in self.space.itertuples():
                 index = row.Index
-                if float(self.space['z_coords'][index]) == float(self.height):
+                if float(self.space['z_coords'][index]) == float(self.model_base):
                     x_coords.append(self.space['x_coords'][index])
                     y_coords.append(self.space['y_coords'][index])
                     temperature.append(self.space['temperature'][index])

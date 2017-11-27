@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,7 +14,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="28">
@@ -25,11 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="137">
-              <caret line="377" column="22" lean-forward="false" selection-start-line="377" selection-start-column="22" selection-end-line="377" selection-end-column="22" />
+            <state relative-caret-position="141">
+              <caret line="426" column="80" lean-forward="false" selection-start-line="426" selection-start-column="80" selection-end-line="426" selection-end-column="80" />
               <folding />
             </state>
           </provider>
@@ -140,7 +141,7 @@
     <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info target-remote="fequilibrium" target-branch="master" repo="$PROJECT_DIR$" source="master" />
+      <push-target-info target-remote="fequilibrium" target-branch="dev" repo="$PROJECT_DIR$" source="master" />
     </push-targets>
   </component>
   <component name="IdeDocumentHistory">
@@ -173,9 +174,9 @@
         <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
         <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
-        <option value="$PROJECT_DIR$/box/Box.py" />
         <option value="$PROJECT_DIR$/test_box.py" />
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
+        <option value="$PROJECT_DIR$/box/Box.py" />
       </list>
     </option>
   </component>
@@ -714,7 +715,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511818180507</updated>
     </task>
-    <option name="localTasksCounter" value="47" />
+    <task id="LOCAL-00047" summary="Testing the insertion of boundary layers.">
+      <created>1511818194848</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1511818194848</updated>
+    </task>
+    <option name="localTasksCounter" value="48" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -745,7 +753,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Code currently not functional." />
     <MESSAGE value="Basis for thermal equilibrium added." />
     <MESSAGE value="Possibly functional thermal equilibrium." />
     <MESSAGE value="Visualization support for thermal equilibrium." />
@@ -770,7 +777,8 @@
     <MESSAGE value="Box now has periodic boundaries." />
     <MESSAGE value="Stable Version 1.0" />
     <MESSAGE value="Reformatted code." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reformatted code." />
+    <MESSAGE value="Testing the insertion of boundary layers." />
+    <option name="LAST_COMMIT_MESSAGE" value="Testing the insertion of boundary layers." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -954,14 +962,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/box/Box.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="137">
-          <caret line="377" column="22" lean-forward="false" selection-start-line="377" selection-start-column="22" selection-end-line="377" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1890">
@@ -991,6 +991,14 @@
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/box/Box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="426" column="80" lean-forward="false" selection-start-line="426" selection-start-column="80" selection-end-line="426" selection-end-column="80" />
+          <folding />
         </state>
       </provider>
     </entry>
