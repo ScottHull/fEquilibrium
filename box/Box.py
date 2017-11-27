@@ -319,12 +319,6 @@ class box:
                                                                                       self.space['y_coords'][index],
                                                                                       self.space['z_coords'][
                                                                                           index]))
-                    # sys.stdout.write("\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
-                    #                                                                     self.space['x_coords'][index],
-                    #                                                                     self.space['y_coords'][index],
-                    #                                                                     self.space['z_coords'][
-                    #                                                                         index]))
-                    # sys.stdout.flush()
                 print("")
             else:
                 for row in self.space.itertuples():
@@ -350,6 +344,24 @@ class box:
             console.pm_err("Matrix material not defined in {}!  Cannot insert matrix material!".format(
                 os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
+
+    def insert_boundary(self, temperature, z_range):
+        for row in self.space.itertuples():
+            index = row.Index
+            if z_range[0] != 0 and z_range[1] != 0:
+                if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
+                        z_range[1], len(str(self.space_resolution))):
+                    self.space['object_id'][index] = 'C'
+                    self.space['object'][index] = "Boundary"
+                    self.space['temperature'][index] = temperature
+                    console.pm_flush("Inserted boundary at coordinates: x:{} y:{}, z:{}".format(
+                        self.space['x_coords'][index],
+                        self.space['y_coords'][index],
+                        self.space['z_coords'][
+                            index]))
+        print("")
+        console.pm_stat("Boundary points inserted!")
+
 
     def visualize_box(self):
         if self.visualize_system != False:

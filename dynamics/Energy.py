@@ -415,8 +415,6 @@ class thermal_eq:
             sample_zcoord = round(system_data['z_coords'][index], len(str(space_resolution)))
             console.pm_flush("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                           sample_zcoord))
-            # sys.stdout.write("\rCalculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord, sample_zcoord))
-            # sys.stdout.flush()
             neighbors = ast.literal_eval(
                 system_data['nearest_neighbors'][index])  # interpret the dictionary stored in the dataframe
             for i in neighbors:
