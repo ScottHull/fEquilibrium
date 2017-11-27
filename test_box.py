@@ -7,7 +7,7 @@ import numpy as np
 width = 5.0
 length = 5.0
 height = 5.0
-space_resolution = 0.5
+space_resolution = 1
 # x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))), space_resolution) # generate range of x-coords
 # y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))), space_resolution) # generate range of y-coords
 # z_coords_range = np.arange(0, round((height + space_resolution), len(str(space_resolution))), space_resolution) # generate range of z-coords
@@ -15,7 +15,7 @@ space_resolution = 0.5
 
 # instantiate the box
 model = box(length=length, width=width, height=height, model_time=30, space_resolution=space_resolution,
-            visualize_system=True, object_history=True, visualize_neighbors=False, animate_neighbors=False)
+            visualize_system=True, object_history=True, visualize_neighbors=True, animate_neighbors=True)
 
 # insert one more more matrix materials into the box, will populate all possible coordinate positions
 model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100},

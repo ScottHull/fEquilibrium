@@ -1,14 +1,23 @@
 import matplotlib as mpl
+
 mpl.use('Qt5Agg')
 import os
 import numpy as np
 import pandas as pd
 from random import randint
 import moviepy.editor as mpy
-os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Movement import move_particle
-os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from dynamics.Energy import energy, thermal_eq
-os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from thermodynamics.Solution import solution
-os.sys.path.append(os.path.dirname(os.path.abspath('.'))); from meta.Console import console
+
+os.sys.path.append(os.path.dirname(os.path.abspath('.')));
+from dynamics.Movement import move_particle
+
+os.sys.path.append(os.path.dirname(os.path.abspath('.')));
+from dynamics.Energy import energy, thermal_eq
+
+os.sys.path.append(os.path.dirname(os.path.abspath('.')));
+from thermodynamics.Solution import solution
+
+os.sys.path.append(os.path.dirname(os.path.abspath('.')));
+from meta.Console import console
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import shutil
@@ -21,9 +30,9 @@ from math import pi
 import multiprocessing
 import datetime
 
+
 # TODO: update some methods to class methods to avoid outside interference
 class box:
-
     def __init__(self, length, width, height, space_resolution, model_time, visualize_system=False,
                  object_history=False, visualize_neighbors=False, animate_neighbors=False):
         """
@@ -46,34 +55,37 @@ class box:
         self.model_time = float(model_time)
         self.initial_time = float(model_time)
         self.coords = self.generate_coordinate_points(length=self.length, width=self.width, height=self.height,
-                                                 space_resolution=self.space_resolution)
+                                                      space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
         self.object_history = object_history
         self.space = pd.DataFrame({
             'coord_index': [str(i) for i in self.coords],
-            'object_id': np.NAN, # randomly generated object id tag to identify unique elements in box
-            'object': np.NAN, # name of the object, as defined in self.physical_parameters
+            'object_id': np.NAN,  # randomly generated object id tag to identify unique elements in box
+            'object': np.NAN,  # name of the object, as defined in self.physical_parameters
             'x_coords': [float(i[0]) for i in self.coords],
             'y_coords': [float(i[1]) for i in self.coords],
             'z_coords': [float(i[2]) for i in self.coords],
-            'nearest_neighbors': np.NAN, # x, y, and z neighbors in each direction
-            'object_radius': np.NAN, # in m
-            'density': np.NAN, # in kg/m^3
-            'temperature': np.NAN, # in K
-            'pressure': [(1*10**9) for i in self.coords], # pressure in pascals, in order to work with ideal gas law
+            'nearest_neighbors': np.NAN,  # x, y, and z neighbors in each direction
+            'object_radius': np.NAN,  # in m
+            'density': np.NAN,  # in kg/m^3
+            'temperature': np.NAN,  # in K
+            'pressure': [(1 * 10 ** 9) for i in self.coords],
+        # pressure in pascals, in order to work with ideal gas law
             'object_velocity': [float(0) for i in self.coords],
             'x_direct': np.NAN,
             'y_direct': np.NAN,
             'z_direct': np.NAN,
             'potential_energy': np.NAN,
-            'kinetic_energy': np.NAN, # in J
-            'total_energy_released': np.NAN, # in J
-            'mass': np.NAN, # in kg
-            'volume': np.NAN # in m^3
+            'kinetic_energy': np.NAN,  # in J
+            'total_energy_released': np.NAN,  # in J
+            'mass': np.NAN,  # in kg
+            'volume': np.NAN  # in m^3
         })
         self.num_coords = len(self.coords)
         self.solution = solution(box_length=self.num_coords)
-        self.physical_parameters = pd.read_csv(os.path.dirname(os.path.abspath('.')) + "/fEquilibrium/dynamics/physical_parameters.csv", index_col='Material')
+        self.physical_parameters = pd.read_csv(
+            os.path.dirname(os.path.abspath('.')) + "/fEquilibrium/dynamics/physical_parameters.csv",
+            index_col='Material')
         self.movie_frames1 = []
         self.movie_frames2 = []
         self.movie_frames3 = []
@@ -103,10 +115,8 @@ class box:
             os.remove('object_velocities.csv')
         self.velocity_output = open('object_velocities.csv', 'a')
 
-
     def get_box(self):
         return self.space
-
 
     def classify_neighbors(self, animate_neighbors, visualize_neighbors):
         loop_count = 1
@@ -138,8 +148,8 @@ class box:
             # print("Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
             if animate_neighbors is True:
                 self.movie_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][index],
-                                                                    self.space['y_coords'][index],
-                                                                    self.space['z_coords'][index]))
+                                                                     self.space['y_coords'][index],
+                                                                     self.space['z_coords'][index]))
         print("")
         if animate_neighbors is True:
             # self.space.to_csv("space2_coords_check.csv")
@@ -153,8 +163,6 @@ class box:
             os.chdir("..")
         return None
 
-
-
     def generate_coordinate_points(self, length, width, height, space_resolution):
         """
         :param length: length of the system, in m
@@ -166,9 +174,12 @@ class box:
         console.pm_stat("Generating coordinates...")
         # print("Generating coordinates...")
         coords = []
-        x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))), space_resolution) # generate range of x-coords
-        y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))), space_resolution) # generate range of y-coords
-        z_coords_range = np.arange(0, round((height + space_resolution), len(str(space_resolution))), space_resolution) # generate range of z-coords
+        x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))),
+                                   space_resolution)  # generate range of x-coords
+        y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))),
+                                   space_resolution)  # generate range of y-coords
+        z_coords_range = np.arange(0, round((height + space_resolution), len(str(space_resolution))),
+                                   space_resolution)  # generate range of z-coords
         for i in x_coords_range:
             for j in y_coords_range:
                 for q in z_coords_range:
@@ -180,7 +191,6 @@ class box:
         console.pm_stat("Coordinates generated!")
         # print("Coordinates generated!")
         return coords
-
 
     def round_coord_arbitrary(self, coordinate, system_data, coordinate_type):
         rounded_coordinate = ''
@@ -196,13 +206,11 @@ class box:
                     rounded_coordinate = i
         return rounded_coordinate
 
-
-
     def check_coords(self, x_coord, y_coord, z_coord):
         console.pm_stat("Checking if coordinates are valid for object insertion...")
         x_min, x_max = self.space['x_coords'][0], self.space['x_coords'][len(self.coords) - 1]
-        y_min, y_max = self.space['y_coords'][0], self.space['y_coords'][len(self.coords) -1]
-        z_min, z_max = self.space['z_coords'][0], self.space['z_coords'][len(self.coords) -1]
+        y_min, y_max = self.space['y_coords'][0], self.space['y_coords'][len(self.coords) - 1]
+        z_min, z_max = self.space['z_coords'][0], self.space['z_coords'][len(self.coords) - 1]
         if x_coord >= x_min and x_coord <= x_max:
             if y_coord >= y_min and y_coord <= y_max:
                 if z_coord >= z_min and z_coord <= z_max:
@@ -219,16 +227,15 @@ class box:
             return object_id
 
         if matrix is True:
-            object_id = random_gen(object_identifier='B') # matrix material objects begin with a B
+            object_id = random_gen(object_identifier='B')  # matrix material objects begin with a B
             while object_id in self.space['object_id'].tolist():
                 object_id = random_gen(object_identifier='B')  # matrix material objects begin with a B
             return object_id
         else:
-            object_id = random_gen(object_identifier='A') # non-matrix material objects begin with a A
+            object_id = random_gen(object_identifier='A')  # non-matrix material objects begin with a A
             while object_id in self.space['object_id'].tolist():
                 object_id = random_gen(object_identifier='A')  # matrix material objects begin with a A
             return object_id
-
 
     # def insert_at_coord(self, x_coord, y_coord, z_coord):
     #     """
@@ -249,25 +256,34 @@ class box:
     def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, composition, initial_temperature):
         console.pm_stat("Inserting object...")
         if object in self.physical_parameters.index:
-            if self.check_coords(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord) is True: # checks to verify that coordinates exist in space
+            if self.check_coords(x_coord=x_coord, y_coord=y_coord,
+                                 z_coord=z_coord) is True:  # checks to verify that coordinates exist in space
                 for row in self.space.itertuples():
                     index = row.Index
                     if self.space['x_coords'][index] == x_coord:
                         if self.space['y_coords'][index] == y_coord:
-                            if self.space['z_coords'][index] == z_coord: # verifies that coordinates match to Dataframe
-                                self.space['object'][index] = object # the name of the object, as defined in dynamics/physical_parameters.csv
-                                self.space['object_id'][index] = self.generate_object_id(matrix=False) # generates object ID
-                                self.space['object_radius'][index] = object_radius # in m
-                                self.space['volume'][index] = (4/3) * pi * (object_radius)**3 # assume volume of object is a perfect sphere
-                                self.space['mass'][index] = self.physical_parameters['Density'][object] * self.space['volume'][index] # mass = density * volume
+                            if self.space['z_coords'][index] == z_coord:  # verifies that coordinates match to Dataframe
+                                self.space['object'][
+                                    index] = object  # the name of the object, as defined in dynamics/physical_parameters.csv
+                                self.space['object_id'][index] = self.generate_object_id(
+                                    matrix=False)  # generates object ID
+                                self.space['object_radius'][index] = object_radius  # in m
+                                self.space['volume'][index] = (4 / 3) * pi * (
+                                                                             object_radius) ** 3  # assume volume of object is a perfect sphere
+                                self.space['mass'][index] = self.physical_parameters['Density'][object] * \
+                                                            self.space['volume'][index]  # mass = density * volume
                                 self.space['temperature'][index] = initial_temperature
-                                self.space['object_density'] = float(self.space['mass'][index]) / ((4/3) * pi *
-                                                float(self.space['object_radius'][index])**3) # assume object is a perfect sphere
-                                self.solution.create_solution(box=self.space, composition=composition, row=index, object=object)
-                                console.pm_flush("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
-                                                                                               self.space['x_coords'][index],
-                                                                                               self.space['y_coords'][index],
-                                                                                               self.space['z_coords'][index]))
+                                self.space['object_density'] = float(self.space['mass'][index]) / ((4 / 3) * pi *
+                                                                                                   float(self.space[
+                                                                                                             'object_radius'][
+                                                                                                             index]) ** 3)  # assume object is a perfect sphere
+                                self.solution.create_solution(box=self.space, composition=composition, row=index,
+                                                              object=object)
+                                console.pm_flush("Inserted object ({}) at coordinates: x:{} y:{}, z:{}".format(
+                                    self.space['object'][index],
+                                    self.space['x_coords'][index],
+                                    self.space['y_coords'][index],
+                                    self.space['z_coords'][index]))
                                 # sys.stdout.write("\rInserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                                 #                                                                self.space['x_coords'][index],
                                 #                                                                self.space['y_coords'][index],
@@ -281,15 +297,15 @@ class box:
                 sys.exit(1)
         else:
             console.pm_err("Object not defined in {}!  Cannot insert object!".format(
-                                                    os.getcwd() + "/dynamics/physical_parameters.csv"))
+                os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
 
-
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
-    def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0,0]):
+    def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0, 0]):
         console.pm_stat("Inserting matrix...")
         if matrix_material in self.physical_parameters.index:
-            if z_range[0] == 0 and z_range[1] == 0:# z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
+            if z_range[0] == 0 and z_range[
+                1] == 0:  # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
                 for row in self.space.itertuples():
                     index = row.Index
                     self.space['object_id'][index] = self.generate_object_id(matrix=True)
@@ -297,11 +313,12 @@ class box:
                     self.space['temperature'][index] = initial_temperature
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
-                    console.pm_flush("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
-                                                                                        self.space['x_coords'][index],
-                                                                                        self.space['y_coords'][index],
-                                                                                        self.space['z_coords'][
-                                                                                            index]))
+                    console.pm_flush(
+                        "Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                                                                      self.space['x_coords'][index],
+                                                                                      self.space['y_coords'][index],
+                                                                                      self.space['z_coords'][
+                                                                                          index]))
                     # sys.stdout.write("\rInserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
                     #                                                                     self.space['x_coords'][index],
                     #                                                                     self.space['y_coords'][index],
@@ -312,17 +329,19 @@ class box:
             else:
                 for row in self.space.itertuples():
                     index = row.Index
-                    if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(z_range[1], len(str(self.space_resolution))):
+                    if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
+                            z_range[1], len(str(self.space_resolution))):
                         self.space['object_id'][index] = self.generate_object_id(matrix=True)
                         self.space['object'][index] = matrix_material
                         self.space['temperature'][index] = initial_temperature
                         self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                       object=matrix_material)
-                        console.pm_flush("Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
-                                                                                            self.space['x_coords'][index],
-                                                                                            self.space['y_coords'][index],
-                                                                                            self.space['z_coords'][
-                                                                                                index]))
+                        console.pm_flush(
+                            "Inserted matrix ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
+                                                                                          self.space['x_coords'][index],
+                                                                                          self.space['y_coords'][index],
+                                                                                          self.space['z_coords'][
+                                                                                              index]))
                 print("")
             print("")
             console.pm_stat("Matrix material(s) ({}) inserted!".format(matrix_material))
@@ -331,7 +350,6 @@ class box:
             console.pm_err("Matrix material not defined in {}!  Cannot insert matrix material!".format(
                 os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
-
 
     def visualize_box(self):
         if self.visualize_system != False:
@@ -352,11 +370,10 @@ class box:
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
             ax.invert_zaxis()
-            fig.savefig(os.getcwd()+'/mpl_animation1/snap_{}.png'.format(self.model_time), format='png')
+            fig.savefig(os.getcwd() + '/mpl_animation1/snap_{}.png'.format(self.model_time), format='png')
             fig.clf()
             self.movie_frames1.append('snap_{}.png'.format(self.model_time))
             console.pm_stat("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
-
 
             fig = plt.figure()
             ax = Axes3D(fig)
@@ -384,7 +401,7 @@ class box:
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
             ax.invert_zaxis()
-            fig.savefig(os.getcwd()+'/mpl_animation2/snap_{}.png'.format(self.model_time), format='png')
+            fig.savefig(os.getcwd() + '/mpl_animation2/snap_{}.png'.format(self.model_time), format='png')
             self.movie_frames2.append('snap_{}.png'.format(self.model_time))
             fig.clf()
 
@@ -408,8 +425,6 @@ class box:
             fig.savefig(os.getcwd() + '/mpl_animation4/snap_{}.png'.format(self.model_time), format='png')
             self.movie_frames4.append('snap_{}.png'.format(self.model_time))
             fig.clf()
-
-
 
     @staticmethod
     def grab_row_index_by_coord(system_data, x_coord, y_coord, z_coord):
@@ -444,7 +459,6 @@ class box:
     def calculate_velocities(cls):
         pass
 
-
     # # TODO: calculate the distance between the two points, and then find nearest coordinate neighbors along the path to account for x,y,z
     # # TODO: right now, just operates in z-direction. will have to rewrite entire method if lateral motion is to occur
     # @classmethod
@@ -464,7 +478,8 @@ class box:
 
 
 
-    def move_systems(self, system_data, update_space, deltaTime, box_height, space_resolution, default_matrix_material='Silicate Liquid'):
+    def move_systems(self, system_data, update_space, deltaTime, box_height, space_resolution,
+                     default_matrix_material='Silicate Liquid'):
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.itertuples():
             index = row.Index
@@ -474,7 +489,7 @@ class box:
                 curr_z_coords = system_data['z_coords'][index]
                 object_velocity = 0
 
-                matrix_material = default_matrix_material # the default matrix matrial until overwritten
+                matrix_material = default_matrix_material  # the default matrix matrial until overwritten
                 matrix_material_temp = 0.0
                 matrix_material_pressure = 0.0
                 # assumption is that object will travel through matrix most like that occupying z coord below it.
@@ -484,38 +499,42 @@ class box:
                     for row2 in system_data.itertuples():
                         index2 = row2.Index
                         if system_data['z_coords'][index2] == searchfor_coord and system_data['y_coords'][index2] \
-                        == curr_y_coords and system_data['x_coords'][index2] == curr_x_coords:
+                                == curr_y_coords and system_data['x_coords'][index2] == curr_x_coords:
                             matrix_material = system_data['object'][index2]
                             matrix_material_temp = system_data['temperature'][index2]
                             matrix_material_pressure = system_data['pressure'][index2]
                             break
                 object_velocity = move_particle(body_type=system_data['object'][index],
-                        system_params=system_data).stokes_settling(object=system_data['object'][index], matrix_material=matrix_material,
-                        matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure,
-                        object_radius=system_data['object_radius'][index])
+                                                system_params=system_data).stokes_settling(
+                    object=system_data['object'][index], matrix_material=matrix_material,
+                    matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure,
+                    object_radius=system_data['object_radius'][index])
 
                 z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coords = system_data['x_coords'][index]
                 updated_y_coords = system_data['y_coords'][index]
-                updated_z_coords = self.round_coord_arbitrary(coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
-                                                             system_data=system_data, coordinate_type='z_coords')
-                rounded_z_distance_travelled = updated_z_coords - curr_z_coords # use this distance for distance travelled, as it is more self-consistent within the model
-                if rounded_z_distance_travelled == 0: # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity = 0
+                updated_z_coords = self.round_coord_arbitrary(
+                    coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
+                    system_data=system_data, coordinate_type='z_coords')
+                rounded_z_distance_travelled = updated_z_coords - curr_z_coords  # use this distance for distance travelled, as it is more self-consistent within the model
+                if rounded_z_distance_travelled == 0:  # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity = 0
                     object_velocity = 0
                     z_dis_obj_travel = 0
                 system_data['temperature'][index] = float(
                     system_data['temperature'][index]) + energy().stokes_frictional_energy(
                     object=system_data['object'][index], matrix_material=matrix_material,
                     body_radius=system_data['object_radius'][index],
-                    body_mass=system_data['mass'][index], distance_travelled=rounded_z_distance_travelled, object_velocity=object_velocity)
+                    body_mass=system_data['mass'][index], distance_travelled=rounded_z_distance_travelled,
+                    object_velocity=object_velocity)
                 system_data['object_velocity'][index] = object_velocity
                 system_data['z_direct'][index] = object_velocity
                 system_data['potential_energy'][index] = energy().potential_energy(mass=system_data['mass'][index],
-                                                                                 height=system_data['z_coords'][index],
-                                                                                 box_height=box_height)
+                                                                                   height=system_data['z_coords'][
+                                                                                       index],
+                                                                                   box_height=box_height)
                 system_data['kinetic_energy'][index] = energy().kinetic_energy(mass=system_data['mass'][index],
-                                                                             velocity=system_data['object_velocity'][
-                                                                                 index])
+                                                                               velocity=system_data['object_velocity'][
+                                                                                   index])
                 console.pm_flush("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
                     system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                     system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coords, updated_y_coords,
@@ -529,11 +548,9 @@ class box:
                                                             y_coord=updated_y_coords,
                                                             z_coord=updated_z_coords)
                 update_space_copy = self.swap_rows(system_data=system_data, updated_system_data=update_space,
-                                              from_row_index=from_row_index, to_row_index=to_row_index)
-                
+                                                   from_row_index=from_row_index, to_row_index=to_row_index)
+
         return update_space_copy
-
-
 
     # TODO: update x and y coords
     def update_system(self, auto_update=True, deltaTime=1.0):
@@ -564,12 +581,15 @@ class box:
                 console.pm_stat("Writing animations...")
 
                 # dynamics animation
-                os.chdir(os.getcwd()+'/mpl_animation1')
-                animation = mpy.ImageSequenceClip(self.movie_frames1, fps=round((self.initial_time/(self.initial_time/3))), load_images=True)
+                os.chdir(os.getcwd() + '/mpl_animation1')
+                animation = mpy.ImageSequenceClip(self.movie_frames1,
+                                                  fps=round((self.initial_time / (self.initial_time / 3))),
+                                                  load_images=True)
                 os.chdir('..')
                 animation.write_videofile('fEquilibrium_animation.mp4',
                                           fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
-                animation.write_gif('fEquilibrium_animation.gif', fps=round((self.initial_time/(self.initial_time/3))))
+                animation.write_gif('fEquilibrium_animation.gif',
+                                    fps=round((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d heatmap animation
@@ -615,7 +635,8 @@ class box:
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime,
                                              box_height=self.height, space_resolution=self.space_resolution)
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
-            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime, space_resolution=self.space_resolution)
+            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime,
+                                                               space_resolution=self.space_resolution)
             for row in update_space.itertuples():
                 index = row.Index
                 if update_space['object'][index] == 'Metal Liquid':

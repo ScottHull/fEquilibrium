@@ -65,11 +65,3 @@ class solution:
         """
 
         return self.solution
-
-
-
-
-
-
-
-

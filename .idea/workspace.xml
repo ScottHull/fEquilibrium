@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/thermodynamics/Solution.py" afterPath="$PROJECT_DIR$/thermodynamics/Solution.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="22" lean-forward="false" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+            <state relative-caret-position="0">
+              <caret line="17" column="104" lean-forward="false" selection-start-line="17" selection-start-column="104" selection-end-line="17" selection-end-column="104" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -28,8 +32,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7785">
-              <caret line="519" column="2" lean-forward="false" selection-start-line="519" selection-start-column="2" selection-end-line="519" selection-end-column="2" />
+            <state relative-caret-position="1">
+              <caret line="627" column="26" lean-forward="false" selection-start-line="627" selection-start-column="26" selection-end-line="627" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -38,8 +42,8 @@
       <file leaf-file-name="Movement.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1395">
-              <caret line="97" column="40" lean-forward="false" selection-start-line="97" selection-start-column="40" selection-end-line="97" selection-end-column="40" />
+            <state relative-caret-position="1807">
+              <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
               <folding>
                 <marker date="1510938740385" expanded="true" signature="5744:5767" ph="..." />
               </folding>
@@ -47,15 +51,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5460">
-              <caret line="370" column="14" lean-forward="false" selection-start-line="370" selection-start-column="14" selection-end-line="370" selection-end-column="14" />
+            <state relative-caret-position="7815">
+              <caret line="521" column="36" lean-forward="false" selection-start-line="521" selection-start-column="36" selection-end-line="521" selection-end-column="36" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
-                <marker date="1510938740390" expanded="true" signature="27315:27316" ph="..." />
-                <marker date="1510938740390" expanded="true" signature="27315:27396" ph="..." />
+                <marker date="1511801726771" expanded="true" signature="29363:29364" ph="..." />
+                <marker date="1511801726771" expanded="true" signature="29363:29444" ph="..." />
               </folding>
             </state>
           </provider>
@@ -140,7 +144,7 @@
     <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <push-targets>
-      <push-target-info target-remote="fequilibrium" target-branch="dev" repo="$PROJECT_DIR$" source="master" />
+      <push-target-info target-remote="fequilibrium" target-branch="master" repo="$PROJECT_DIR$" source="master" />
     </push-targets>
   </component>
   <component name="IdeDocumentHistory">
@@ -169,13 +173,13 @@
         <option value="$PROJECT_DIR$/stats/regression.py" />
         <option value="$USER_HOME$/SCE_GUI_Project/SIPM_v3_final.py" />
         <option value="$PROJECT_DIR$/box/test_box.py" />
+        <option value="$PROJECT_DIR$/meta/Console.py" />
+        <option value="$PROJECT_DIR$/test_box.py" />
+        <option value="$PROJECT_DIR$/box/Box.py" />
+        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
         <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
-        <option value="$PROJECT_DIR$/dynamics/Movement.py" />
-        <option value="$PROJECT_DIR$/meta/Console.py" />
-        <option value="$PROJECT_DIR$/box/Box.py" />
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
-        <option value="$PROJECT_DIR$/test_box.py" />
       </list>
     </option>
   </component>
@@ -200,12 +204,18 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
               <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+              <item name="box" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
@@ -226,7 +236,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
   </component>
@@ -698,7 +707,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511291856796</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="Stable Version 1.0">
+      <created>1511291954056</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1511291954056</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -814,13 +830,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/thermodynamics/Thermodynamics.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="122" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/thermodynamics/example_partition_extrapolation.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="615">
@@ -907,20 +916,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="40" column="96" lean-forward="false" selection-start-line="40" selection-start-column="96" selection-end-line="40" selection-end-column="96" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="4" column="11" lean-forward="false" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/meta/Console.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
@@ -928,42 +923,66 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="17" column="104" lean-forward="false" selection-start-line="17" selection-start-column="104" selection-end-line="17" selection-end-column="104" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7785">
-          <caret line="519" column="2" lean-forward="false" selection-start-line="519" selection-start-column="2" selection-end-line="519" selection-end-column="2" />
+        <state relative-caret-position="1">
+          <caret line="627" column="26" lean-forward="false" selection-start-line="627" selection-start-column="26" selection-end-line="627" selection-end-column="26" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1395">
-          <caret line="97" column="40" lean-forward="false" selection-start-line="97" selection-start-column="40" selection-end-line="97" selection-end-column="40" />
+        <state relative-caret-position="1807">
+          <caret line="130" column="0" lean-forward="false" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
           <folding>
             <marker date="1510938740385" expanded="true" signature="5744:5767" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
+    <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5460">
-          <caret line="370" column="14" lean-forward="false" selection-start-line="370" selection-start-column="14" selection-end-line="370" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <marker date="1510938740390" expanded="true" signature="27315:27316" ph="..." />
-            <marker date="1510938740390" expanded="true" signature="27315:27396" ph="..." />
-          </folding>
+        <state relative-caret-position="945">
+          <caret line="67" column="0" lean-forward="true" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_box.py">
+    <entry file="file://$PROJECT_DIR$/thermodynamics/Thermodynamics.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="22" lean-forward="false" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
+        <state relative-caret-position="389">
+          <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1575">
+          <caret line="109" column="0" lean-forward="false" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7815">
+          <caret line="521" column="36" lean-forward="false" selection-start-line="521" selection-start-column="36" selection-end-line="521" selection-end-column="36" />
           <folding>
-            <element signature="e#0#23#0" expanded="true" />
+            <element signature="e#0#25#0" expanded="true" />
+            <marker date="1511801726771" expanded="true" signature="29363:29364" ph="..." />
+            <marker date="1511801726771" expanded="true" signature="29363:29444" ph="..." />
           </folding>
         </state>
       </provider>
