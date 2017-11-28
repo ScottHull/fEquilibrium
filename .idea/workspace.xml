@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,11 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="10" lean-forward="false" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="10" />
+            <state relative-caret-position="240">
+              <caret line="16" column="67" lean-forward="false" selection-start-line="16" selection-start-column="67" selection-end-line="16" selection-end-column="67" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -38,7 +39,7 @@
       <file leaf-file-name="Movement.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="-761">
               <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
               <folding>
                 <marker date="1510938740385" expanded="true" signature="5744:5767" ph="..." />
@@ -47,11 +48,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="96" lean-forward="true" selection-start-line="23" selection-start-column="96" selection-end-line="23" selection-end-column="96" />
+            <state relative-caret-position="-280">
+              <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
                 <marker date="1511880532806" expanded="true" signature="29190:29191" ph="..." />
@@ -141,11 +142,12 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="dev" />
       </map>
     </option>
     <push-targets>
       <push-target-info target-remote="fequilibrium" target-branch="dev" repo="$PROJECT_DIR$" source="master" />
+      <push-target-info target-remote="fequilibrium" target-branch="boundary_test" repo="$PROJECT_DIR$" source="dev" />
     </push-targets>
   </component>
   <component name="IdeDocumentHistory">
@@ -178,9 +180,9 @@
         <option value="$PROJECT_DIR$/dynamics/Movement.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
         <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
-        <option value="$PROJECT_DIR$/test_box.py" />
         <option value="$PROJECT_DIR$/box/Box.py" />
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
+        <option value="$PROJECT_DIR$/test_box.py" />
       </list>
     </option>
   </component>
@@ -396,13 +398,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Began integrating energy calculations into the code.  Currently not usable.">
-      <created>1506711649940</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1506711649940</updated>
     </task>
     <task id="LOCAL-00004" summary="Code currently not functional.">
       <created>1507047944405</created>
@@ -740,7 +735,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511890420633</updated>
     </task>
-    <option name="localTasksCounter" value="52" />
+    <task id="LOCAL-00052" summary="Boundary test">
+      <created>1511890440429</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1511890440429</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -771,7 +773,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Possibly functional thermal equilibrium." />
     <MESSAGE value="Visualization support for thermal equilibrium." />
     <MESSAGE value="Temperature equilibration currently not working." />
     <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing." />
@@ -796,7 +797,8 @@
     <MESSAGE value="Reformatted code." />
     <MESSAGE value="Testing the insertion of boundary layers." />
     <MESSAGE value="Some important comments on heat exchange." />
-    <option name="LAST_COMMIT_MESSAGE" value="Some important comments on heat exchange." />
+    <MESSAGE value="Boundary test" />
+    <option name="LAST_COMMIT_MESSAGE" value="Boundary test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -976,12 +978,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_box.py">
+    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="10" lean-forward="false" selection-start-line="7" selection-start-column="10" selection-end-line="7" selection-end-column="10" />
+        <state relative-caret-position="-280">
+          <caret line="21" column="0" lean-forward="true" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
           <folding>
-            <element signature="e#0#23#0" expanded="true" />
+            <element signature="e#0#25#0" expanded="true" />
+            <marker date="1511880532806" expanded="true" signature="29190:29191" ph="..." />
+            <marker date="1511880532806" expanded="true" signature="29190:29271" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-761">
+          <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+          <folding>
+            <marker date="1510938740385" expanded="true" signature="5744:5767" ph="..." />
           </folding>
         </state>
       </provider>
@@ -994,24 +1008,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
+    <entry file="file://$PROJECT_DIR$/test_box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+        <state relative-caret-position="240">
+          <caret line="16" column="67" lean-forward="false" selection-start-line="16" selection-start-column="67" selection-end-line="16" selection-end-column="67" />
           <folding>
-            <marker date="1510938740385" expanded="true" signature="5744:5767" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="96" lean-forward="true" selection-start-line="23" selection-start-column="96" selection-end-line="23" selection-end-column="96" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-            <marker date="1511880532806" expanded="true" signature="29190:29191" ph="..." />
-            <marker date="1511880532806" expanded="true" signature="29190:29271" ph="..." />
+            <element signature="e#0#23#0" expanded="true" />
           </folding>
         </state>
       </provider>

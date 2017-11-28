@@ -14,7 +14,7 @@ space_resolution = 0.5
 
 
 # instantiate the box
-model = box(length=length, width=width, height=height, model_time=30, space_resolution=space_resolution,
+model = box(length=length, width=width, height=height, model_time=10, space_resolution=space_resolution,
             visualize_system=True, object_history=True, visualize_neighbors=False, animate_neighbors=False)
 
 # insert one more more matrix materials into the box, will populate all possible coordinate positions
@@ -23,12 +23,13 @@ model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 
 # model.insert_matrix(matrix_material='Denser Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100},
 #                     z_range=[20,30], initial_temperature=2000)
 # insert boundary with conditions at a specified z range
-model.insert_boundary(temperature=1600, z_range=[4,5])
+model.insert_boundary(temperature=2200, z_range=[0,0.5])
+model.insert_boundary(temperature=2200, z_range=[4.5,5])
 
 # insert X number of objects into the box, specify their location, will overwrite matrix at that point
 for i in list(range(1)):
     model.insert_object(object='Metal Liquid', object_radius=0.1, x_coord=2.5,
-                        y_coord=2.5, z_coord=0, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2200)
+                        y_coord=2.5, z_coord=1, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2200)
 
 # automatically update the box iteratively to model_time = 0
 # a time step is automatically calculated if one is not provided with the deltaTime argument
