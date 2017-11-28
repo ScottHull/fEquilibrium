@@ -483,10 +483,10 @@ class energy:
 
         Temperature = degK
         Body Mass = g (automatically scaled from the user input in kg)
-        Specific Heat = J/g
+        Specific Heat, cp = J/g
         Distance Travelled = m
 
-        Modeling temperature change: K = W/(cp*mass) = J/[((J/K/mass)*mass)] = JK/J = K
+        Modeling temperature change: K = W / (cp * mass) = J / [(((J / K) / mass) * mass)] = JK / J = K
 
         :return:
         """
@@ -501,6 +501,7 @@ class energy:
         # W = F * d, Units = [J]
         W = F_d * distance_travelled  # convert joules to degK, Q[J]=M[g] * Cp * T[degK] --> T=Q/(M*Cp)
         degK = W / (body_cp * (body_mass * 1000))  # the temperature to be added to the body
+        # Checking units for calculation above: K = W / (cp * mass) = J / [(((J / K) / mass) * mass)] = JK / J = K
         return degK
 
     # def distribute_stokes_frictional_energy(self, frictional_energy, path_coords):

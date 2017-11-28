@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
+    <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="Some important comments on heat exchange.">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
     </list>
@@ -51,12 +51,12 @@
       <file leaf-file-name="Energy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="486" column="30" lean-forward="true" selection-start-line="486" selection-start-column="30" selection-end-line="486" selection-end-column="30" />
+            <state relative-caret-position="418">
+              <caret line="503" column="84" lean-forward="false" selection-start-line="503" selection-start-column="84" selection-end-line="503" selection-end-column="84" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
-                <marker date="1511880203514" expanded="true" signature="29190:29191" ph="..." />
-                <marker date="1511880203514" expanded="true" signature="29190:29271" ph="..." />
+                <marker date="1511880532806" expanded="true" signature="29190:29191" ph="..." />
+                <marker date="1511880532806" expanded="true" signature="29190:29271" ph="..." />
               </folding>
             </state>
           </provider>
@@ -729,7 +729,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511819414570</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="Some important comments on heat exchange.">
+      <created>1511880230742</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1511880230742</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -760,7 +767,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Basis for thermal equilibrium added." />
     <MESSAGE value="Possibly functional thermal equilibrium." />
     <MESSAGE value="Visualization support for thermal equilibrium." />
     <MESSAGE value="Temperature equilibration currently not working." />
@@ -785,7 +791,8 @@
     <MESSAGE value="Stable Version 1.0" />
     <MESSAGE value="Reformatted code." />
     <MESSAGE value="Testing the insertion of boundary layers." />
-    <option name="LAST_COMMIT_MESSAGE" value="Testing the insertion of boundary layers." />
+    <MESSAGE value="Some important comments on heat exchange." />
+    <option name="LAST_COMMIT_MESSAGE" value="Some important comments on heat exchange." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -995,12 +1002,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="486" column="30" lean-forward="true" selection-start-line="486" selection-start-column="30" selection-end-line="486" selection-end-column="30" />
+        <state relative-caret-position="418">
+          <caret line="503" column="84" lean-forward="false" selection-start-line="503" selection-start-column="84" selection-end-line="503" selection-end-column="84" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-            <marker date="1511880203514" expanded="true" signature="29190:29191" ph="..." />
-            <marker date="1511880203514" expanded="true" signature="29190:29271" ph="..." />
+            <marker date="1511880532806" expanded="true" signature="29190:29191" ph="..." />
+            <marker date="1511880532806" expanded="true" signature="29190:29271" ph="..." />
           </folding>
         </state>
       </provider>
