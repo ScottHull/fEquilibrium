@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -5220,13 +5219,6 @@
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
     </task>
-    <task id="LOCAL-00010" summary="Discrete point heat equation seemingly operational.  Requires more testing.">
-      <created>1507563553343</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1507563553343</updated>
-    </task>
     <task id="LOCAL-00011" summary="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement.">
       <created>1507573232725</created>
       <option name="number" value="00011" />
@@ -5563,7 +5555,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511902815720</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="Boundary test">
+      <created>1511903327415</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1511903327415</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="ToolWindowManager">
