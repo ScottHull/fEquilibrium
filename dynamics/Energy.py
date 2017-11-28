@@ -177,34 +177,6 @@ class thermal_eq:
                 neighbors_dict['z']['z-']['coords'].append(
                     round(z_coord - space_resolution, len(str(space_resolution))))
 
-        # add periodicity to the boundaries by providing anti-linear coordinate to the direction in question
-
-        # def periodic_add(x, y, z):
-        #     coord = []
-        #     x = minx
-        #     y = y_coord
-        #     z = z_coord
-        #     coord.append(x)
-        #     coord.append(y)
-        #     coord.append(z)
-        #     return coord
-        #
-        # for i in neighbors_dict:
-        #     for r in neighbors_dict[i]:
-        #         if len(neighbors_dict[i][r]['coords']) == 0:
-        #             if neighbors_dict[i][r] == 'x+':
-        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=minx, y=y_coord, z=z_coord)
-        #             elif neighbors_dict[i][r] == 'x-':
-        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=maxx, y=y_coord, z=z_coord)
-        #             elif neighbors_dict[i][r] == 'y+':
-        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=miny, z=z_coord)
-        #             elif neighbors_dict[i][r] == 'y-':
-        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=maxy, z=z_coord)
-        #             elif neighbors_dict[i][r] == 'z+':
-        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=y_coord, z=minz)
-        #             elif neighbors_dict[i][r] == 'z-':
-        #                 neighbors_dict[i][r]['coords'] = periodic_add(x=x_coord, y=y_coord, z=maxz)
-
 
 
 

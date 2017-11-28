@@ -24,8 +24,8 @@ model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 
 #                     z_range=[20,30], initial_temperature=2000)
 
 # insert boundary with conditions at a specified z range
-model.insert_boundary(temperature=2200, z_range=[0,0.5])
-model.insert_boundary(temperature=2200, z_range=[4.5,5])
+model.insert_boundary(temperature=2200, z_range=[0,0.5], boundary_location='top')
+model.insert_boundary(temperature=2200, z_range=[4.5,5], boundary_location='bottom')
 
 # insert X number of objects into the box, specify their location, will overwrite matrix at that point
 for i in list(range(1)):

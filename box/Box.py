@@ -289,8 +289,8 @@ class box:
     def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0, 0]):
         console.pm_stat("Inserting matrix...")
         if matrix_material in self.physical_parameters.index:
-            if z_range[0] == 0 and z_range[
-                1] == 0:  # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
+            if z_range[1] == 0:
+                # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
                 for row in self.space.itertuples():
                     index = row.Index
                     self.space['object_id'][index] = self.generate_object_id(matrix=True)
@@ -339,7 +339,7 @@ class box:
         :param flux: allow heat flux from the boundary layers to permeate the rest of the model
         :return:
         """
-        if z_range[0] != 0 and z_range[1] != 0:
+        if z_range[1] != 0:
             if boundary_location == 'bottom':
                 self.model_base = z_range[0] # base of model considered to be the top (highest z-coordinate) of boundary layer
             for row in self.space.itertuples():
@@ -355,7 +355,7 @@ class box:
                         self.space['z_coords'][
                             index]))
             print("")
-            console.pm_stat("Boundary points inserted between z-range: {}m-{}m!".format(z_range[0], z_range[1]))
+            console.pm_stat("Boundary layer inserted between z-range: {}m-{}m!".format(z_range[0], z_range[1]))
 
 
     def visualize_box(self):
