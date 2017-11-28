@@ -4,8 +4,6 @@
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -31,8 +29,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="108" column="64" lean-forward="false" selection-start-line="108" selection-start-column="64" selection-end-line="108" selection-end-column="64" />
+            <state relative-caret-position="265">
+              <caret line="357" column="47" lean-forward="true" selection-start-line="357" selection-start-column="47" selection-end-line="357" selection-end-column="47" />
               <folding />
             </state>
           </provider>
@@ -399,13 +397,6 @@
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
     </task>
-    <task id="LOCAL-00006" summary="Possibly functional thermal equilibrium.">
-      <created>1507231759777</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1507231759777</updated>
-    </task>
     <task id="LOCAL-00007" summary="Visualization support for thermal equilibrium.">
       <created>1507233506826</created>
       <option name="number" value="00007" />
@@ -742,7 +733,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511892597102</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Boundary test">
+      <created>1511893284516</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1511893284516</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1010,8 +1008,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="108" column="64" lean-forward="false" selection-start-line="108" selection-start-column="64" selection-end-line="108" selection-end-column="64" />
+        <state relative-caret-position="265">
+          <caret line="357" column="47" lean-forward="true" selection-start-line="357" selection-start-column="47" selection-end-line="357" selection-end-column="47" />
           <folding />
         </state>
       </provider>

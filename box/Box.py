@@ -320,7 +320,6 @@ class box:
                                                                                       self.space['y_coords'][index],
                                                                                       self.space['z_coords'][
                                                                                           index]))
-                print("")
             else:
                 for row in self.space.itertuples():
                     index = row.Index
