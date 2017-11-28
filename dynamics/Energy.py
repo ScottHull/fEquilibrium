@@ -351,9 +351,17 @@ class thermal_eq:
 
     @classmethod
     def change_temperature(cls, laplacian, point_temperature, deltaTime, thermal_diffusivity):
+        """
+        This function calculates the temperature change (dT) and then the new temperature (T = T_not + dT)
+        :param laplacian:
+        :param point_temperature:
+        :param deltaTime:
+        :param thermal_diffusivity:
+        :return:
+        """
         # heat equation (time-dependent): dT/dt = K*laplacian(T)
         # dT = (K*K*laplacian(T)) * dt
-        # T = T_not + dT
+        # T = T_not + dT (add the dT to the original temperature to get the new temperature)
         format_laplacian = []
         for i in laplacian:
             format_laplacian.append(laplacian[i][0])

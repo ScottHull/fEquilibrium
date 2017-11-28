@@ -541,6 +541,12 @@ class box:
                                                             y_coord=updated_y_coord,
                                                             z_coord=updated_z_coord)
                 # update the copy of the dataframe with the appropriate changes
+                if object_velocity != 0:
+                    console.pm_flush(
+                        "Object {} will move! ({},{},{} to {},{},{})".format(system_data['object_id'][index],
+                                                                             curr_x_coords, curr_y_coords,
+                                                                             curr_z_coords, updated_x_coord,
+                                                                             updated_y_coord, updated_z_coord))
                 system_data['temperature'][index] = float(
                     system_data['temperature'][index]) + energy().stokes_frictional_energy(
                     object=system_data['object'][index], matrix_material=matrix_material,
