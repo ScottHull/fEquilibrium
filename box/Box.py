@@ -1,22 +1,14 @@
-import matplotlib as mpl
-
-mpl.use('Qt5Agg')
 import os
+import matplotlib as mpl
+mpl.use('Qt5Agg')
+os.sys.path.append(os.path.dirname(os.path.abspath('.')))
 import numpy as np
 import pandas as pd
 from random import randint
 import moviepy.editor as mpy
-
-os.sys.path.append(os.path.dirname(os.path.abspath('.')));
 from dynamics.Movement import move_particle
-
-os.sys.path.append(os.path.dirname(os.path.abspath('.')));
 from dynamics.Energy import energy, thermal_eq
-
-os.sys.path.append(os.path.dirname(os.path.abspath('.')));
 from thermodynamics.Solution import solution
-
-os.sys.path.append(os.path.dirname(os.path.abspath('.')));
 from meta.Console import console
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
@@ -25,10 +17,7 @@ import sys
 import matplotlib.cm as cm
 import matplotlib.colors
 import matplotlib.colorbar
-import time
 from math import pi
-import multiprocessing
-import datetime
 
 
 # TODO: update some methods to class methods to avoid outside interference
@@ -285,11 +274,6 @@ class box:
                                     self.space['x_coords'][index],
                                     self.space['y_coords'][index],
                                     self.space['z_coords'][index]))
-                                # sys.stdout.write("\rInserted object ({}) at coordinates: x:{} y:{}, z:{}".format(self.space['object'][index],
-                                #                                                                self.space['x_coords'][index],
-                                #                                                                self.space['y_coords'][index],
-                                #                                                                self.space['z_coords'][index]))
-                                # sys.stdout.flush()
                                 break
                 print("")
 
@@ -370,8 +354,8 @@ class box:
                         self.space['y_coords'][index],
                         self.space['z_coords'][
                             index]))
-        print("")
-        console.pm_stat("Boundary points inserted!")
+            print("")
+            console.pm_stat("Boundary points inserted between z-range: {}m-{}m!".format(z_range[0], z_range[1]))
 
 
     def visualize_box(self):
