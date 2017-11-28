@@ -478,7 +478,16 @@ class energy:
                                  distance_travelled):
         """
         The Stokes settling velocity calculates a terminal velocity, so there is no acceleration.  The frictional force
-        (drag force) must therefore balance the force due to gravity, Fg=Fd.
+        (drag force) must therefore balance the force due to gravity, Fg=Fd.  All work (units=J) assumed to be
+        converted to heat (units=degK).
+
+        Temperature = degK
+        Body Mass = g (automatically scaled from the user input in kg)
+        Specific Heat = J/g
+        Distance Travelled = m
+
+        Modeling temperature change: K = W/(cp*mass) = J/[((J/K/mass)*mass)] = JK/J = K
+
         :return:
         """
         df = pd.read_csv('dynamics/physical_parameters.csv', index_col='Material')
@@ -491,7 +500,7 @@ class energy:
         # Frictional drag must be converted to energy and added to the body temperature.
         # W = F * d, Units = [J]
         W = F_d * distance_travelled  # convert joules to degK, Q[J]=M[g] * Cp * T[degK] --> T=Q/(M*Cp)
-        degK = W / (body_cp * body_mass)  # the temperature to be added to the body
+        degK = W / (body_cp * (body_mass * 1000))  # the temperature to be added to the body
         return degK
 
     # def distribute_stokes_frictional_energy(self, frictional_energy, path_coords):
