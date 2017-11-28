@@ -22,6 +22,7 @@ model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 
                     z_range=[0,4], initial_temperature=2000)
 # model.insert_matrix(matrix_material='Denser Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100},
 #                     z_range=[20,30], initial_temperature=2000)
+
 # insert boundary with conditions at a specified z range
 model.insert_boundary(temperature=2200, z_range=[0,0.5])
 model.insert_boundary(temperature=2200, z_range=[4.5,5])

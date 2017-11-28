@@ -88,7 +88,7 @@ class thermal_eq:
             if visualize_neighbors is True and animate_neighbors is False:
                 fig.show()
             if animate_neighbors is True:
-                fig.savefig(os.getcwd() + '/mpl_animation3/snap_{}-{}-{}.png'.format(x_coord, y_coord, z_coord),
+                fig.savefig(os.getcwd() + '/nearest_neighbors/snap_{}-{}-{}.png'.format(x_coord, y_coord, z_coord),
                             format='png')
             fig.clf()
         classified_neighbors = self.explicit_classify_neighbors(x_coord=x_coord, y_coord=y_coord, z_coord=z_coord,
@@ -460,7 +460,7 @@ class thermal_eq:
         # if animate_neighbors == True:
         #     import moviepy.editor as mpy
         #     import os, time
-        #     os.chdir(os.getcwd() + "/mpl_animation3")
+        #     os.chdir(os.getcwd() + "/nearest_neighbors")
         #     animation = mpy.ImageSequenceClip(frames,
         #                                       fps=5,
         #                                       load_images=True)

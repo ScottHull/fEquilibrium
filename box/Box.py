@@ -91,18 +91,18 @@ class box:
         self.movie_frames2 = []
         self.movie_frames3 = []
         self.movie_frames4 = []
-        if os.path.exists('mpl_animation1'):
-            shutil.rmtree('mpl_animation1')
-        if os.path.exists('mpl_animation2'):
-            shutil.rmtree('mpl_animation2')
-        if os.path.exists('mpl_animation3'):
-            shutil.rmtree('mpl_animation3')
-        if os.path.exists('mpl_animation4'):
-            shutil.rmtree('mpl_animation4')
-        os.mkdir('mpl_animation1')
-        os.mkdir('mpl_animation2')
-        os.mkdir('mpl_animation3')
-        os.mkdir('mpl_animation4')
+        if os.path.exists('object_dynamics'):
+            shutil.rmtree('object_dynamics')
+        if os.path.exists('thermal_equilibrium_heatmap'):
+            shutil.rmtree('thermal_equilibrium_heatmap')
+        if os.path.exists('nearest_neighbors'):
+            shutil.rmtree('nearest_neighbors')
+        if os.path.exists('temp_distrib_floor'):
+            shutil.rmtree('temp_distrib_floor')
+        os.mkdir('object_dynamics')
+        os.mkdir('thermal_equilibrium_heatmap')
+        os.mkdir('nearest_neighbors')
+        os.mkdir('temp_distrib_floor')
         if self.object_history == True:
             if "object_history.csv" in os.listdir(os.getcwd()):
                 os.remove("object_history.csv")
@@ -156,7 +156,7 @@ class box:
             # self.space.to_csv("space2_coords_check.csv")
             import moviepy.editor as mpy
             import os
-            os.chdir(os.getcwd() + "/mpl_animation3")
+            os.chdir(os.getcwd() + "/nearest_neighbors")
             animation = mpy.ImageSequenceClip(self.movie_frames3,
                                               fps=5,
                                               load_images=True)
@@ -345,13 +345,15 @@ class box:
                 os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
 
-    def insert_boundary(self, temperature, z_range, boundary_location='bottom'):
+    def insert_boundary(self, temperature, z_range, boundary_location='bottom', flux=True):
         """
-
+        Insert a boundary layer for the purpose of regulating z-gradients in heat exchange.
+        It is recommended that a boundary layer is inserted
         :param temperature:
         :param z_range:
         :param boundary_location: Either the boundary layer is on the 'top' or the 'bottom' of the model.
-                The boundary location defaults to bottom
+                The boundary location defaults to bottom if not explicitly stated.
+        :param flux: allow heat flux from the boundary layers to permeate the rest of the model
         :return:
         """
         if z_range[0] != 0 and z_range[1] != 0:
@@ -392,7 +394,7 @@ class box:
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
             ax.invert_zaxis()
-            fig.savefig(os.getcwd() + '/mpl_animation1/snap_{}.png'.format(self.model_time), format='png')
+            fig.savefig(os.getcwd() + '/object_dynamics/snap_{}.png'.format(self.model_time), format='png')
             fig.clf()
             self.movie_frames1.append('snap_{}.png'.format(self.model_time))
             console.pm_stat("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
@@ -423,16 +425,17 @@ class box:
             ax.set_ylabel("Box Width")
             ax.set_zlabel("Box Height")
             ax.invert_zaxis()
-            fig.savefig(os.getcwd() + '/mpl_animation2/snap_{}.png'.format(self.model_time), format='png')
+            fig.savefig(os.getcwd() + '/thermal_equilibrium_heatmap/snap_{}.png'.format(self.model_time), format='png')
             self.movie_frames2.append('snap_{}.png'.format(self.model_time))
             fig.clf()
 
+            # creates the 
             x_coords = []
             y_coords = []
             temperature = []
             for row in self.space.itertuples():
                 index = row.Index
-                if float(self.space['z_coords'][index]) == float(self.model_base):
+                if float(self.space['z_coords'][index]) == float(self.model_base - self.space_resolution):
                     x_coords.append(self.space['x_coords'][index])
                     y_coords.append(self.space['y_coords'][index])
                     temperature.append(self.space['temperature'][index])
@@ -444,7 +447,7 @@ class box:
             ax.set_zlabel("Temperature (degK)")
             ax.set_zlim(zmin=1950, zmax=2500)
             ax.set_title("Temperature Distribution at Time {} At Base of Model".format(self.model_time))
-            fig.savefig(os.getcwd() + '/mpl_animation4/snap_{}.png'.format(self.model_time), format='png')
+            fig.savefig(os.getcwd() + '/temp_distrib_floor/snap_{}.png'.format(self.model_time), format='png')
             self.movie_frames4.append('snap_{}.png'.format(self.model_time))
             fig.clf()
 
@@ -603,38 +606,38 @@ class box:
                 console.pm_stat("Writing animations...")
 
                 # dynamics animation
-                os.chdir(os.getcwd() + '/mpl_animation1')
+                os.chdir(os.getcwd() + '/object_dynamics')
                 animation = mpy.ImageSequenceClip(self.movie_frames1,
                                                   fps=round((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
-                animation.write_videofile('fEquilibrium_animation.mp4',
+                animation.write_videofile('object_dynamics.mp4',
                                           fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
-                animation.write_gif('fEquilibrium_animation.gif',
+                animation.write_gif('object_dynamics.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d heatmap animation
-                os.chdir(os.getcwd() + '/mpl_animation2')
+                os.chdir(os.getcwd() + '/thermal_equilibrium_heatmap')
                 animation = mpy.ImageSequenceClip(self.movie_frames2,
                                                   fps=round((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
-                animation.write_videofile('thermal_fEquilibrium_animation.mp4',
+                animation.write_videofile('thermal_equilibrium_heatmap.mp4',
                                           fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
-                animation.write_gif('thermal_fEquilibrium_animation.gif',
+                animation.write_gif('thermal_equilibrium_heatmap.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d surface heat distribution animation
-                os.chdir(os.getcwd() + '/mpl_animation4')
+                os.chdir(os.getcwd() + '/temp_distrib_floor')
                 animation = mpy.ImageSequenceClip(self.movie_frames4,
                                                   fps=round((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
-                animation.write_videofile('time_t_distrib.mp4',
+                animation.write_videofile('temp_distrib_floor.mp4',
                                           fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
-                animation.write_gif('time_t_distrib.gif',
+                animation.write_gif('temp_distrib_floor.gif',
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 

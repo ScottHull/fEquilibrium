@@ -5,6 +5,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,8 +19,8 @@
       <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="23" column="64" lean-forward="true" selection-start-line="23" selection-start-column="64" selection-end-line="23" selection-end-column="64" />
+            <state relative-caret-position="360">
+              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -30,8 +31,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="293">
-              <caret line="357" column="45" lean-forward="false" selection-start-line="357" selection-start-column="45" selection-end-line="357" selection-end-column="45" />
+            <state relative-caret-position="435">
+              <caret line="108" column="64" lean-forward="false" selection-start-line="108" selection-start-column="64" selection-end-line="108" selection-end-column="64" />
               <folding />
             </state>
           </provider>
@@ -41,7 +42,7 @@
         <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-761">
-              <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+              <caret line="4" column="9" lean-forward="false" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
               <folding>
                 <marker date="1510938740385" expanded="true" signature="5744:5767" ph="..." />
               </folding>
@@ -52,12 +53,10 @@
       <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3918">
-              <caret line="473" column="0" lean-forward="false" selection-start-line="473" selection-start-column="0" selection-end-line="473" selection-end-column="0" />
+            <state relative-caret-position="5797">
+              <caret line="462" column="56" lean-forward="false" selection-start-line="462" selection-start-column="56" selection-end-line="462" selection-end-column="56" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
-                <marker date="1511892590844" expanded="true" signature="29190:29191" ph="..." />
-                <marker date="1511892590844" expanded="true" signature="29190:29271" ph="..." />
               </folding>
             </state>
           </provider>
@@ -74,10 +73,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>sys.s</find>
-      <find>inserted ob</find>
-      <find>deltaTime</find>
-      <find>matrix material(s)</find>
       <find>console.pm</find>
       <find>clf</find>
       <find>self.space.index</find>
@@ -104,11 +99,12 @@
       <find>.values()</find>
       <find>body_mass</find>
       <find>mass</find>
+      <find>matrix material(s)</find>
+      <find>fEquilibrium_animation</find>
+      <find>mpl_animation4</find>
+      <find>mpl_animation3</find>
     </findStrings>
     <replaceStrings>
-      <replace>gradients</replace>
-      <replace>gradient</replace>
-      <replace>laplace</replace>
       <replace>del2T_delz2</replace>
       <replace>subrow</replace>
       <replace>'coords'</replace>
@@ -136,6 +132,9 @@
       <replace>console</replace>
       <replace>clf</replace>
       <replace>movie_frames</replace>
+      <replace>object_dynamics</replace>
+      <replace>temp_distrib_floor</replace>
+      <replace>nearest_neighbors</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -399,13 +398,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Basis for thermal equilibrium added.">
-      <created>1507142342576</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1507142342576</updated>
     </task>
     <task id="LOCAL-00006" summary="Possibly functional thermal equilibrium.">
       <created>1507231759777</created>
@@ -743,7 +735,14 @@
       <option name="project" value="LOCAL" />
       <updated>1511891053045</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="Boundary test">
+      <created>1511892597102</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1511892597102</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -982,7 +981,7 @@
     <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-761">
-          <caret line="4" column="9" lean-forward="true" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
+          <caret line="4" column="9" lean-forward="false" selection-start-line="4" selection-start-column="9" selection-end-line="4" selection-end-column="9" />
           <folding>
             <marker date="1510938740385" expanded="true" signature="5744:5767" ph="..." />
           </folding>
@@ -991,20 +990,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3918">
-          <caret line="473" column="0" lean-forward="false" selection-start-line="473" selection-start-column="0" selection-end-line="473" selection-end-column="0" />
+        <state relative-caret-position="5797">
+          <caret line="462" column="56" lean-forward="false" selection-start-line="462" selection-start-column="56" selection-end-line="462" selection-end-column="56" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-            <marker date="1511892590844" expanded="true" signature="29190:29191" ph="..." />
-            <marker date="1511892590844" expanded="true" signature="29190:29271" ph="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/test_box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="23" column="64" lean-forward="true" selection-start-line="23" selection-start-column="64" selection-end-line="23" selection-end-column="64" />
+        <state relative-caret-position="360">
+          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
           <folding>
             <element signature="e#0#23#0" expanded="true" />
           </folding>
@@ -1013,8 +1010,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="293">
-          <caret line="357" column="45" lean-forward="false" selection-start-line="357" selection-start-column="45" selection-end-line="357" selection-end-column="45" />
+        <state relative-caret-position="435">
+          <caret line="108" column="64" lean-forward="false" selection-start-line="108" selection-start-column="64" selection-end-line="108" selection-end-column="64" />
           <folding />
         </state>
       </provider>
