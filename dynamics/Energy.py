@@ -471,6 +471,7 @@ class thermal_eq:
 
 
 class energy:
+
     def __init__(self):
         self.gravity = 9.81
 

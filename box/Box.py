@@ -337,7 +337,6 @@ class box:
                                                                                           self.space['y_coords'][index],
                                                                                           self.space['z_coords'][
                                                                                               index]))
-                print("")
             print("")
             console.pm_stat("Matrix material(s) ({}) inserted!".format(matrix_material))
 
@@ -346,9 +345,18 @@ class box:
                 os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
 
-    def insert_boundary(self, temperature, z_range):
+    def insert_boundary(self, temperature, z_range, boundary_location='bottom'):
+        """
+
+        :param temperature:
+        :param z_range:
+        :param boundary_location: Either the boundary layer is on the 'top' or the 'bottom' of the model.
+                The boundary location defaults to bottom
+        :return:
+        """
         if z_range[0] != 0 and z_range[1] != 0:
-            self.model_base = z_range[0] # base of model considered to be the top (highest z-coordinate) of boundary layer
+            if boundary_location == 'bottom':
+                self.model_base = z_range[0] # base of model considered to be the top (highest z-coordinate) of boundary layer
             for row in self.space.itertuples():
                 index = row.Index
                 if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
