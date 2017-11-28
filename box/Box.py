@@ -491,6 +491,7 @@ class box:
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.itertuples():
             index = row.Index
+            # object_id's that begin with 'A' are objects and will be free to move
             if str(system_data['object_id'][index][0]) == 'A':
                 curr_x_coords = system_data['x_coords'][index]
                 curr_y_coords = system_data['y_coords'][index]
@@ -519,15 +520,27 @@ class box:
                     object_radius=system_data['object_radius'][index])
 
                 z_dis_obj_travel = object_velocity * deltaTime
-                updated_x_coords = system_data['x_coords'][index]
-                updated_y_coords = system_data['y_coords'][index]
-                updated_z_coords = self.round_coord_arbitrary(
+                updated_x_coord = system_data['x_coords'][index]
+                updated_y_coord = system_data['y_coords'][index]
+                # round the z-coordinate to the nearest point within the spatial resolution
+                updated_z_coord = self.round_coord_arbitrary(
                     coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
                     system_data=system_data, coordinate_type='z_coords')
-                rounded_z_distance_travelled = updated_z_coords - curr_z_coords  # use this distance for distance travelled, as it is more self-consistent within the model
-                if rounded_z_distance_travelled == 0:  # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity = 0
+                rounded_z_distance_travelled = updated_z_coord - curr_z_coords  # use this distance for distance travelled, as it is more self-consistent within the model
+                # check to see if object travels into boundary layer.  if so, put it in nearest point within spatial resolution ABOVE boundary layer
+                if rounded_z_distance_travelled + curr_z_coords >= self.model_base:
+                    updated_z_coord = self.model_base - self.space_resolution # fix the z-coord
+                    rounded_z_distance_travelled = updated_z_coord - curr_z_coords # fix the distance travelled
+                # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travlled = 0
+                if rounded_z_distance_travelled == 0:
                     object_velocity = 0
                     z_dis_obj_travel = 0
+                # get the index of the coordinate point where the object will travel to
+                to_row_index = self.grab_row_index_by_coord(system_data=system_data,
+                                                            x_coord=updated_x_coord,
+                                                            y_coord=updated_y_coord,
+                                                            z_coord=updated_z_coord)
+                # update the copy of the dataframe with the appropriate changes
                 system_data['temperature'][index] = float(
                     system_data['temperature'][index]) + energy().stokes_frictional_energy(
                     object=system_data['object'][index], matrix_material=matrix_material,
@@ -545,16 +558,16 @@ class box:
                                                                                    index])
                 console.pm_flush("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
                     system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
-                    system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coords, updated_y_coords,
-                    updated_z_coords))
+                    system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
+                    updated_z_coord))
                 from_row_index = self.grab_row_index_by_coord(system_data=system_data,
                                                               x_coord=system_data['x_coords'][index],
                                                               y_coord=system_data['y_coords'][index],
                                                               z_coord=system_data['z_coords'][index])
-                to_row_index = self.grab_row_index_by_coord(system_data=system_data,
-                                                            x_coord=updated_x_coords,
-                                                            y_coord=updated_y_coords,
-                                                            z_coord=updated_z_coords)
+                # to_row_index = self.grab_row_index_by_coord(system_data=system_data,
+                #                                             x_coord=updated_x_coord,
+                #                                             y_coord=updated_y_coord,
+                #                                             z_coord=updated_z_coord)
                 update_space_copy = self.swap_rows(system_data=system_data, updated_system_data=update_space,
                                                    from_row_index=from_row_index, to_row_index=to_row_index)
 
