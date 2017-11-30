@@ -25,6 +25,7 @@ class box:
     def __init__(self, length, width, height, space_resolution, model_time, visualize_system=False,
                  object_history=False, visualize_neighbors=False, animate_neighbors=False):
         """
+        Instantiates the box.
         :param length: length of the system, in m
         :param width: width of the system, in m
         :param height: height of the system, in m
@@ -48,6 +49,8 @@ class box:
                                                       space_resolution=self.space_resolution)
         self.visualize_system = visualize_system
         self.object_history = object_history
+        # this is the central dataframe of the model
+        # highly critical that this is accessible in memory for all processes
         self.space = pd.DataFrame({
             'coord_index': [str(i) for i in self.coords],
             'object_id': np.NAN,  # randomly generated object id tag to identify unique elements in box
@@ -76,6 +79,7 @@ class box:
         self.physical_parameters = pd.read_csv(
             os.path.dirname(os.path.abspath('.')) + "/fEquilibrium/dynamics/physical_parameters.csv",
             index_col='Material')
+        # these are lists and directories for tracking animation frame ordering and storing animation frames
         self.movie_frames1 = []
         self.movie_frames2 = []
         self.movie_frames3 = []
@@ -92,6 +96,7 @@ class box:
         os.mkdir('thermal_equilibrium_heatmap')
         os.mkdir('nearest_neighbors')
         os.mkdir('temp_distrib_floor')
+        # opens the object history csv so object histories can be written after each time interval
         if self.object_history == True:
             if "object_history.csv" in os.listdir(os.getcwd()):
                 os.remove("object_history.csv")
@@ -101,14 +106,24 @@ class box:
                 header.append(str(i))
             formatted_header = ",".join(i for i in header)
             self.object_output.write("{}\n".format(formatted_header))
+        # opens the object velocity csv so object velocities can be written after each time interval
         if 'object_velocities.csv' in os.listdir(os.getcwd()):
             os.remove('object_velocities.csv')
         self.velocity_output = open('object_velocities.csv', 'a')
 
+    # returns a copy of the self.space dataframe
     def get_box(self):
         return self.space
 
     def classify_neighbors(self, animate_neighbors, visualize_neighbors):
+        """
+        classifies nearest neighbors, primarily for heat equilibrium
+        assumption is that each point in the box is only in contact with its nearest neighbor
+        this only executes once at the initial model time
+        :param animate_neighbors:
+        :param visualize_neighbors:
+        :return: None
+        """
         loop_count = 1
         loop_total = len(self.space.index.tolist())
         console.pm_stat("Finding nearest neighbors for all points.  This may take several minutes...")
@@ -119,6 +134,7 @@ class box:
         max_ycoords = float(self.width)
         min_zcoords = 0.0
         max_zcoords = float(self.height)
+        # iterates through each coordinate point in the box and identifies the nearest neighbors
         for row in self.space.itertuples():
             index = row.Index
             neighbors = thermal_eq.explicit_nearest_neighboor(system_data=self.space,
@@ -133,9 +149,6 @@ class box:
                                                               visualize_neighbors=visualize_neighbors)
             self.space['nearest_neighbors'][index] = str(neighbors)
             console.pm_flush(message="Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
-            # sys.stdout.write("\rFound neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
-            # sys.stdout.flush()
-            # print("Found neighbors for {}/{} coordinate points.".format(index + 1, loop_total))
             if animate_neighbors is True:
                 self.movie_frames3.append('snap_{}-{}-{}.png'.format(self.space['x_coords'][index],
                                                                      self.space['y_coords'][index],
@@ -155,6 +168,7 @@ class box:
 
     def generate_coordinate_points(self, length, width, height, space_resolution):
         """
+        Generates all possible coordinate points within the defined box
         :param length: length of the system, in m
         :param width: width of the system, in m
         :param height: height of the system, in m
@@ -183,6 +197,13 @@ class box:
         return coords
 
     def round_coord_arbitrary(self, coordinate, system_data, coordinate_type):
+        """
+        Rounds a calculated coordinate to the nearest one defined by the spatial resolution
+        :param coordinate:
+        :param system_data:
+        :param coordinate_type:
+        :return: rounded_coordinate
+        """
         rounded_coordinate = ''
         found_min = ''
         for i in system_data[coordinate_type]:
@@ -211,6 +232,17 @@ class box:
             return False
 
     def generate_object_id(self, matrix):
+        """
+        Generates object ID codes so that specific objects and materials can be tracked
+        Object/matrial types are unique and coded by the a letter specifying the general type followed by a
+        unique number combination
+        The general object/material types are coded by the first letter as follows:
+            - 'A' = object
+            - 'B' = matrix
+            - 'C' = boundary
+        :param matrix:
+        :return: object_id
+        """
 
         def random_gen(object_identifier):
             object_id = object_identifier + str(randint(0, len(self.coords) + len(self.coords)))
@@ -244,6 +276,19 @@ class box:
 
 
     def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, composition, initial_temperature):
+        """
+        Allows the insertion of an object into the box
+        The object should NOT be inserted into coordinates occupied by boundaries
+        This function should be called AFTER matrix insertion--else it will be overwritten
+        :param object:
+        :param x_coord:
+        :param y_coord:
+        :param z_coord:
+        :param object_radius:
+        :param composition:
+        :param initial_temperature:
+        :return: None
+        """
         console.pm_stat("Inserting object...")
         if object in self.physical_parameters.index:
             if self.check_coords(x_coord=x_coord, y_coord=y_coord,
@@ -284,9 +329,19 @@ class box:
             console.pm_err("Object not defined in {}!  Cannot insert object!".format(
                 os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
+        return None
 
     # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
     def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0, 0]):
+        """
+        This function allows for the insertion of a matrix material over a given z-range
+        This function should be called FIRST when constructing the box
+        :param matrix_material:
+        :param composition:
+        :param initial_temperature:
+        :param z_range: The depths at which the matrix should be inserted into the box
+        :return: None
+        """
         console.pm_stat("Inserting matrix...")
         if matrix_material in self.physical_parameters.index:
             if z_range[1] == 0:
@@ -327,6 +382,7 @@ class box:
             console.pm_err("Matrix material not defined in {}!  Cannot insert matrix material!".format(
                 os.getcwd() + "/dynamics/physical_parameters.csv"))
             sys.exit(1)
+        return None
 
     def insert_boundary(self, temperature, z_range, boundary_location='bottom', flux=True):
         """
@@ -359,6 +415,10 @@ class box:
 
 
     def visualize_box(self):
+        """
+        Constructs animation frames that allows for the visualization of the box
+        :return: None
+        """
         # creates the 3D diapir movement animation frames
         if self.visualize_system != False:
             fig = plt.figure()
@@ -436,6 +496,8 @@ class box:
             fig.savefig(os.getcwd() + '/temp_distrib_floor/snap_{}.png'.format(self.model_time), format='png')
             self.movie_frames4.append('snap_{}.png'.format(self.model_time))
             fig.clf()
+        return None
+
 
     @staticmethod
     def grab_row_index_by_coord(system_data, x_coord, y_coord, z_coord):
@@ -491,6 +553,16 @@ class box:
 
     def move_systems(self, system_data, update_space, deltaTime, box_height, space_resolution,
                      default_matrix_material='Silicate Liquid'):
+        """
+        Allows for the movement of objects to occur within the box if objects are gravitationally unstable
+        :param system_data:
+        :param update_space:
+        :param deltaTime:
+        :param box_height:
+        :param space_resolution:
+        :param default_matrix_material:
+        :return: update_space_copy, a copy of the self.space dataframe with updated object/matrix positions
+        """
         update_space_copy = update_space.copy(deep=True)
         for row in system_data.itertuples():
             index = row.Index
@@ -584,6 +656,12 @@ class box:
 
     # TODO: update x and y coords
     def update_system(self, auto_update=True, deltaTime=1.0):
+        """
+        Updates the system thermal/dynamic/chemical state at each time interval
+        :param auto_update:
+        :param deltaTime:
+        :return: self.model_time, self.space
+        """
         console.pm_stat("Model time at: {}".format(self.model_time))
         update_space = self.space.copy(deep=True)
         # this section only executes at the initial time--no object or thermal movement occurs here
