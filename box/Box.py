@@ -593,10 +593,10 @@ class box:
                         pass
                 except:
                     console.pm_err(
-                        "Box integrity check failed. Please check your z-ranges to make sure all "
+                        "Box integrity check failed.  Please check your z-ranges to make sure all "
                         "coordinate spaces are filled..")
                     sys.exit(1)
-            console.pm_stat("Box integrity confirmed--calculations allowed to proceed.")
+            console.pm_stat("Box integrity confirmed.  Calculations allowed to proceed.")
             # if box integrity confirmed, proceed to nearest neighbor identification
             self.classify_neighbors(visualize_neighbors=self.visualize_neighbors,
                                     animate_neighbors=self.animate_neighbors)
@@ -644,7 +644,7 @@ class box:
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
-                # 3d surface heat distribution animation
+                # 3d model base heat distribution animation
                 os.chdir(os.getcwd() + '/temp_distrib_floor')
                 animation = mpy.ImageSequenceClip(self.movie_frames4,
                                                   fps=round((self.initial_time / (self.initial_time / 3))),
@@ -656,8 +656,11 @@ class box:
                                     fps=round((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
+                # writes the central pandas dataframe to 'space.csv'.  most critical model info contained here
                 self.space.to_csv("space.csv")
+                # writes the chemical compositions to 'solution.csv'
                 self.solution.get_solution().to_csv("solution.csv")
+                # writes the object history output file
                 if self.object_history == True:
                     for row in self.space.itertuples():
                         index = row.Index
@@ -672,9 +675,12 @@ class box:
                     self.object_output.close()
                 return self.model_time, self.space
         else:
+            # models the object movement
             update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime,
                                              box_height=self.height, space_resolution=self.space_resolution)
+            # updates chemical compositions
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
+            # models thermal equilibrium
             therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime,
                                                                space_resolution=self.space_resolution)
             for row in update_space.itertuples():
@@ -693,6 +699,7 @@ class box:
                             contents.append(str(self.space[i][index]))
                         formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
+        # auto-update calculates the appropriate deltaTime, if one is not defined
         if auto_update == True:
             if self.model_time == deltaTime:
                 self.model_time -= deltaTime
