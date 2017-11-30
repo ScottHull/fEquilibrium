@@ -359,6 +359,7 @@ class box:
 
 
     def visualize_box(self):
+        # creates the 3D diapir movement animation frames
         if self.visualize_system != False:
             fig = plt.figure()
             ax = Axes3D(fig)
@@ -382,6 +383,7 @@ class box:
             self.movie_frames1.append('snap_{}.png'.format(self.model_time))
             console.pm_stat("System snapshot created: {}".format('snap_{}.png'.format(self.model_time)))
 
+            # creates 3D heatmap animation frames
             fig = plt.figure()
             ax = Axes3D(fig)
             ax.set_xlim(xmin=min(self.space['x_coords']), xmax=max(self.space['x_coords']))
@@ -412,12 +414,13 @@ class box:
             self.movie_frames2.append('snap_{}.png'.format(self.model_time))
             fig.clf()
 
-            # creates the 
+            # creates the 3D model base trisurf animation frames
             x_coords = []
             y_coords = []
             temperature = []
             for row in self.space.itertuples():
                 index = row.Index
+                print(self.model_base)
                 if float(self.space['z_coords'][index]) == float(self.model_base - self.space_resolution):
                     x_coords.append(self.space['x_coords'][index])
                     y_coords.append(self.space['y_coords'][index])
@@ -428,7 +431,7 @@ class box:
             ax.set_xlabel("Box Length (x) (m)")
             ax.set_ylabel("Box Width (y) (m)")
             ax.set_zlabel("Temperature (degK)")
-            ax.set_zlim(zmin=1950, zmax=2500)
+            ax.set_zlim(zmin=1990, zmax=2500)
             ax.set_title("Temperature Distribution at Time {} At Base of Model".format(self.model_time))
             fig.savefig(os.getcwd() + '/temp_distrib_floor/snap_{}.png'.format(self.model_time), format='png')
             self.movie_frames4.append('snap_{}.png'.format(self.model_time))
