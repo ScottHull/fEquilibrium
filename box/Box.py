@@ -420,8 +420,8 @@ class box:
             temperature = []
             for row in self.space.itertuples():
                 index = row.Index
-                print(self.model_base)
-                if float(self.space['z_coords'][index]) == float(self.model_base - self.space_resolution):
+                surface_zcoord = round((self.model_base - self.space_resolution), len(str(self.space_resolution)))
+                if float(self.space['z_coords'][index]) == surface_zcoord:
                     x_coords.append(self.space['x_coords'][index])
                     y_coords.append(self.space['y_coords'][index])
                     temperature.append(self.space['temperature'][index])
@@ -523,17 +523,17 @@ class box:
                     object_radius=system_data['object_radius'][index])
 
                 z_dis_obj_travel = object_velocity * deltaTime
-                updated_x_coord = system_data['x_coords'][index]
-                updated_y_coord = system_data['y_coords'][index]
+                updated_x_coord = round(system_data['x_coords'][index], len(str(space_resolution)))
+                updated_y_coord = round(system_data['y_coords'][index], len(str(space_resolution)))
                 # round the z-coordinate to the nearest point within the spatial resolution
-                updated_z_coord = self.round_coord_arbitrary(
+                updated_z_coord = round(self.round_coord_arbitrary(
                     coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
-                    system_data=system_data, coordinate_type='z_coords')
-                rounded_z_distance_travelled = updated_z_coord - curr_z_coords  # use this distance for distance travelled, as it is more self-consistent within the model
+                    system_data=system_data, coordinate_type='z_coords'), len(str(space_resolution)))
+                rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords, len(str(space_resolution)))  # use this distance for distance travelled, as it is more self-consistent within the model
                 # check to see if object travels into boundary layer.  if so, put it in nearest point within spatial resolution ABOVE boundary layer
-                if rounded_z_distance_travelled + curr_z_coords >= self.model_base:
-                    updated_z_coord = self.model_base - self.space_resolution # fix the z-coord
-                    rounded_z_distance_travelled = updated_z_coord - curr_z_coords # fix the distance travelled
+                if round(rounded_z_distance_travelled + curr_z_coords, len(str(space_resolution))) >= self.model_base:
+                    updated_z_coord = round(self.model_base - self.space_resolution, len(str(space_resolution)))# fix the z-coord
+                    rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords, len(str(space_resolution))) # fix the distance travelled
                 # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travlled = 0
                 if rounded_z_distance_travelled == 0:
                     object_velocity = 0
@@ -579,7 +579,7 @@ class box:
                 #                                             z_coord=updated_z_coord)
                 update_space_copy = self.swap_rows(system_data=system_data, updated_system_data=update_space,
                                                    from_row_index=from_row_index, to_row_index=to_row_index)
-
+        print("")
         return update_space_copy
 
     # TODO: update x and y coords
