@@ -582,15 +582,27 @@ class box:
     # TODO: update x and y coords
     def update_system(self, auto_update=True, deltaTime=1.0):
         console.pm_stat("Model time at: {}".format(self.model_time))
-        # space_stats = self.space.info(memory_usage='deep')
-        # print("\n[!] SPACE DATAFRAME STATS:\n")
-        # print(space_stats)
-        # print("\n")
         update_space = self.space.copy(deep=True)
+        # this section only executes at the initial time--no object or thermal movement occurs here
         if self.model_time == self.initial_time:
+            # check the integrity of the box before time and neighbor identifification allowed to progress
+            for row in self.space.itertuples():
+                index = row.Index
+                try:
+                    if 'A' in self.space['object_id'][index]:
+                        pass
+                except:
+                    console.pm_err(
+                        "Box integrity check failed. Please check your z-ranges to make sure all "
+                        "coordinate spaces are filled..")
+                    sys.exit(1)
+            console.pm_stat("Box integrity confirmed--calculations allowed to proceed.")
+            # if box integrity confirmed, proceed to nearest neighbor identification
             self.classify_neighbors(visualize_neighbors=self.visualize_neighbors,
                                     animate_neighbors=self.animate_neighbors)
+            # create an initial snapshot of the box
             self.visualize_box()
+            # writes an object history output file if flagged in box setup
             if self.object_history == True:
                 for row in self.space.itertuples():
                     index = row.Index
@@ -601,6 +613,7 @@ class box:
                             contents.append(str(self.space[i][index]))
                         formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
+        # executes when the model time is exhausted--writes output files and animations and then ends the simulation
         elif self.model_time <= 0:
             self.visualize_box()
             console.pm_stat("Model at minimum time!")
