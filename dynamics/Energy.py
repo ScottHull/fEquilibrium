@@ -3,10 +3,6 @@ import os
 import pandas as pd
 import numpy as np
 import ast
-import time
-from multiprocessing import Pool
-
-os.sys.path.append(os.path.dirname(os.path.abspath('.')));
 from meta.Console import console
 
 
@@ -435,9 +431,9 @@ class thermal_eq:
                                                                             system_data['object'][index]])
         print("")
 
-        #     if animate_neighbors == True:
+        #     if animate_neighbors is True:
         #         frames.append('snap_{}-{}-{}.png'.format(sample_xcoord, sample_ycoord, sample_zcoord))
-        # if animate_neighbors == True:
+        # if animate_neighbors is True:
         #     import moviepy.editor as mpy
         #     import os, time
         #     os.chdir(os.getcwd() + "/nearest_neighbors")

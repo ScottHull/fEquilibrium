@@ -97,7 +97,7 @@ class box:
         os.mkdir('nearest_neighbors')
         os.mkdir('temp_distrib_floor')
         # opens the object history csv so object histories can be written after each time interval
-        if self.object_history == True:
+        if self.object_history is True:
             if "object_history.csv" in os.listdir(os.getcwd()):
                 os.remove("object_history.csv")
             self.object_output = open("object_history.csv", 'w')
@@ -684,7 +684,7 @@ class box:
             # create an initial snapshot of the box
             self.visualize_box()
             # writes an object history output file if flagged in box setup
-            if self.object_history == True:
+            if self.object_history is True:
                 for row in self.space.itertuples():
                     index = row.Index
                     if 'A' in self.space['object_id'][index]:
@@ -698,7 +698,7 @@ class box:
         elif self.model_time <= 0:
             self.visualize_box()
             console.pm_stat("Model at minimum time!")
-            if self.visualize_system == True:
+            if self.visualize_system is True:
                 console.pm_stat("Writing animations...")
 
                 # dynamics animation
@@ -742,7 +742,7 @@ class box:
                 # writes the chemical compositions to 'solution.csv'
                 self.solution.get_solution().to_csv("solution.csv")
                 # writes the object history output file
-                if self.object_history == True:
+                if self.object_history is True:
                     for row in self.space.itertuples():
                         index = row.Index
                         if 'A' in self.space['object_id'][index]:
@@ -752,7 +752,7 @@ class box:
                                 contents.append(str(self.space[i][index]))
                             formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                             self.object_output.write("{}\n".format(formatted_contents))
-                if self.object_output == True:
+                if self.object_output is True:
                     self.object_output.close()
                 return self.model_time, self.space
         else:
@@ -770,7 +770,7 @@ class box:
                     self.velocity_output.write("\n{}".format(update_space['object_velocity'][index]))
             self.visualize_box()
             self.space = update_space
-            if self.object_history == True:
+            if self.object_history is True:
                 for row in self.space.itertuples():
                     index = row.Index
                     if 'A' in self.space['object_id'][index]:
@@ -781,7 +781,7 @@ class box:
                         formatted_contents = ",".join(i.replace(",", ":") for i in contents)
                         self.object_output.write("{}\n".format(formatted_contents))
         # auto-update calculates the appropriate deltaTime, if one is not defined
-        if auto_update == True:
+        if auto_update is True:
             if self.model_time == deltaTime:
                 self.model_time -= deltaTime
                 self.update_system(auto_update=False, deltaTime=deltaTime)
