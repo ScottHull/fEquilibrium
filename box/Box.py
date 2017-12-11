@@ -72,7 +72,10 @@ class box:
             'kinetic_energy': np.NAN,  # in J
             'total_energy_released': np.NAN,  # in J
             'mass': np.NAN,  # in kg
-            'volume': np.NAN  # in m^3
+            'volume': np.NAN,  # in m^3
+            'drag_force': np.NAN, # in N, the drag force exerted on sinking objects
+            'buoyant_force': np.NAN, # in N, the buoyant force exerted on particles (negative = downward buoyant force)
+            'gravitational_force': np.NAN # in N, the force pulling down on the objects due to gravity
         })
         self.num_coords = len(self.coords)
         self.solution = solution(box_length=self.num_coords)
@@ -622,12 +625,17 @@ class box:
                                                                              curr_x_coords, curr_y_coords,
                                                                              curr_z_coords, updated_x_coord,
                                                                              updated_y_coord, updated_z_coord))
-                system_data['temperature'][index] = float(
-                    system_data['temperature'][index]) + energy().stokes_frictional_energy(
+                # stokes_data returns degK, F_g, F_b, F_d
+                stokes_data = energy().stokes_frictional_energy(
                     object=system_data['object'][index], matrix_material=matrix_material,
                     body_radius=system_data['object_radius'][index],
                     body_mass=system_data['mass'][index], distance_travelled=rounded_z_distance_travelled,
                     object_velocity=object_velocity)
+                system_data['temperature'][index] = float(
+                    system_data['temperature'][index]) + stokes_data[0]  # grabs degK from stokes_data & adjusts the temperature
+                system_data['drag_force'][index] = float(stokes_data[1]) # gets drag force and adds it to the dataframe
+                system_data['buoyant_force'][index] = float(stokes_data[2]) # gets buoyant force and adds it to the dataframe
+                system_data['gravitational_force'][index] = float(stokes_data[3]) # gets gravitational force and adds it to the dataframe
                 system_data['object_velocity'][index] = object_velocity
                 system_data['z_direct'][index] = object_velocity
                 system_data['potential_energy'][index] = energy().potential_energy(mass=system_data['mass'][index],

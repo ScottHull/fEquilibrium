@@ -472,6 +472,9 @@ class energy:
         body_density = df['Density'][object]
         matrix_density = df['Density'][matrix_material]
         drag_coeffient = df['Drag Coefficient'][object]
+        body_volume = (4 / 3) * pi * body_radius**3
+        F_g = body_mass * self.gravity # gravitational force, N, F_g = m * g
+        F_b = matrix_density * body_volume * self.gravity # buoyant force, N, F_b = rho_fluid * volume_object * g
         F_d = drag_coeffient * 0.5 * matrix_density * (object_velocity ** 2) * (
         pi * (body_radius ** 2))  # F_d = drag (frictional) force, F_d = Cd*0.5*rho*velocity*A (source: NASA)
         # Frictional drag must be converted to energy and added to the body temperature.
@@ -479,7 +482,7 @@ class energy:
         W = F_d * distance_travelled  # convert joules to degK, Q[J]=M[g] * Cp * T[degK] --> T=Q/(M*Cp)
         degK = W / (body_cp * (body_mass * 1000))  # the temperature to be added to the body
         # Checking units for calculation above: K = W / (cp * mass) = J / [(((J / K) / mass) * mass)] = JK / J = K
-        return degK
+        return degK, F_g, F_b, F_d
 
     # def distribute_stokes_frictional_energy(self, frictional_energy, path_coords):
     #     """

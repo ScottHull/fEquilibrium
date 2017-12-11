@@ -4,9 +4,9 @@ import math
 import os
 import numpy as np
 
-width = 5.0
-length = 5.0
-height = 8.0
+width = 3.0
+length = 3.0
+height = 3.0
 space_resolution = 0.2
 # x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))), space_resolution) # generate range of x-coords
 # y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))), space_resolution) # generate range of y-coords
