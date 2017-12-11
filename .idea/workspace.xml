@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Graduate Research.iml" afterPath="$PROJECT_DIR$/.idea/Graduate Research.iml" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
-      <change beforePath="$PROJECT_DIR$/dynamics/Energy.py" afterPath="$PROJECT_DIR$/dynamics/Energy.py" />
-      <change beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,11 +13,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="12" lean-forward="true" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
+            <state relative-caret-position="390">
+              <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -33,8 +28,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3897">
-              <caret line="804" column="0" lean-forward="false" selection-start-line="804" selection-start-column="0" selection-end-line="804" selection-end-column="0" />
+            <state relative-caret-position="267">
+              <caret line="562" column="25" lean-forward="true" selection-start-line="562" selection-start-column="25" selection-end-line="562" selection-end-column="25" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -54,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="484" column="15" lean-forward="true" selection-start-line="484" selection-start-column="15" selection-end-line="484" selection-end-column="34" />
+            <state relative-caret-position="332">
+              <caret line="484" column="34" lean-forward="true" selection-start-line="484" selection-start-column="34" selection-end-line="484" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -102,9 +97,9 @@
       <find>== True</find>
       <find>force</find>
       <find>stokes_frictional</find>
+      <find>gravitational</find>
       <find>stokes_friction</find>
       <find>stokes_f</find>
-      <find>gravitational</find>
     </findStrings>
     <replaceStrings>
       <replace>neighbors</replace>
@@ -28208,13 +28203,6 @@
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
     </task>
-    <task id="LOCAL-00014" summary="Base temperature visualization via 3D surface plots.">
-      <created>1507745151504</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1507745151504</updated>
-    </task>
     <task id="LOCAL-00015" summary="Began implementing solution geochemistry.">
       <created>1507747628100</created>
       <option name="number" value="00015" />
@@ -28551,7 +28539,14 @@
       <option name="project" value="LOCAL" />
       <updated>1512061008375</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="Added force tracking to the main Box dataframe">
+      <created>1513022852159</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1513022852160</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -28592,7 +28587,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Temperature equilibration currently not working." />
     <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing." />
     <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement." />
     <MESSAGE value="Object history output file support added." />
@@ -28617,7 +28611,8 @@
     <MESSAGE value="Some important comments on heat exchange." />
     <MESSAGE value="Boundary test" />
     <MESSAGE value="Added box integrity check before calculations proceed." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added box integrity check before calculations proceed." />
+    <MESSAGE value="Added force tracking to the main Box dataframe" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added force tracking to the main Box dataframe" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -28797,14 +28792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="484" column="15" lean-forward="true" selection-start-line="484" selection-start-column="15" selection-end-line="484" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
@@ -28815,23 +28802,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3897">
-          <caret line="804" column="0" lean-forward="false" selection-start-line="804" selection-start-column="0" selection-end-line="804" selection-end-column="0" />
+        <state relative-caret-position="267">
+          <caret line="562" column="25" lean-forward="true" selection-start-line="562" selection-start-column="25" selection-end-line="562" selection-end-column="25" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_box.py">
+    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="12" lean-forward="true" selection-start-line="8" selection-start-column="12" selection-end-line="8" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="332">
+          <caret line="484" column="34" lean-forward="true" selection-start-line="484" selection-start-column="34" selection-end-line="484" selection-end-column="34" />
+          <folding />
         </state>
       </provider>
     </entry>
