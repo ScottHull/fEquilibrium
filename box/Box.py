@@ -1,5 +1,6 @@
 import os
 import matplotlib as mpl
+
 mpl.use('Qt5Agg')
 os.sys.path.append(os.path.dirname(os.path.abspath('.')))
 import numpy as np
@@ -18,6 +19,7 @@ import matplotlib.cm as cm
 import matplotlib.colors
 import matplotlib.colorbar
 from math import pi
+from numbers import Number
 
 
 # TODO: update some methods to class methods to avoid outside interference
@@ -63,7 +65,7 @@ class box:
             'density': np.NAN,  # in kg/m^3
             'temperature': np.NAN,  # in K
             'pressure': [(1 * 10 ** 9) for i in self.coords],
-        # pressure in pascals, in order to work with ideal gas law
+            # pressure in pascals, in order to work with ideal gas law
             'object_velocity': [float(0) for i in self.coords],
             'x_direct': np.NAN,
             'y_direct': np.NAN,
@@ -73,9 +75,9 @@ class box:
             'total_energy_released': np.NAN,  # in J
             'mass': np.NAN,  # in kg
             'volume': np.NAN,  # in m^3
-            'drag_force': np.NAN, # in N, the drag force exerted on sinking objects
-            'buoyant_force': np.NAN, # in N, the buoyant force exerted on particles (negative = downward buoyant force)
-            'gravitational_force': np.NAN # in N, the force pulling down on the objects due to gravity
+            'drag_force': np.NAN,  # in N, the drag force exerted on sinking objects
+            'buoyant_force': np.NAN,  # in N, the buoyant force exerted on particles (negative = downward buoyant force)
+            'gravitational_force': np.NAN  # in N, the force pulling down on the objects due to gravity
         })
         self.num_coords = len(self.coords)
         self.solution = solution(box_length=self.num_coords)
@@ -275,9 +277,6 @@ class box:
     #
     #     return row
 
-
-
-
     def insert_object(self, object, x_coord, y_coord, z_coord, object_radius, composition, initial_temperature):
         """
         Allows the insertion of an object into the box
@@ -307,7 +306,7 @@ class box:
                                     matrix=False)  # generates object ID
                                 self.space['object_radius'][index] = object_radius  # in m
                                 self.space['volume'][index] = (4 / 3) * pi * (
-                                                                             object_radius) ** 3  # assume volume of object is a perfect sphere
+                                    object_radius) ** 3  # assume volume of object is a perfect sphere
                                 self.space['mass'][index] = self.physical_parameters['Density'][object] * \
                                                             self.space['volume'][index]  # mass = density * volume
                                 self.space['temperature'][index] = initial_temperature
@@ -400,7 +399,8 @@ class box:
         """
         if z_range[1] != 0:
             if boundary_location == 'bottom':
-                self.model_base = z_range[0] # base of model considered to be the top (highest z-coordinate) of boundary layer
+                self.model_base = z_range[
+                    0]  # base of model considered to be the top (highest z-coordinate) of boundary layer
             for row in self.space.itertuples():
                 index = row.Index
                 if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
@@ -415,7 +415,6 @@ class box:
                             index]))
             print("")
             console.pm_stat("Boundary layer inserted between z-range: {}m-{}m!".format(z_range[0], z_range[1]))
-
 
     def visualize_box(self):
         """
@@ -501,7 +500,6 @@ class box:
             fig.clf()
         return None
 
-
     @staticmethod
     def grab_row_index_by_coord(system_data, x_coord, y_coord, z_coord):
         """
@@ -521,14 +519,61 @@ class box:
                         return index
 
     @staticmethod
-    def swap_rows(system_data, updated_system_data, from_row_index, to_row_index):
+    def swap_rows(system_data, update_space, from_row_index, to_row_index):
         stationary_columns = ['x_coords', 'y_coords', 'z_coords', 'coord_index', 'nearest_neighbors']
-        updated_system = updated_system_data
-        for i in updated_system_data:
+        for i in update_space:
             if i not in stationary_columns:
-                updated_system[i][to_row_index] = system_data[i][from_row_index]
-                updated_system[i][from_row_index] = system_data[i][to_row_index]
-        return updated_system
+                update_space[i][to_row_index] = system_data[i][from_row_index]
+                update_space[i][from_row_index] = system_data[i][to_row_index]
+        return update_space
+
+    def replace_fromobject(self, system_data, update_space, from_object_index, stationary_columns):
+        # finds the nearest matrix point to copy data + replace 'from' object
+        search_integer = 1
+        # replaces the point where the merged diapir came from with the nearest matrix point
+        def search_for_matrix(search_integer):
+            if system_data['object_id'][from_object_index + search_integer][0] == 'A':
+                search_integer += 1
+                search_for_matrix(search_integer=search_integer)
+            else:
+                ind = system_data['object_id'].tolist().index(system_data['object_id'][from_object_index + search_integer])
+                return ind
+
+        sample_point_index = search_for_matrix(search_integer=search_integer)
+        # replaces all former object data with new matrix data
+        for i in system_data:
+            if i not in stationary_columns:
+                update_space[i][from_object_index] = system_data[i][sample_point_index]
+        return None
+
+    def merge_objects(self, to_object_index, from_object_index, system_data, update_space):
+        """
+        When two objects of the same type occupy the same point in coordinate space, they will merge.
+        The deepest object (i.e. the "to" destination of the "from" diapir) will inherit all properties.
+        The object doing the sinking will merge to the deeper object + disappear.
+        :param to_object_index:
+        :param from_object_index:
+        :param system_data:
+        :return:
+        """
+        stationary_columns = ['x_coords', 'y_coords', 'z_coords', 'coord_index',
+                              'nearest_neighbors']  # columns that are not swapped
+        additive_columns = ['mass', 'volume']  # columns that contain additive data when diapirs merge
+        for i in system_data:
+            if i not in stationary_columns and i in additive_columns:
+                # checks to make sure values aren't equal to cut down on (minimal) computational time
+                if system_data[i][from_object_index] != system_data[i][to_object_index]:
+                    # makes sure the values are numbers
+                    if isinstance(system_data[i][from_object_index], Number) and isinstance(
+                            system_data[i][to_object_index], Number):
+                        # adds the values
+                        update_space[i][to_object_index] = update_space[i][to_object_index] + update_space[i][
+                            from_object_index]
+                        update_space['temperature'][to_object_index] = (system_data['temperature'][from_object_index] +
+                                                                        system_data['temperature'][to_object_index]) / 2
+        self.replace_fromobject(system_data=system_data, update_space=update_space, from_object_index=from_object_index,
+                                stationary_columns=stationary_columns)
+        return update_space
 
     # TODO: seperate velocity calculations from system movement so space dataframe can be updated and moved according to velocity contents
     @classmethod
@@ -551,8 +596,6 @@ class box:
     #                 unique_path_coords.append(float(system_data['z_coord'][row]))
     #         path_coords.append(unique_path_coords)
     #     return path_coords
-
-
 
     def move_systems(self, system_data, update_space, deltaTime, box_height, space_resolution,
                      default_matrix_material='Silicate Liquid'):
@@ -604,11 +647,14 @@ class box:
                 updated_z_coord = round(self.round_coord_arbitrary(
                     coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
                     system_data=system_data, coordinate_type='z_coords'), len(str(space_resolution)))
-                rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords, len(str(space_resolution)))  # use this distance for distance travelled, as it is more self-consistent within the model
+                rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords, len(str(
+                    space_resolution)))  # use this distance for distance travelled, as it is more self-consistent within the model
                 # check to see if object travels into boundary layer.  if so, put it in nearest point within spatial resolution ABOVE boundary layer
                 if round(rounded_z_distance_travelled + curr_z_coords, len(str(space_resolution))) >= self.model_base:
-                    updated_z_coord = round(self.model_base - self.space_resolution, len(str(space_resolution)))# fix the z-coord
-                    rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords, len(str(space_resolution))) # fix the distance travelled
+                    updated_z_coord = round(self.model_base - self.space_resolution,
+                                            len(str(space_resolution)))  # fix the z-coord
+                    rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords,
+                                                         len(str(space_resolution)))  # fix the distance travelled
                 # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travlled = 0
                 if rounded_z_distance_travelled == 0:
                     object_velocity = 0
@@ -632,10 +678,13 @@ class box:
                     body_mass=system_data['mass'][index], distance_travelled=rounded_z_distance_travelled,
                     object_velocity=object_velocity)
                 system_data['temperature'][index] = float(
-                    system_data['temperature'][index]) + stokes_data[0]  # grabs degK from stokes_data & adjusts the temperature
-                system_data['drag_force'][index] = float(stokes_data[1]) # gets drag force and adds it to the dataframe
-                system_data['buoyant_force'][index] = float(stokes_data[2]) # gets buoyant force and adds it to the dataframe
-                system_data['gravitational_force'][index] = float(stokes_data[3]) # gets gravitational force and adds it to the dataframe
+                    system_data['temperature'][index]) + stokes_data[
+                                                        0]  # grabs degK from stokes_data & adjusts the temperature
+                system_data['drag_force'][index] = float(stokes_data[1])  # gets drag force and adds it to the dataframe
+                system_data['buoyant_force'][index] = float(
+                    stokes_data[2])  # gets buoyant force and adds it to the dataframe
+                system_data['gravitational_force'][index] = float(
+                    stokes_data[3])  # gets gravitational force and adds it to the dataframe
                 system_data['object_velocity'][index] = object_velocity
                 system_data['z_direct'][index] = object_velocity
                 system_data['potential_energy'][index] = energy().potential_energy(mass=system_data['mass'][index],
@@ -653,12 +702,14 @@ class box:
                                                               x_coord=system_data['x_coords'][index],
                                                               y_coord=system_data['y_coords'][index],
                                                               z_coord=system_data['z_coords'][index])
-                # to_row_index = self.grab_row_index_by_coord(system_data=system_data,
-                #                                             x_coord=updated_x_coord,
-                #                                             y_coord=updated_y_coord,
-                #                                             z_coord=updated_z_coord)
-                update_space_copy = self.swap_rows(system_data=system_data, updated_system_data=update_space,
-                                                   from_row_index=from_row_index, to_row_index=to_row_index)
+                # check to see if two objects of the same type will collide
+                # if two objects of the same type collide, they will merge
+                # else, just swap points with the matrix material at the destination coordinate point
+                if system_data['object'][from_row_index] == system_data['object'][to_row_index]:
+                    update_space_copy = self.merge_objects(to_object_index=to_row_index, from_object_index=from_row_index, system_data=system_data, update_space=update_space)
+                else:
+                    update_space_copy = self.swap_rows(system_data=system_data, update_space=update_space,
+                                                       from_row_index=from_row_index, to_row_index=to_row_index)
         print("")
         return update_space_copy
 
