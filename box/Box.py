@@ -20,6 +20,8 @@ import matplotlib.colors
 import matplotlib.colorbar
 from math import pi
 from numbers import Number
+import ast
+from collections import Counter
 
 
 # TODO: update some methods to class methods to avoid outside interference
@@ -40,17 +42,19 @@ class box:
         console.pm_stat("Instantiating box. Please sit tight.")
         self.visualize_neighbors = visualize_neighbors
         self.animate_neighbors = animate_neighbors
-        self.length = length
-        self.width = width
-        self.height = height
-        self.model_base = height
-        self.space_resolution = space_resolution
-        self.model_time = float(model_time)
-        self.initial_time = float(model_time)
+        self.length = length # x values of box
+        self.width = width # y values of box
+        self.height = height # z values of box
+        self.model_base = height # sets the model base as the coords directly above the boundary layer
+        self.boundary_vals = [] # stores limits of boundaries so that box integrity can be verified
+        self.space_resolution = space_resolution # the spatial resolution of the box
+        self.model_time = float(model_time) # the amount of time the model will run
+        self.initial_time = float(model_time) # the initial value of self.model_time
+        # generates all possible coordinate points within the box
         self.coords = self.generate_coordinate_points(length=self.length, width=self.width, height=self.height,
                                                       space_resolution=self.space_resolution)
-        self.visualize_system = visualize_system
-        self.object_history = object_history
+        self.visualize_system = visualize_system # True/False, create animations of the box?
+        self.object_history = object_history # creates an output file that tracks objects with time
         # this is the central dataframe of the model
         # highly critical that this is accessible in memory for all processes
         self.space = pd.DataFrame({
@@ -322,7 +326,6 @@ class box:
                                     self.space['y_coords'][index],
                                     self.space['z_coords'][index]))
                                 break
-                print("")
 
             else:
                 console.pm_err("Could not insert object!  Outside of defined coordinate points!")
@@ -398,6 +401,8 @@ class box:
         :return:
         """
         if z_range[1] != 0:
+            self.boundary_vals.append(z_range[0])
+            self.boundary_vals.append(z_range[1])
             if boundary_location == 'bottom':
                 self.model_base = z_range[
                     0]  # base of model considered to be the top (highest z-coordinate) of boundary layer
@@ -527,24 +532,36 @@ class box:
                 update_space[i][from_row_index] = system_data[i][to_row_index]
         return update_space
 
-    def replace_fromobject(self, system_data, update_space, from_object_index, stationary_columns):
-        # finds the nearest matrix point to copy data + replace 'from' object
-        search_integer = 1
-        # replaces the point where the merged diapir came from with the nearest matrix point
-        def search_for_matrix(search_integer):
-            if system_data['object_id'][from_object_index + search_integer][0] == 'A':
-                search_integer += 1
-                search_for_matrix(search_integer=search_integer)
-            else:
-                ind = system_data['object_id'].tolist().index(system_data['object_id'][from_object_index + search_integer])
-                return ind
 
-        sample_point_index = search_for_matrix(search_integer=search_integer)
-        # replaces all former object data with new matrix data
-        for i in system_data:
-            if i not in stationary_columns:
-                update_space[i][from_object_index] = system_data[i][sample_point_index]
-        return None
+    def replace_fromobject(self, system_data, update_space, from_object_index, to_object_index, stationary_columns):
+        found = False
+        from_neighbors = ast.literal_eval(system_data['nearest_neighbors'][from_object_index])
+        avg_temps_list = []
+        avg_object_list = []
+        for i in from_neighbors:
+            for z in from_neighbors[i]:
+                if "+" in z or "-" in z:
+                    if len(from_neighbors[i][z]['index']) != 0:
+                        temp = system_data['temperature'][from_neighbors[i][z]['index']].values.tolist()[0]
+                        avg_obj = system_data['object'][from_neighbors[i][z]['index']].values.tolist()[0]
+                        if avg_obj != 'Boundary':
+                            avg_temps_list.append(temp)
+                            avg_object_list.append(avg_obj)
+        avg_temp = sum(avg_temps_list) / len(avg_temps_list)
+        common_obj = Counter(avg_object_list).most_common()[0][0]
+        for i in from_neighbors:
+            for z in from_neighbors[i]:
+                obj = system_data['object'][from_neighbors[i][z]['index']].values.tolist()[0]
+                if obj == common_obj:
+                    for q in system_data:
+                        if q not in stationary_columns:
+                            update_space[q][from_object_index] = system_data[q][from_neighbors[i][z]['index']]
+                    update_space['temperature'][from_object_index] = avg_temp
+                    found = True
+                    break
+            if found is True:
+                break
+
 
     def merge_objects(self, to_object_index, from_object_index, system_data, update_space):
         """
@@ -559,20 +576,20 @@ class box:
         stationary_columns = ['x_coords', 'y_coords', 'z_coords', 'coord_index',
                               'nearest_neighbors']  # columns that are not swapped
         additive_columns = ['mass', 'volume']  # columns that contain additive data when diapirs merge
+        console.pm_stat("Objects {} and {} will merge to object {}!".format(system_data['object_id'][from_object_index],
+                                                                            system_data['object_id'][
+                                                                                to_object_index], system_data['object_id'][
+                                                                                to_object_index]))
         for i in system_data:
-            if i not in stationary_columns and i in additive_columns:
-                # checks to make sure values aren't equal to cut down on (minimal) computational time
-                if system_data[i][from_object_index] != system_data[i][to_object_index]:
-                    # makes sure the values are numbers
-                    if isinstance(system_data[i][from_object_index], Number) and isinstance(
-                            system_data[i][to_object_index], Number):
-                        # adds the values
-                        update_space[i][to_object_index] = update_space[i][to_object_index] + update_space[i][
-                            from_object_index]
-                        update_space['temperature'][to_object_index] = (system_data['temperature'][from_object_index] +
+            # makes sure that the column is an additive property
+            if (i not in stationary_columns) and (i in additive_columns):
+                # adds the values
+                update_space[i][to_object_index] = system_data[i][to_object_index] + system_data[i][
+                    from_object_index]
+        update_space['temperature'][to_object_index] = (system_data['temperature'][from_object_index] +
                                                                         system_data['temperature'][to_object_index]) / 2
         self.replace_fromobject(system_data=system_data, update_space=update_space, from_object_index=from_object_index,
-                                stationary_columns=stationary_columns)
+                                stationary_columns=stationary_columns, to_object_index=to_object_index)
         return update_space
 
     # TODO: seperate velocity calculations from system movement so space dataframe can be updated and moved according to velocity contents
@@ -655,7 +672,7 @@ class box:
                                             len(str(space_resolution)))  # fix the z-coord
                     rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords,
                                                          len(str(space_resolution)))  # fix the distance travelled
-                # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travlled = 0
+                # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travelled = 0
                 if rounded_z_distance_travelled == 0:
                     object_velocity = 0
                     z_dis_obj_travel = 0
@@ -664,6 +681,10 @@ class box:
                                                             x_coord=updated_x_coord,
                                                             y_coord=updated_y_coord,
                                                             z_coord=updated_z_coord)
+                from_row_index = self.grab_row_index_by_coord(system_data=system_data,
+                                                              x_coord=system_data['x_coords'][index],
+                                                              y_coord=system_data['y_coords'][index],
+                                                              z_coord=system_data['z_coords'][index])
                 # update the copy of the dataframe with the appropriate changes
                 if object_velocity != 0:
                     console.pm_flush(
@@ -698,20 +719,49 @@ class box:
                     system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                     system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
                     updated_z_coord))
-                from_row_index = self.grab_row_index_by_coord(system_data=system_data,
-                                                              x_coord=system_data['x_coords'][index],
-                                                              y_coord=system_data['y_coords'][index],
-                                                              z_coord=system_data['z_coords'][index])
                 # check to see if two objects of the same type will collide
                 # if two objects of the same type collide, they will merge
                 # else, just swap points with the matrix material at the destination coordinate point
-                if system_data['object'][from_row_index] == system_data['object'][to_row_index]:
+                if (system_data['object'][from_row_index] == update_space['object'][to_row_index]) and \
+                        (system_data['object_id'][from_row_index] != system_data['object_id'][to_row_index]):
+                    print(system_data['object'][from_row_index])
+                    print(system_data['object'][to_row_index])
+                    print(system_data['object_id'][from_row_index])
+                    print(system_data['object_id'][to_row_index])
                     update_space_copy = self.merge_objects(to_object_index=to_row_index, from_object_index=from_row_index, system_data=system_data, update_space=update_space)
                 else:
                     update_space_copy = self.swap_rows(system_data=system_data, update_space=update_space,
                                                        from_row_index=from_row_index, to_row_index=to_row_index)
         print("")
         return update_space_copy
+
+
+    def certify_box(self):
+        for row in self.space.itertuples():
+            index = row.Index
+            try:
+                if 'A' in self.space['object_id'][index]:
+                    pass
+            except:
+                console.pm_err(
+                    "Box integrity check failed.  Please check your z-ranges to make sure all "
+                    "coordinate spaces are filled..")
+                sys.exit(1)
+        res = [self.width, self.length, self.height]
+        for i in res:
+            if i % self.space_resolution != 0:
+                console.pm_err("Box integrity check failed.  Your space resolution is not a multiple of "
+                               "the box length, width, and/or height.")
+                sys.exit(1)
+        for i in self.boundary_vals:
+            if i % self.space_resolution != 0:
+                console.pm_err("Box integrity check failed.  Your space resolution is not a multiple of "
+                               "the boundary layer limit(s).")
+                sys.exit(1)
+        console.pm_stat("Box integrity confirmed.  Calculations allowed to proceed.")
+
+
+
 
     # TODO: update x and y coords
     def update_system(self, auto_update=True, deltaTime=1.0):
@@ -726,17 +776,7 @@ class box:
         # this section only executes at the initial time--no object or thermal movement occurs here
         if self.model_time == self.initial_time:
             # check the integrity of the box before time and neighbor identifification allowed to progress
-            for row in self.space.itertuples():
-                index = row.Index
-                try:
-                    if 'A' in self.space['object_id'][index]:
-                        pass
-                except:
-                    console.pm_err(
-                        "Box integrity check failed.  Please check your z-ranges to make sure all "
-                        "coordinate spaces are filled..")
-                    sys.exit(1)
-            console.pm_stat("Box integrity confirmed.  Calculations allowed to proceed.")
+            self.certify_box()
             # if box integrity confirmed, proceed to nearest neighbor identification
             self.classify_neighbors(visualize_neighbors=self.visualize_neighbors,
                                     animate_neighbors=self.animate_neighbors)
@@ -825,7 +865,7 @@ class box:
                                                                space_resolution=self.space_resolution)
             for row in update_space.itertuples():
                 index = row.Index
-                if update_space['object'][index] == 'Metal Liquid':
+                if 'A' in update_space['object_id'][index]:
                     self.velocity_output.write("\n{}".format(update_space['object_velocity'][index]))
             self.visualize_box()
             self.space = update_space

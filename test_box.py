@@ -25,10 +25,10 @@ model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 
 model.insert_boundary(temperature=2000, z_range=[0,0.5], boundary_location='top')
 model.insert_boundary(temperature=2300, z_range=[7.5,8], boundary_location='bottom')
 
-model.insert_object(object='Metal Liquid', object_radius=0.05, x_coord=2.5,
+model.insert_object(object='Metal Liquid', object_radius=0.08, x_coord=2.5,
                         y_coord=2.5, z_coord=0.5, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2200)
-model.insert_object(object='Metal Liquid', object_radius=0.06, x_coord=2.5,
-                        y_coord=2.5, z_coord=1.6, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2200)
+model.insert_object(object='Metal Liquid', object_radius=0.08, x_coord=2.5,
+                        y_coord=2.5, z_coord=1.5, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2200)
 
 # insert X number of objects into the box, specify their location, will overwrite matrix at that point
 # for i in list(range(1)):
