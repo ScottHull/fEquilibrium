@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="Began tinkering with removing update space.">
+    <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
-      <change beforePath="$PROJECT_DIR$/dynamics/Movement.py" afterPath="$PROJECT_DIR$/dynamics/Movement.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -18,7 +16,7 @@
       <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="68">
               <caret line="17" column="107" lean-forward="false" selection-start-line="17" selection-start-column="107" selection-end-line="17" selection-end-column="107" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
@@ -30,8 +28,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
-              <caret line="802" column="37" lean-forward="false" selection-start-line="802" selection-start-column="37" selection-end-line="802" selection-end-column="37" />
+            <state relative-caret-position="251">
+              <caret line="877" column="87" lean-forward="false" selection-start-line="877" selection-start-column="87" selection-end-line="877" selection-end-column="87" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -84,7 +82,6 @@
       <find>updated_system</find>
       <find>.6</find>
       <find>additive</find>
-      <find>additi</find>
       <find>system_data</find>
       <find>addi</find>
       <find>check_coords</find>
@@ -102,6 +99,7 @@
       <find>== 'A&quot;</find>
       <find>client</find>
       <find>update_space</find>
+      <find>additi</find>
     </findStrings>
     <replaceStrings>
       <replace>object_history</replace>
@@ -403,13 +401,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
-    </task>
-    <task id="LOCAL-00020" summary="Integrated radioactivity for specified primordial parent isotopes.">
-      <created>1508871739524</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1508871739524</updated>
     </task>
     <task id="LOCAL-00021" summary="Began preparing foundations for multiple types of matricies.">
       <created>1508876192440</created>
@@ -747,7 +738,14 @@
       <option name="project" value="LOCAL" />
       <updated>1513357413799</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="Added functional object merging.">
+      <created>1513534139834</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1513534139835</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -778,7 +776,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Discrete point heat equation seemingly operational.  Requires more testing.  Frictional energy now non-increasing with no movement." />
     <MESSAGE value="Object history output file support added." />
     <MESSAGE value="Base temperature visualization via 3D surface plots." />
     <MESSAGE value="Began implementing solution geochemistry." />
@@ -803,7 +800,8 @@
     <MESSAGE value="Added box integrity check before calculations proceed." />
     <MESSAGE value="Added force tracking to the main Box dataframe" />
     <MESSAGE value="Added object merging when sinking." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added object merging when sinking." />
+    <MESSAGE value="Added functional object merging." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added functional object merging." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -982,16 +980,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_box.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="17" column="107" lean-forward="false" selection-start-line="17" selection-start-column="107" selection-end-line="17" selection-end-column="107" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../SCE_GUI_Project/SIPM_v3_final.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="137">
@@ -1018,10 +1006,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="17" column="107" lean-forward="false" selection-start-line="17" selection-start-column="107" selection-end-line="17" selection-end-column="107" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="802" column="37" lean-forward="false" selection-start-line="802" selection-start-column="37" selection-end-line="802" selection-end-column="37" />
+        <state relative-caret-position="251">
+          <caret line="877" column="87" lean-forward="false" selection-start-line="877" selection-start-column="87" selection-end-line="877" selection-end-column="87" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
