@@ -438,8 +438,12 @@ class box:
                 x = self.space['x_coords'][index]
                 y = self.space['y_coords'][index]
                 z = self.space['z_coords'][index]
-                if str(self.space['object_id'][index])[0] == 'A':
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 100)
+                try:
+                    if str(self.space['object_id'][index])[0] == 'A':
+                        ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 100)
+                except:
+                    self.space.to_csv("alskdfjakhsdf.csv")
+                    sys.exit(1)
             ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length (x) (m)")
             ax.set_ylabel("Box Width (y) (m)")
@@ -462,9 +466,13 @@ class box:
                 y = self.space['y_coords'][index]
                 z = self.space['z_coords'][index]
                 # velocity_x = self.space['x_direct'][row]
-                if str(self.space['object_id'][index][0]) == 'A':
-                    # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
-                    ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 100)
+                try:
+                    if str(self.space['object_id'][index][0]) == 'A':
+                        # print("Plotted object at: x:{} y:{} z:{}.".format(x, y, z))
+                        ax.scatter3D(x, y, z, color='b', s=self.space['object_radius'][index] * 100)
+                except:
+                    self.space.to_csv("alskdfjakhsdf.csv")
+                    sys.exit(1)
             # norm_colors = mpl.colors.Normalize(vmin=self.space['temperature'].min(), vmax=self.space['temperature'].max())
             norm_colors = mpl.colors.Normalize(vmin=1900, vmax=2200)
             colorsmap = matplotlib.cm.ScalarMappable(norm=norm_colors, cmap='jet')
@@ -526,11 +534,14 @@ class box:
     @staticmethod
     def swap_rows(system_data, update_space, from_row_index, to_row_index):
         stationary_columns = ['x_coords', 'y_coords', 'z_coords', 'coord_index', 'nearest_neighbors']
-        for i in update_space:
+        for i in system_data:
             if i not in stationary_columns:
-                update_space[i][to_row_index] = system_data[i][from_row_index]
-                update_space[i][from_row_index] = system_data[i][to_row_index]
-        return update_space
+                cp_from = system_data[i][from_row_index]
+                cp_to = system_data[i][to_row_index]
+                system_data[i][to_row_index] = cp_from
+                system_data[i][from_row_index] = cp_to
+
+        return system_data
 
 
     def replace_fromobject(self, system_data, update_space, from_object_index, to_object_index, stationary_columns):
@@ -555,8 +566,8 @@ class box:
                 if obj == common_obj:
                     for q in system_data:
                         if q not in stationary_columns:
-                            update_space[q][from_object_index] = system_data[q][from_neighbors[i][z]['index']]
-                    update_space['temperature'][from_object_index] = avg_temp
+                            system_data[q][from_object_index] = system_data[q][from_neighbors[i][z]['index']].values.tolist()[0]
+                    system_data['temperature'][from_object_index] = avg_temp
                     found = True
                     break
             if found is True:
@@ -584,13 +595,16 @@ class box:
             # makes sure that the column is an additive property
             if (i not in stationary_columns) and (i in additive_columns):
                 # adds the values
-                update_space[i][to_object_index] = system_data[i][to_object_index] + system_data[i][
+                system_data[i][to_object_index] = system_data[i][to_object_index] + system_data[i][
                     from_object_index]
-        update_space['temperature'][to_object_index] = (system_data['temperature'][from_object_index] +
+        # takes an average of temperatures of the merging objects for the temperature of the merged object
+        # this should eventually be weighted by object radius
+        system_data['object_radius'][to_object_index] = ((system_data['volume'][to_object_index] * 3) / (4 * pi))**(1/3) # V = (4/3)*pi*r^3 --> r = ((3V)/(4pi))^(1/3)
+        system_data['temperature'][to_object_index] = (system_data['temperature'][from_object_index] +
                                                                         system_data['temperature'][to_object_index]) / 2
-        self.replace_fromobject(system_data=system_data, update_space=update_space, from_object_index=from_object_index,
+        self.replace_fromobject(system_data=system_data, update_space=system_data, from_object_index=from_object_index,
                                 stationary_columns=stationary_columns, to_object_index=to_object_index)
-        return update_space
+        return system_data
 
     # TODO: seperate velocity calculations from system movement so space dataframe can be updated and moved according to velocity contents
     @classmethod
@@ -626,7 +640,8 @@ class box:
         :param default_matrix_material:
         :return: update_space_copy, a copy of the self.space dataframe with updated object/matrix positions
         """
-        update_space_copy = update_space.copy(deep=True)
+        # update_space_copy = update_space.copy(deep=True)
+        update_space_copy = self.space
         for row in system_data.itertuples():
             index = row.Index
             # object_id's that begin with 'A' are objects and will be free to move
@@ -715,23 +730,21 @@ class box:
                 system_data['kinetic_energy'][index] = energy().kinetic_energy(mass=system_data['mass'][index],
                                                                                velocity=system_data['object_velocity'][
                                                                                    index])
-                console.pm_flush("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
-                    system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
-                    system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
-                    updated_z_coord))
+                if object_velocity != 0:
+                    console.pm_flush("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
+                        system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
+                        system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
+                        updated_z_coord))
                 # check to see if two objects of the same type will collide
                 # if two objects of the same type collide, they will merge
                 # else, just swap points with the matrix material at the destination coordinate point
-                if (system_data['object'][from_row_index] == update_space['object'][to_row_index]) and \
+                if (system_data['object'][from_row_index] == system_data['object'][to_row_index]) and \
                         (system_data['object_id'][from_row_index] != system_data['object_id'][to_row_index]):
-                    print(system_data['object'][from_row_index])
-                    print(system_data['object'][to_row_index])
-                    print(system_data['object_id'][from_row_index])
-                    print(system_data['object_id'][to_row_index])
                     update_space_copy = self.merge_objects(to_object_index=to_row_index, from_object_index=from_row_index, system_data=system_data, update_space=update_space)
                 else:
-                    update_space_copy = self.swap_rows(system_data=system_data, update_space=update_space,
-                                                       from_row_index=from_row_index, to_row_index=to_row_index)
+                    if object_velocity != 0:
+                        update_space_copy = self.swap_rows(system_data=system_data, update_space=update_space,
+                                                           from_row_index=from_row_index, to_row_index=to_row_index)
         print("")
         return update_space_copy
 
@@ -772,7 +785,7 @@ class box:
         :return: self.model_time, self.space
         """
         console.pm_stat("Model time at: {}".format(self.model_time))
-        update_space = self.space.copy(deep=True)
+        # update_space = self.space.copy(deep=True)
         # this section only executes at the initial time--no object or thermal movement occurs here
         if self.model_time == self.initial_time:
             # check the integrity of the box before time and neighbor identifification allowed to progress
@@ -856,8 +869,9 @@ class box:
                 return self.model_time, self.space
         else:
             # models the object movement
-            update_space = self.move_systems(system_data=self.space, update_space=update_space, deltaTime=deltaTime,
+            self.move_systems(system_data=self.space, update_space=None, deltaTime=deltaTime,
                                              box_height=self.height, space_resolution=self.space_resolution)
+            update_space = self.space.copy(deep=True)
             # updates chemical compositions
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
             # models thermal equilibrium

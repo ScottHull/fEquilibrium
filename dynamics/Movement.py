@@ -90,15 +90,15 @@ class move_particle:
                                       diameter_body=diameter_body, matrix_viscosity=matrix_viscosity)
         if f < 10: # low frictional coefficient, when body is in laminar flow regime
             v = ((density_body - density_matrix) * grav_constant * diameter_body**2) / (18 * matrix_viscosity) # calculates the velocity of the body
-            console.pm_flush(
-                "f: {}, velocity: {}, matrix_viscosity: {}, matrix_material: {}".format(f, v, matrix_viscosity,
-                                                                                        matrix_material))
+            # console.pm_flush(
+            #     "f: {}, velocity: {}, matrix_viscosity: {}, matrix_material: {}".format(f, v, matrix_viscosity,
+            #                                                                             matrix_material))
             return v
         else:
             v = sqrt(((4 / (3 * drag_coeff)) * (((density_body - density_matrix) / density_matrix) * (grav_constant * diameter_body))))
-            console.pm_flush(
-                "f: {}, velocity: {}, matrix_viscosity: {}, matrix_material: {}".format(f, v, matrix_viscosity,
-                                                                                        matrix_material))
+            # console.pm_flush(
+            #     "f: {}, velocity: {}, matrix_viscosity: {}, matrix_material: {}".format(f, v, matrix_viscosity,
+            #                                                                             matrix_material))
             return v
 
 
