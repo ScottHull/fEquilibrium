@@ -133,7 +133,6 @@ class box:
         :param visualize_neighbors:
         :return: None
         """
-        loop_count = 1
         loop_total = len(self.space.index.tolist())
         console.pm_stat("Finding nearest neighbors for all points.  This may take several minutes...")
         # print("Finding nearest neighbors for all points.  This may take several minutes...")
@@ -573,6 +572,27 @@ class box:
             if found is True:
                 break
 
+    def define_path(self, start, end, length, width, height):
+        """
+        Get the list of coordinates between two points in the box.
+        :param start: a list of path start coordinates, [length, width, height] (i.e. [x, y, z])
+        :param end: a list of path end coordinates, [length, width, height] (i.e. [x, y, z])
+        :param length: x-coordinates
+        :param width: y-coordinates
+        :param height: z-coordinates
+        :return: path, the list of lists of coordinates in the path
+        """
+        start_x = start[0]
+        start_y = start[1]
+        start_z = start[2]
+        end_x = end[0]
+        end_y = end[1]
+        end_z = end[2]
+        path_x = end_x - start_x
+        path_y = end_y - start_y
+        path_z = end_z - start_z
+
+
 
     def merge_objects(self, to_object_index, from_object_index, system_data, update_space):
         """
@@ -762,12 +782,12 @@ class box:
                 sys.exit(1)
         res = [self.width, self.length, self.height]
         for i in res:
-            if i % self.space_resolution != 0:
+            if (i % self.space_resolution) - self.space_resolution >= 0:
                 console.pm_err("Box integrity check failed.  Your space resolution is not a multiple of "
                                "the box length, width, and/or height.")
                 sys.exit(1)
         for i in self.boundary_vals:
-            if i % self.space_resolution != 0:
+            if (i % self.space_resolution) - self.space_resolution >= 0:
                 console.pm_err("Box integrity check failed.  Your space resolution is not a multiple of "
                                "the boundary layer limit(s).")
                 sys.exit(1)
