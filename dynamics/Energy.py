@@ -342,8 +342,8 @@ class thermal_eq:
                     dT_d = ((classified_neighbors[i]["{}+".format(i)]['temperature'][0] - 
                             (2 * classified_neighbors[i]["{}".format(i)]['temperature'][0]) + 
                             classified_neighbors[i]["{}-".format(i)]['temperature'][0]) /
-                            ((classified_neighbors[i]["{}+".format(i)]['coords'][0] -
-                             classified_neighbors[i]["{}-".format(i)]['coords'][0])))
+                            ((1/2) * (classified_neighbors[i]["{}+".format(i)]['coords'][0] -
+                             classified_neighbors[i]["{}-".format(i)]['coords'][0]))**2)
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 # elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
                 #                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
@@ -369,8 +369,8 @@ class thermal_eq:
                     dT_d = ((classified_neighbors[i]["{}+".format(i)]['temperature'][0] -
                              (2 * classified_neighbors[i]["{}".format(i)]['temperature'][0]) +
                              classified_neighbors[i]["{}-".format(i)]['temperature'][0]) /
-                            ((classified_neighbors[i]["{}+".format(i)]['coords'][1] -
-                              classified_neighbors[i]["{}-".format(i)]['coords'][1])))
+                            ((1/2) * (classified_neighbors[i]["{}+".format(i)]['coords'][1] -
+                              classified_neighbors[i]["{}-".format(i)]['coords'][1]))**2)
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 # elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
                 #                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
@@ -396,8 +396,8 @@ class thermal_eq:
                     dT_d = ((classified_neighbors[i]["{}+".format(i)]['temperature'][0] -
                             (2 * classified_neighbors[i]["{}".format(i)]['temperature'][0]) +
                             classified_neighbors[i]["{}-".format(i)]['temperature'][0]) /
-                            ((classified_neighbors[i]["{}+".format(i)]['coords'][2] -
-                             classified_neighbors[i]["{}-".format(i)]['coords'][2])))
+                            ((1/2) * (classified_neighbors[i]["{}+".format(i)]['coords'][2] -
+                             classified_neighbors[i]["{}-".format(i)]['coords'][2]))**2)
                     laplacian['laplacian_{}'.format(i)].append(dT_d)
                 # elif len(classified_neighbors[i]["{}+".format(i)]['coords']) == 0 and \
                 #                 len(classified_neighbors[i]["{}-".format(i)]['coords']) != 0:
