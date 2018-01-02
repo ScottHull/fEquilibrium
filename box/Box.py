@@ -661,11 +661,13 @@ class box:
         :return: update_space_copy, a copy of the self.space dataframe with updated object/matrix positions
         """
         # update_space_copy = update_space.copy(deep=True)
+        inactive_objects = []
         update_space_copy = self.space
         for row in system_data.itertuples():
             index = row.Index
             # object_id's that begin with 'A' are objects and will be free to move
-            if str(system_data['object_id'][index][0]) == 'A':
+            if str(system_data['object_id'][index][0]) == 'A' and str(system_data['object_id'][index]) not in inactive_objects:
+                inactive_objects.append(str(system_data['object_id'][index]))
                 curr_x_coords = system_data['x_coords'][index]
                 curr_y_coords = system_data['y_coords'][index]
                 curr_z_coords = system_data['z_coords'][index]
@@ -691,7 +693,6 @@ class box:
                     object=system_data['object'][index], matrix_material=matrix_material,
                     matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure,
                     object_radius=system_data['object_radius'][index])
-
                 z_dis_obj_travel = object_velocity * deltaTime
                 updated_x_coord = round(system_data['x_coords'][index], len(str(space_resolution)))
                 updated_y_coord = round(system_data['y_coords'][index], len(str(space_resolution)))
@@ -751,10 +752,10 @@ class box:
                                                                                velocity=system_data['object_velocity'][
                                                                                    index])
                 if object_velocity != 0:
-                    console.pm_flush("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{}".format(
+                    console.pm_stat("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{} (velocity: {})".format(
                         system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                         system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
-                        updated_z_coord))
+                        updated_z_coord, system_data['object_velocity'][index]))
                 # check to see if two objects of the same type will collide
                 # if two objects of the same type collide, they will merge
                 # else, just swap points with the matrix material at the destination coordinate point
