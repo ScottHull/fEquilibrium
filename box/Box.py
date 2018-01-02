@@ -443,7 +443,7 @@ class box:
                 except:
                     self.space.to_csv("alskdfjakhsdf.csv")
                     sys.exit(1)
-            ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
+            ax.set_title("System 3D Heatmap at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length (x) (m)")
             ax.set_ylabel("Box Width (y) (m)")
             ax.set_zlabel("Box Height (z) (m)")
@@ -479,7 +479,7 @@ class box:
             ax.scatter(self.space['x_coords'], self.space['y_coords'], self.space['z_coords'], marker='s', s=140,
                        c=self.space['temperature'], cmap='jet', alpha=0.50)
             cb = fig.colorbar(colorsmap)
-            ax.set_title("Sinking diapirs at Time {}".format(self.model_time))
+            ax.set_title("System 3D Heatmap at Time {}".format(self.model_time))
             ax.set_xlabel("Box Length (x) (m)")
             ax.set_ylabel("Box Width (y) (m)")
             ax.set_zlabel("Box Height (z) (m)")
