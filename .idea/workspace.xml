@@ -398,13 +398,6 @@
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
     </task>
-    <task id="LOCAL-00025" summary="Fixed some typos.">
-      <created>1509322766183</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1509322766183</updated>
-    </task>
     <task id="LOCAL-00026" summary="Updated column swapping error.">
       <created>1509378334022</created>
       <option name="number" value="00026" />
@@ -741,7 +734,14 @@
       <option name="project" value="LOCAL" />
       <updated>1514909023207</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="Fixed second order derivatives.">
+      <created>1514913739786</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1514913739786</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="ToolWindowManager">
