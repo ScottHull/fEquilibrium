@@ -717,6 +717,7 @@ class box:
                     rounded_object_velocity = 0
                     system_data['rounded_object_velocity'][index] = rounded_object_velocity
                     z_dis_obj_travel = 0
+
                 # get the index of the coordinate point where the object will travel to
                 to_row_index = self.grab_row_index_by_coord(system_data=system_data,
                                                             x_coord=updated_x_coord,
@@ -729,10 +730,11 @@ class box:
                 # update the copy of the dataframe with the appropriate changes
                 if rounded_object_velocity != 0:
                     console.pm_flush(
-                        "Object {} will move! ({},{},{} to {},{},{})".format(system_data['object_id'][index],
+                        "Object {} will move! ({},{},{} to {},{},{} - {}m)".format(system_data['object_id'][index],
                                                                              curr_x_coords, curr_y_coords,
                                                                              curr_z_coords, updated_x_coord,
-                                                                             updated_y_coord, updated_z_coord))
+                                                                             updated_y_coord, updated_z_coord,
+                                                                                   rounded_z_distance_travelled))
                 # stokes_data returns degK, F_g, F_b, F_d
                 stokes_data = energy().stokes_frictional_energy(
                     object=system_data['object'][index], matrix_material=matrix_material,
@@ -749,7 +751,7 @@ class box:
                 system_data['gravitational_force'][index] = float(
                     stokes_data[3])  # gets gravitational force and adds it to the dataframe
                 system_data['object_velocity'][index] = object_velocity
-                system_data['z_direct'][index] = object_velocity
+                # system_data['z_direct'][index] = object_velocity
                 system_data['potential_energy'][index] = energy().potential_energy(mass=system_data['mass'][index],
                                                                                    height=system_data['z_coords'][
                                                                                        index],
