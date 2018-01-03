@@ -29,8 +29,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="734" column="68" lean-forward="true" selection-start-line="734" selection-start-column="68" selection-end-line="734" selection-end-column="68" />
+            <state relative-caret-position="308">
+              <caret line="711" column="154" lean-forward="false" selection-start-line="711" selection-start-column="154" selection-end-line="711" selection-end-column="154" />
               <folding />
             </state>
           </provider>
@@ -143,7 +143,7 @@
       <push-target-info target-remote="fequilibrium" target-branch="dev" repo="$PROJECT_DIR$" source="master" />
       <push-target-info target-remote="fequilibrium" target-branch="smoothed_laplacian_test" repo="$PROJECT_DIR$" source="boundary_test" />
       <push-target-info target-remote="fequilibrium" target-branch="dev" repo="$PROJECT_DIR$" source="smoothed_laplacian_test" />
-      <push-target-info target-remote="fequilibrium" target-branch="master" repo="$PROJECT_DIR$" source="dev" />
+      <push-target-info target-remote="fequilibrium" target-branch="dev" repo="$PROJECT_DIR$" source="dev" />
     </push-targets>
   </component>
   <component name="IdeDocumentHistory">
@@ -399,13 +399,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
-    </task>
-    <task id="LOCAL-00026" summary="Updated column swapping error.">
-      <created>1509378334022</created>
-      <option name="number" value="00026" />
-      <option name="presentableId" value="LOCAL-00026" />
-      <option name="project" value="LOCAL" />
-      <updated>1509378334022</updated>
     </task>
     <task id="LOCAL-00027" summary="Updated column swapping error.">
       <created>1509568326625</created>
@@ -743,7 +736,14 @@
       <option name="project" value="LOCAL" />
       <updated>1514924047700</updated>
     </task>
-    <option name="localTasksCounter" value="75" />
+    <task id="LOCAL-00075" summary="Stores the amount of heat generated due to viscous dissipation of the sinking object.">
+      <created>1514998971778</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1514998971779</updated>
+    </task>
+    <option name="localTasksCounter" value="76" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -774,7 +774,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Operable model with solution geochemistry in matrix." />
     <MESSAGE value="Fixing radioactivity..." />
     <MESSAGE value="Integrated radioactivity for specified primordial parent isotopes." />
     <MESSAGE value="Began preparing foundations for multiple types of matricies." />
@@ -799,7 +798,8 @@
     <MESSAGE value="Smoothed laplacian test." />
     <MESSAGE value="Fixed second order derivatives." />
     <MESSAGE value="Merged with dev." />
-    <option name="LAST_COMMIT_MESSAGE" value="Merged with dev." />
+    <MESSAGE value="Stores the amount of heat generated due to viscous dissipation of the sinking object." />
+    <option name="LAST_COMMIT_MESSAGE" value="Stores the amount of heat generated due to viscous dissipation of the sinking object." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1007,8 +1007,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="734" column="68" lean-forward="true" selection-start-line="734" selection-start-column="68" selection-end-line="734" selection-end-column="68" />
+        <state relative-caret-position="308">
+          <caret line="711" column="154" lean-forward="false" selection-start-line="711" selection-start-column="154" selection-end-line="711" selection-end-column="154" />
           <folding />
         </state>
       </provider>

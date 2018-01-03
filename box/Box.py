@@ -68,10 +68,10 @@ class box:
             'object_radius': np.NAN,  # in m
             'density': np.NAN,  # in kg/m^3
             'temperature': np.NAN,  # in K
-            'heat_generated': np.NAN, # in K
-            'pressure': [(1 * 10 ** 9) for i in self.coords],
-            # pressure in pascals, in order to work with ideal gas law
+            'heat_generated': np.NAN,  # in K
+            'pressure': [(1 * 10 ** 9) for i in self.coords], # pressure in pascals, in order to work with ideal gas law
             'object_velocity': [float(0) for i in self.coords],
+            'rounded_object_velocity': np.NAN,
             'x_direct': np.NAN,  # in m
             'y_direct': np.NAN,  # in m
             'z_direct': np.NAN,  # in m
@@ -709,6 +709,7 @@ class box:
                                             len(str(space_resolution)))  # fix the z-coord
                     rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords,
                                                          len(str(space_resolution)))  # fix the distance travelled
+                system_data['rounded_object_velocity'][index] = rounded_z_distance_travelled / deltaTime  # makes object velocity self-consistent with model
                 # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travelled = 0
                 if rounded_z_distance_travelled == 0:
                     object_velocity = 0
