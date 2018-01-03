@@ -709,10 +709,13 @@ class box:
                                             len(str(space_resolution)))  # fix the z-coord
                     rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords,
                                                          len(str(space_resolution)))  # fix the distance travelled
-                system_data['rounded_object_velocity'][index] = rounded_z_distance_travelled / deltaTime  # makes object velocity self-consistent with model
+                rounded_object_velocity = rounded_z_distance_travelled / deltaTime  # makes object velocity self-consistent with model
+                system_data['rounded_object_velocity'][index] = rounded_object_velocity  # makes object velocity self-consistent with model
                 # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travelled = 0
                 if rounded_z_distance_travelled == 0:
                     object_velocity = 0
+                    rounded_object_velocity = 0
+                    system_data['rounded_object_velocity'][index] = rounded_object_velocity
                     z_dis_obj_travel = 0
                 # get the index of the coordinate point where the object will travel to
                 to_row_index = self.grab_row_index_by_coord(system_data=system_data,
@@ -724,7 +727,7 @@ class box:
                                                               y_coord=system_data['y_coords'][index],
                                                               z_coord=system_data['z_coords'][index])
                 # update the copy of the dataframe with the appropriate changes
-                if object_velocity != 0:
+                if rounded_object_velocity != 0:
                     console.pm_flush(
                         "Object {} will move! ({},{},{} to {},{},{})".format(system_data['object_id'][index],
                                                                              curr_x_coords, curr_y_coords,
@@ -752,13 +755,13 @@ class box:
                                                                                        index],
                                                                                    box_height=box_height)
                 system_data['kinetic_energy'][index] = energy().kinetic_energy(mass=system_data['mass'][index],
-                                                                               velocity=system_data['object_velocity'][
+                                                                               velocity=system_data['rounded_object_velocity'][
                                                                                    index])
                 if object_velocity != 0:
-                    console.pm_stat("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{} (velocity: {})".format(
+                    console.pm_stat("{} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{} (real velocity: {}, rounded velocity: {})".format(
                         system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                         system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
-                        updated_z_coord, system_data['object_velocity'][index]))
+                        updated_z_coord, system_data['object_velocity'][index], updated_z_coord, system_data['rounded_object_velocity'][index]))
                 # check to see if two objects of the same type will collide
                 # if two objects of the same type collide, they will merge
                 # else, just swap points with the matrix material at the destination coordinate point
