@@ -40,21 +40,21 @@ class box:
         """
         console.pm_header("\n\n\nfEquilibrium\nScott D. Hull, 2017\n\n")
         console.pm_stat("Instantiating box. Please sit tight.")
-        self.visualize_neighbors = visualize_neighbors
-        self.animate_neighbors = animate_neighbors
-        self.length = length # x values of box
-        self.width = width # y values of box
-        self.height = height # z values of box
-        self.model_base = height # sets the model base as the coords directly above the boundary layer
-        self.boundary_vals = [] # stores limits of boundaries so that box integrity can be verified
-        self.space_resolution = space_resolution # the spatial resolution of the box
-        self.model_time = float(model_time) # the amount of time the model will run
-        self.initial_time = float(model_time) # the initial value of self.model_time
+        self.visualize_neighbors = visualize_neighbors  # option for generating frames of each point's nearest neighbor
+        self.animate_neighbors = animate_neighbors  # option to stich together neighbor frames as an animation
+        self.length = length  # x values of box
+        self.width = width  # y values of box
+        self.height = height  # z values of box
+        self.model_base = height  # sets the model base as the coords directly above the boundary layer
+        self.boundary_vals = []  # stores limits of boundaries so that box integrity can be verified
+        self.space_resolution = space_resolution  # the spatial resolution of the box
+        self.model_time = float(model_time)  # the amount of time the model will run
+        self.initial_time = float(model_time)  # the initial value of self.model_time
         # generates all possible coordinate points within the box
         self.coords = self.generate_coordinate_points(length=self.length, width=self.width, height=self.height,
                                                       space_resolution=self.space_resolution)
-        self.visualize_system = visualize_system # True/False, create animations of the box?
-        self.object_history = object_history # creates an output file that tracks objects with time
+        self.visualize_system = visualize_system  # True/False, create animations of the box?
+        self.object_history = object_history  # creates an output file that tracks objects with time
         # this is the central dataframe of the model
         # highly critical that this is accessible in memory for all processes
         self.space = pd.DataFrame({
@@ -68,13 +68,14 @@ class box:
             'object_radius': np.NAN,  # in m
             'density': np.NAN,  # in kg/m^3
             'temperature': np.NAN,  # in K
+            'heat_generated': np.NAN, # in K
             'pressure': [(1 * 10 ** 9) for i in self.coords],
             # pressure in pascals, in order to work with ideal gas law
             'object_velocity': [float(0) for i in self.coords],
-            'x_direct': np.NAN,
-            'y_direct': np.NAN,
-            'z_direct': np.NAN,
-            'potential_energy': np.NAN,
+            'x_direct': np.NAN,  # in m
+            'y_direct': np.NAN,  # in m
+            'z_direct': np.NAN,  # in m
+            'potential_energy': np.NAN,  # in J
             'kinetic_energy': np.NAN,  # in J
             'total_energy_released': np.NAN,  # in J
             'mass': np.NAN,  # in kg
@@ -734,6 +735,7 @@ class box:
                     body_radius=system_data['object_radius'][index],
                     body_mass=system_data['mass'][index], distance_travelled=rounded_z_distance_travelled,
                     object_velocity=object_velocity)
+                system_data['heat_generated'][index] = float(stokes_data[0])  # grabs degK from stokes_data and stores it as the heat generated due to viscous dissipation
                 system_data['temperature'][index] = float(
                     system_data['temperature'][index]) + stokes_data[
                                                         0]  # grabs degK from stokes_data & adjusts the temperature
