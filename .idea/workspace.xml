@@ -29,8 +29,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="417">
-              <caret line="737" column="82" lean-forward="false" selection-start-line="737" selection-start-column="82" selection-end-line="737" selection-end-column="82" />
+            <state relative-caret-position="487">
+              <caret line="760" column="144" lean-forward="false" selection-start-line="760" selection-start-column="144" selection-end-line="760" selection-end-column="144" />
               <folding />
             </state>
           </provider>
@@ -400,13 +400,6 @@
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
     </task>
-    <task id="LOCAL-00028" summary="Optimized nearest neighbor via reindexing.">
-      <created>1510005259592</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1510005259592</updated>
-    </task>
     <task id="LOCAL-00029" summary="Replaced index iteration with tuple iteration.  Much faster.">
       <created>1510247570026</created>
       <option name="number" value="00029" />
@@ -743,7 +736,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515002555598</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="Rounded object velocity to make the model self-consistent">
+      <created>1515003688645</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1515003688645</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1007,8 +1007,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="737" column="82" lean-forward="false" selection-start-line="737" selection-start-column="82" selection-end-line="737" selection-end-column="82" />
+        <state relative-caret-position="487">
+          <caret line="760" column="144" lean-forward="false" selection-start-line="760" selection-start-column="144" selection-end-line="760" selection-end-column="144" />
           <folding />
         </state>
       </provider>

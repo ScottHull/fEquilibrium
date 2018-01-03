@@ -755,10 +755,10 @@ class box:
                                                                                velocity=system_data['object_velocity'][
                                                                                    index])
                 if object_velocity != 0:
-                    console.pm_stat("Object will move! {} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{} (velocity: {})".format(
+                    console.pm_stat("{} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{} (real velocity: {}, rounded velocity: {})".format(
                         system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                         system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
-                        updated_z_coord, system_data['object_velocity'][index]))
+                        updated_z_coord, system_data['object_velocity'][index], updated_z_coord, system_data['rounded_object_velocity'][index]))
                 # check to see if two objects of the same type will collide
                 # if two objects of the same type collide, they will merge
                 # else, just swap points with the matrix material at the destination coordinate point
