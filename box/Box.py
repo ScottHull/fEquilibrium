@@ -735,7 +735,7 @@ class box:
                     object=system_data['object'][index], matrix_material=matrix_material,
                     body_radius=system_data['object_radius'][index],
                     body_mass=system_data['mass'][index], distance_travelled=rounded_z_distance_travelled,
-                    object_velocity=object_velocity)
+                    object_velocity=system_data['rounded_object_velocity'][index])
                 system_data['heat_generated'][index] = float(stokes_data[0])  # grabs degK from stokes_data and stores it as the heat generated due to viscous dissipation
                 system_data['temperature'][index] = float(
                     system_data['temperature'][index]) + stokes_data[

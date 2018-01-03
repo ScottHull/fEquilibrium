@@ -29,8 +29,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="711" column="154" lean-forward="false" selection-start-line="711" selection-start-column="154" selection-end-line="711" selection-end-column="154" />
+            <state relative-caret-position="417">
+              <caret line="737" column="82" lean-forward="false" selection-start-line="737" selection-start-column="82" selection-end-line="737" selection-end-column="82" />
               <folding />
             </state>
           </provider>
@@ -400,13 +400,6 @@
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
     </task>
-    <task id="LOCAL-00027" summary="Updated column swapping error.">
-      <created>1509568326625</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1509568326625</updated>
-    </task>
     <task id="LOCAL-00028" summary="Optimized nearest neighbor via reindexing.">
       <created>1510005259592</created>
       <option name="number" value="00028" />
@@ -743,7 +736,14 @@
       <option name="project" value="LOCAL" />
       <updated>1514998971779</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="Rounded object velocity to make the model self-consistent">
+      <created>1515002555598</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1515002555598</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -774,7 +774,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixing radioactivity..." />
     <MESSAGE value="Integrated radioactivity for specified primordial parent isotopes." />
     <MESSAGE value="Began preparing foundations for multiple types of matricies." />
     <MESSAGE value="(More) realistic velocity calculations." />
@@ -799,7 +798,8 @@
     <MESSAGE value="Fixed second order derivatives." />
     <MESSAGE value="Merged with dev." />
     <MESSAGE value="Stores the amount of heat generated due to viscous dissipation of the sinking object." />
-    <option name="LAST_COMMIT_MESSAGE" value="Stores the amount of heat generated due to viscous dissipation of the sinking object." />
+    <MESSAGE value="Rounded object velocity to make the model self-consistent" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rounded object velocity to make the model self-consistent" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1007,8 +1007,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="711" column="154" lean-forward="false" selection-start-line="711" selection-start-column="154" selection-end-line="711" selection-end-column="154" />
+        <state relative-caret-position="417">
+          <caret line="737" column="82" lean-forward="false" selection-start-line="737" selection-start-column="82" selection-end-line="737" selection-end-column="82" />
           <folding />
         </state>
       </provider>
