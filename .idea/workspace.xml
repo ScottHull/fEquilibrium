@@ -17,8 +17,8 @@
       <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test_box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="24" column="81" lean-forward="false" selection-start-line="24" selection-start-column="81" selection-end-line="24" selection-end-column="81" />
+            <state relative-caret-position="165">
+              <caret line="11" column="141" lean-forward="true" selection-start-line="11" selection-start-column="141" selection-end-line="11" selection-end-column="141" />
               <folding>
                 <element signature="e#0#23#0" expanded="true" />
               </folding>
@@ -29,8 +29,8 @@
       <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/box/Box.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="487">
-              <caret line="760" column="144" lean-forward="false" selection-start-line="760" selection-start-column="144" selection-end-line="760" selection-end-column="144" />
+            <state relative-caret-position="696">
+              <caret line="757" column="109" lean-forward="false" selection-start-line="757" selection-start-column="109" selection-end-line="757" selection-end-column="109" />
               <folding />
             </state>
           </provider>
@@ -49,8 +49,8 @@
       <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1762">
-              <caret line="557" column="36" lean-forward="false" selection-start-line="557" selection-start-column="21" selection-end-line="557" selection-end-column="36" />
+            <state relative-caret-position="450">
+              <caret line="544" column="55" lean-forward="true" selection-start-line="544" selection-start-column="55" selection-end-line="544" selection-end-column="55" />
               <folding />
             </state>
           </provider>
@@ -67,8 +67,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>updated_system</find>
-      <find>.6</find>
       <find>additive</find>
       <find>system_data</find>
       <find>addi</find>
@@ -96,7 +94,9 @@
       <find>Sinking diapirs</find>
       <find>gradient</find>
       <find># a</find>
+      <find>'heat_gen</find>
       <find>stokes_friction</find>
+      <find>ob</find>
     </findStrings>
     <replaceStrings>
       <replace>row</replace>
@@ -399,13 +399,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
-    </task>
-    <task id="LOCAL-00029" summary="Replaced index iteration with tuple iteration.  Much faster.">
-      <created>1510247570026</created>
-      <option name="number" value="00029" />
-      <option name="presentableId" value="LOCAL-00029" />
-      <option name="project" value="LOCAL" />
-      <updated>1510247570026</updated>
     </task>
     <task id="LOCAL-00030" summary="Replaced index iteration with tuple iteration.  Much faster.">
       <created>1510248891448</created>
@@ -743,7 +736,14 @@
       <option name="project" value="LOCAL" />
       <updated>1515003688645</updated>
     </task>
-    <option name="localTasksCounter" value="78" />
+    <task id="LOCAL-00078" summary="Rounded object velocity to make the model self-consistent">
+      <created>1515006094164</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1515006094164</updated>
+    </task>
+    <option name="localTasksCounter" value="79" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -979,24 +979,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test_box.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="24" column="81" lean-forward="false" selection-start-line="24" selection-start-column="81" selection-end-line="24" selection-end-column="81" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1762">
-          <caret line="557" column="36" lean-forward="false" selection-start-line="557" selection-start-column="21" selection-end-line="557" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="676">
@@ -1005,10 +987,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="544" column="55" lean-forward="true" selection-start-line="544" selection-start-column="55" selection-end-line="544" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test_box.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="141" lean-forward="true" selection-start-line="11" selection-start-column="141" selection-end-line="11" selection-end-column="141" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="487">
-          <caret line="760" column="144" lean-forward="false" selection-start-line="760" selection-start-column="144" selection-end-line="760" selection-end-column="144" />
+        <state relative-caret-position="696">
+          <caret line="757" column="109" lean-forward="false" selection-start-line="757" selection-start-column="109" selection-end-line="757" selection-end-column="109" />
           <folding />
         </state>
       </provider>
