@@ -25,7 +25,7 @@ from collections import Counter
 
 # TODO: update some methods to class methods to avoid outside interference
 class box:
-    def __init__(self, length, width, height, space_resolution, model_time, visualize_system=False,
+    def __init__(self, length, width, height, space_resolution, model_time, fO2_buffer=None, visualize_system=False,
                  object_history=False, visualize_neighbors=False, animate_neighbors=False):
         """
         Instantiates the box.
@@ -44,6 +44,7 @@ class box:
         self.length = length  # x values of box
         self.width = width  # y values of box
         self.height = height  # z values of box
+        self.fO2_buffer = fO2_buffer
         self.model_base = height  # sets the model base as the coords directly above the boundary layer
         self.model_top = 0  # sets the model top as the coords directly below the boundary layer
         self.boundary_vals = []  # stores limits of boundaries so that box integrity can be verified
@@ -69,7 +70,8 @@ class box:
             'density': np.NAN,  # in kg/m^3
             'temperature': np.NAN,  # in K
             'heat_generated': np.NAN,  # in K
-            'pressure': [(1 * 10 ** 9) for i in self.coords], # pressure in pascals, in order to work with ideal gas law
+            'pressure': np.NAN, # pressure in pascals, in order to work with ideal gas law
+            'fO2_({})'.format(self.fO2_buffer): np.NAN, # log units below the IW buffer
             'object_velocity': [float(0) for i in self.coords],
             'rounded_object_velocity': np.NAN,
             'x_direct': np.NAN,  # in m
@@ -337,7 +339,7 @@ class box:
 
 
     def insert_matrix(self, matrix_material, composition, initial_temperature, temperature_gradient=None,
-                      initial_pressure=None, pressure_gradient=None, z_range=[0, 0]):
+                      initial_pressure=None, pressure_gradient=None, initial_fO2=None, fO2_gradient=None, z_range=[0, 0]):
         """
         This function allows for the insertion of a matrix material over a given z-range
         This function should be called FIRST when constructing the box
@@ -347,8 +349,13 @@ class box:
         :param z_range: The depths at which the matrix should be inserted into the box
         :return: None
         """
+        if (pressure_gradient is not None and initial_pressure is None) or (fO2_gradient is not None and initial_fO2 is None):
+            console.pm_err("A gradient was applied without an initial condition!  "
+                           "Please make sure the optional initial parameter is filled before when applying a gradient.")
+            sys.exit(1)
         fixed_grad_T = initial_temperature  # stores the next temperature to be added in case the gradient option is added
         fixed_grad_P = initial_pressure  # stores the next pressure to be added in case the gradient option is added
+        fixed_grad_fO2 = initial_fO2  # stores the next fO2 to be added in case the gradient option is added
         z_coords_range = []
         if z_range[1] != 0:
             z_coords_range = list(np.arange(z_range[0], round((z_range[1] + self.space_resolution), len(str(self.space_resolution))),
@@ -364,6 +371,7 @@ class box:
         z_coords_range = z_coords_range_rounded
         t_range = {}
         p_range = {}
+        fO2_range = {}
         if temperature_gradient is not None:
             for i in z_coords_range:
                 t_range.update({i: fixed_grad_T})
@@ -372,6 +380,10 @@ class box:
             for i in z_coords_range:
                 p_range.update({i: fixed_grad_P})
                 fixed_grad_P += pressure_gradient
+        if fO2_gradient is not None:
+            for i in z_coords_range:
+                fO2_range.update({i: fixed_grad_fO2})
+                fixed_grad_fO2 += fO2_gradient
         console.pm_stat("Inserting matrix...")
         if matrix_material in self.physical_parameters.index:
             if z_range[1] == 0:
@@ -384,14 +396,20 @@ class box:
                         if pressure_gradient is not None:  # checks if the pressure gradient option is selected
                             self.space['pressure'][index] = p_range[round(self.space['z_coords'][
                                                                               index], len(str(
-                                self.space_resolution)))]  # if a gradient is added, applies the pressure stored in 'fixed_grad_P'
+                                self.space_resolution)))]  # if a gradient is added, applies the pressure gradient
                         else:  # if no gradient selected, applies a homogeneous pressure
                             self.space['pressure'][index] = initial_pressure
                     if temperature_gradient is None:  # no gradient is selected, homogeneous matrix temperature
                         self.space['temperature'][index] = initial_temperature
-                    else:  # if a gradient is added, applies the temperature stored in 'fixed_grad_T'
+                    else:  # if a gradient is added, applies the temperature gradient
                         self.space['temperature'][index] = t_range[round(self.space['z_coords'][
                                                                              index], len(str(self.space_resolution)))]
+                    if initial_fO2 is not None:  # applies an fO2 if one is selected
+                        if fO2_gradient is None:  # no gradient is selected, homogeneous matrix fO2
+                            self.space['fO2_({})'.format(self.fO2_buffer)][index] = initial_fO2
+                        else:  # if a gradient is added, applies the fO2 gradient
+                            self.space['fO2_({})'.format(self.fO2_buffer)][index] = fO2_range[round(self.space['z_coords'][
+                                                                                 index], len(str(self.space_resolution)))]
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
                     console.pm_flush(
@@ -410,14 +428,23 @@ class box:
                         if initial_pressure is not None:  # makes sure that a pressure is set
                             if pressure_gradient is not None:  # checks if the pressure gradient option is selected
                                 self.space['pressure'][index] = p_range[round(self.space['z_coords'][
-                                    index], len(str(self.space_resolution)))]  # if a gradient is added, applies the pressure stored in 'fixed_grad_P'
+                                                                                  index], len(str(
+                                    self.space_resolution)))]  # if a gradient is added, applies the pressure gradient
                             else:  # if no gradient selected, applies a homogeneous pressure
                                 self.space['pressure'][index] = initial_pressure
                         if temperature_gradient is None:  # no gradient is selected, homogeneous matrix temperature
                             self.space['temperature'][index] = initial_temperature
-                        else:  # if a gradient is added, applies the temperature stored in 'fixed_grad_T'
+                        else:  # if a gradient is added, applies the temperature gradient
                             self.space['temperature'][index] = t_range[round(self.space['z_coords'][
-                                    index], len(str(self.space_resolution)))]
+                                                                                 index],
+                                                                             len(str(self.space_resolution)))]
+                        if initial_fO2 is not None:  # applies an fO2 if one is selected
+                            if fO2_gradient is None:  # no gradient is selected, homogeneous matrix fO2
+                                self.space['fO2_({})'.format(self.fO2_buffer)][index] = initial_fO2
+                            else:  # if a gradient is added, applies the fO2 gradient
+                                self.space['fO2_({})'.format(self.fO2_buffer)][index] = fO2_range[
+                                    round(self.space['z_coords'][
+                                              index], len(str(self.space_resolution)))]
                         self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                       object=matrix_material)
                         console.pm_flush(
@@ -435,7 +462,7 @@ class box:
             sys.exit(1)
         return None
 
-    def insert_boundary(self, temperature, z_range, boundary_location='bottom', flux=True):
+    def insert_boundary(self, temperature, z_range, boundary_location='bottom', flux=True, pressure=None, fO2=None):
         """
         Insert a boundary layer for the purpose of regulating z-gradients in heat exchange.
         It is recommended that a boundary layer is inserted
@@ -462,6 +489,8 @@ class box:
                     self.space['object_id'][index] = 'C'
                     self.space['object'][index] = "Boundary"
                     self.space['temperature'][index] = temperature
+                    self.space['pressure'][index] = pressure
+                    self.space['fO2'][index] = fO2
                     console.pm_flush("Inserted boundary at coordinates: x:{} y:{}, z:{}".format(
                         self.space['x_coords'][index],
                         self.space['y_coords'][index],

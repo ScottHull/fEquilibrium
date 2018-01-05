@@ -14,12 +14,13 @@ space_resolution = 0.2
 
 
 # instantiate the box
-model = box(length=length, width=width, height=height, model_time=5, space_resolution=space_resolution,
+model = box(length=length, width=width, height=height, model_time=5, space_resolution=space_resolution, fO2_buffer='IW',
             visualize_system=True, object_history=True, visualize_neighbors=False, animate_neighbors=False)
 
 # insert one more more matrix materials into the box, will populate all possible coordinate positions
 model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100},
-                    z_range=[0,6], initial_temperature=2000)
+                    z_range=[0,6], initial_temperature=2000, temperature_gradient=2,
+                    initial_pressure=(1 * 10 ** 9), pressure_gradient=2, initial_fO2=(-1.2), fO2_gradient=(-.01))
 
 # insert boundary with conditions at a specified z range
 model.insert_boundary(temperature=2000, z_range=[0,0.2], boundary_location='top')
