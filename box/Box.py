@@ -1,6 +1,5 @@
 import os
 import matplotlib as mpl
-
 mpl.use('Qt5Agg')
 os.sys.path.append(os.path.dirname(os.path.abspath('.')))
 import numpy as np
@@ -46,6 +45,7 @@ class box:
         self.width = width  # y values of box
         self.height = height  # z values of box
         self.model_base = height  # sets the model base as the coords directly above the boundary layer
+        self.model_top = 0  # sets the model top as the coords directly below the boundary layer
         self.boundary_vals = []  # stores limits of boundaries so that box integrity can be verified
         self.space_resolution = space_resolution  # the spatial resolution of the box
         self.model_time = float(model_time)  # the amount of time the model will run
@@ -202,7 +202,6 @@ class box:
                     temp_coords.append(round(q, len(str(space_resolution))))
                     coords.append(temp_coords)
         console.pm_stat("Coordinates generated!")
-        # print("Coordinates generated!")
         return coords
 
     def round_coord_arbitrary(self, coordinate, system_data, coordinate_type):
@@ -336,8 +335,9 @@ class box:
             sys.exit(1)
         return None
 
-    # TODO: allow for the definition of matrix temperature or a matrix temperature gradient (starting temp, temp gradient
-    def insert_matrix(self, matrix_material, composition, initial_temperature, z_range=[0, 0]):
+
+    def insert_matrix(self, matrix_material, composition, initial_temperature, temperature_gradient=None,
+                      initial_pressure=None, pressure_gradient=None, z_range=[0, 0]):
         """
         This function allows for the insertion of a matrix material over a given z-range
         This function should be called FIRST when constructing the box
@@ -347,15 +347,51 @@ class box:
         :param z_range: The depths at which the matrix should be inserted into the box
         :return: None
         """
+        fixed_grad_T = initial_temperature  # stores the next temperature to be added in case the gradient option is added
+        fixed_grad_P = initial_pressure  # stores the next pressure to be added in case the gradient option is added
+        z_coords_range = []
+        if z_range[1] != 0:
+            z_coords_range = list(np.arange(z_range[0], round((z_range[1] + self.space_resolution), len(str(self.space_resolution))),
+                                   self.space_resolution))  # generate range of z-coords
+        else:
+            z_coords_range = list(
+                np.arange(0, round((self.height + self.space_resolution), len(str(self.space_resolution))),
+                          self.space_resolution))  # generate range of z-coords
+        z_coords_range_rounded = []
+        for i in z_coords_range:
+            rounded_coord = round(i, len(str(self.space_resolution)))
+            z_coords_range_rounded.append(rounded_coord)
+        z_coords_range = z_coords_range_rounded
+        t_range = {}
+        p_range = {}
+        if temperature_gradient is not None:
+            for i in z_coords_range:
+                t_range.update({i: fixed_grad_T})
+                fixed_grad_T += temperature_gradient
+        if pressure_gradient is not None:
+            for i in z_coords_range:
+                p_range.update({i: fixed_grad_P})
+                fixed_grad_P += pressure_gradient
         console.pm_stat("Inserting matrix...")
         if matrix_material in self.physical_parameters.index:
             if z_range[1] == 0:
                 # z range is a list of two numbers, the minimum depth at the index 0, and the maximum depth at index 1
                 for row in self.space.itertuples():
                     index = row.Index
-                    self.space['object_id'][index] = self.generate_object_id(matrix=True)
+                    self.space['object_id'][index] = self.generate_object_id(matrix=True)  # generates the object id
                     self.space['object'][index] = matrix_material
-                    self.space['temperature'][index] = initial_temperature
+                    if initial_pressure is not None:  # makes sure that a pressure is set
+                        if pressure_gradient is not None:  # checks if the pressure gradient option is selected
+                            self.space['pressure'][index] = p_range[round(self.space['z_coords'][
+                                                                              index], len(str(
+                                self.space_resolution)))]  # if a gradient is added, applies the pressure stored in 'fixed_grad_P'
+                        else:  # if no gradient selected, applies a homogeneous pressure
+                            self.space['pressure'][index] = initial_pressure
+                    if temperature_gradient is None:  # no gradient is selected, homogeneous matrix temperature
+                        self.space['temperature'][index] = initial_temperature
+                    else:  # if a gradient is added, applies the temperature stored in 'fixed_grad_T'
+                        self.space['temperature'][index] = t_range[round(self.space['z_coords'][
+                                                                             index], len(str(self.space_resolution)))]
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
                     console.pm_flush(
@@ -368,10 +404,20 @@ class box:
                 for row in self.space.itertuples():
                     index = row.Index
                     if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
-                            z_range[1], len(str(self.space_resolution))):
-                        self.space['object_id'][index] = self.generate_object_id(matrix=True)
+                            z_range[1], len(str(self.space_resolution))):  # inserts only between z gradients
+                        self.space['object_id'][index] = self.generate_object_id(matrix=True)  # generates the object id
                         self.space['object'][index] = matrix_material
-                        self.space['temperature'][index] = initial_temperature
+                        if initial_pressure is not None:  # makes sure that a pressure is set
+                            if pressure_gradient is not None:  # checks if the pressure gradient option is selected
+                                self.space['pressure'][index] = p_range[round(self.space['z_coords'][
+                                    index], len(str(self.space_resolution)))]  # if a gradient is added, applies the pressure stored in 'fixed_grad_P'
+                            else:  # if no gradient selected, applies a homogeneous pressure
+                                self.space['pressure'][index] = initial_pressure
+                        if temperature_gradient is None:  # no gradient is selected, homogeneous matrix temperature
+                            self.space['temperature'][index] = initial_temperature
+                        else:  # if a gradient is added, applies the temperature stored in 'fixed_grad_T'
+                            self.space['temperature'][index] = t_range[round(self.space['z_coords'][
+                                    index], len(str(self.space_resolution)))]
                         self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                       object=matrix_material)
                         console.pm_flush(
@@ -406,6 +452,9 @@ class box:
             if boundary_location == 'bottom':
                 self.model_base = z_range[
                     0]  # base of model considered to be the top (highest z-coordinate) of boundary layer
+            elif boundary_location == 'top':
+                self.model_base = z_range[
+                    1]  # top of model considered to be the bottom (lowest z-coordinate) of boundary layer
             for row in self.space.itertuples():
                 index = row.Index
                 if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
@@ -763,7 +812,7 @@ class box:
                     console.pm_stat("{} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{} (real velocity: {}, rounded velocity: {})".format(
                         system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                         system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
-                        updated_z_coord, system_data['object_velocity'][index], updated_z_coord, system_data['rounded_object_velocity'][index]))
+                        updated_z_coord, system_data['object_velocity'][index], system_data['rounded_object_velocity'][index]))
                 # check to see if two objects of the same type will collide
                 # if two objects of the same type collide, they will merge
                 # else, just swap points with the matrix material at the destination coordinate point

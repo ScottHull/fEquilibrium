@@ -102,6 +102,7 @@ class move_particle:
             return v
 
 
+# currently not in use
 class droplet_size:
 
     """
