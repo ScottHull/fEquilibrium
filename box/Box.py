@@ -71,7 +71,7 @@ class box:
             'temperature': np.NAN,  # in K
             'heat_generated': np.NAN,  # in K
             'pressure': np.NAN, # pressure in pascals, in order to work with ideal gas law
-            'fO2_({})'.format(self.fO2_buffer): np.NAN, # log units below the IW buffer
+            'fO2_{}'.format(self.fO2_buffer): np.NAN, # log units below the IW buffer
             'object_velocity': [float(0) for i in self.coords],
             'rounded_object_velocity': np.NAN,
             'x_direct': np.NAN,  # in m
@@ -406,9 +406,9 @@ class box:
                                                                              index], len(str(self.space_resolution)))]
                     if initial_fO2 is not None:  # applies an fO2 if one is selected
                         if fO2_gradient is None:  # no gradient is selected, homogeneous matrix fO2
-                            self.space['fO2_({})'.format(self.fO2_buffer)][index] = initial_fO2
+                            self.space['fO2_{}'.format(self.fO2_buffer)][index] = initial_fO2
                         else:  # if a gradient is added, applies the fO2 gradient
-                            self.space['fO2_({})'.format(self.fO2_buffer)][index] = fO2_range[round(self.space['z_coords'][
+                            self.space['fO2_{}'.format(self.fO2_buffer)][index] = fO2_range[round(self.space['z_coords'][
                                                                                  index], len(str(self.space_resolution)))]
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
@@ -440,9 +440,9 @@ class box:
                                                                              len(str(self.space_resolution)))]
                         if initial_fO2 is not None:  # applies an fO2 if one is selected
                             if fO2_gradient is None:  # no gradient is selected, homogeneous matrix fO2
-                                self.space['fO2_({})'.format(self.fO2_buffer)][index] = initial_fO2
+                                self.space['fO2_{}'.format(self.fO2_buffer)][index] = initial_fO2
                             else:  # if a gradient is added, applies the fO2 gradient
-                                self.space['fO2_({})'.format(self.fO2_buffer)][index] = fO2_range[
+                                self.space['fO2_{}'.format(self.fO2_buffer)][index] = fO2_range[
                                     round(self.space['z_coords'][
                                               index], len(str(self.space_resolution)))]
                         self.solution.create_solution(box=self.space, composition=composition, row=index,
@@ -490,7 +490,7 @@ class box:
                     self.space['object'][index] = "Boundary"
                     self.space['temperature'][index] = temperature
                     self.space['pressure'][index] = pressure
-                    self.space['fO2'][index] = fO2
+                    self.space['fO2_{}'.format(self.fO2_buffer)][index] = fO2
                     console.pm_flush("Inserted boundary at coordinates: x:{} y:{}, z:{}".format(
                         self.space['x_coords'][index],
                         self.space['y_coords'][index],
@@ -651,25 +651,34 @@ class box:
             if found is True:
                 break
 
-    def define_path(self, start, end, length, width, height):
+    def define_path(self, start, end):
         """
-        Get the list of coordinates between two points in the box.
+        Get the list of coordinates on a line between two points in the box.
+        Currently only works in the z-direction.
+        ***Note that the ending z coordinate is not the actual destination z coordinate.  A merge there is handled by
+                a separate function.
         :param start: a list of path start coordinates, [length, width, height] (i.e. [x, y, z])
         :param end: a list of path end coordinates, [length, width, height] (i.e. [x, y, z])
         :param length: x-coordinates
         :param width: y-coordinates
         :param height: z-coordinates
-        :return: path, the list of lists of coordinates in the path
+        :return: line, the list of lists of coordinates in the path
         """
-        start_x = start[0]
-        start_y = start[1]
-        start_z = start[2]
-        end_x = end[0]
-        end_y = end[1]
-        end_z = end[2]
-        path_x = end_x - start_x
-        path_y = end_y - start_y
-        path_z = end_z - start_z
+        start_x = start[0]  # the starting x coordinate of the diapir
+        start_y = start[1]  # the starting y coordinate of the diapir
+        start_z = start[2]  # the starting z coordinate of the diapir
+        end_x = end[0]  # the ending x coordinate of the diapir
+        end_y = end[1]  # the ending y coordinate of the diapir
+        end_z = end[2]  # the ending z coordinate of the diapir
+        range_z = list(np.arange(start_z, round(end_z + self.space_resolution, len(str(self.space_resolution)))))  # generates a list of numbers between the starting & ending z coordinates
+        line = []    # a list of lists that define all coordinates on the line of travel
+        for i in range_z:
+            coord = [end_x, end_y, i]  # currently only works with changing z, adding changing x and y could be difficult
+            rounded_coord = []
+            for i in coord:
+                rounded_coord.append(round(i, len(str(self.space_resolution))))  # cheap floating point fix
+            line.append(rounded_coord)  # appends the coordinate point on the line to the line list
+        return line
 
 
 
@@ -837,7 +846,7 @@ class box:
                 system_data['kinetic_energy'][index] = energy().kinetic_energy(mass=system_data['mass'][index],
                                                                                velocity=system_data['rounded_object_velocity'][
                                                                                    index])
-                if object_velocity != 0:
+                if rounded_object_velocity != 0:
                     console.pm_stat("{} ({}) will move from x:{} y:{} z:{} to x:{} y:{} z:{} (real velocity: {}, rounded velocity: {})".format(
                         system_data['object_id'][index], system_data['object'][index], system_data['x_coords'][index],
                         system_data['y_coords'][index], system_data['z_coords'][index], updated_x_coord, updated_y_coord,
@@ -845,13 +854,39 @@ class box:
                 # check to see if two objects of the same type will collide
                 # if two objects of the same type collide, they will merge
                 # else, just swap points with the matrix material at the destination coordinate point
-                if (system_data['object'][from_row_index] == system_data['object'][to_row_index]) and \
-                        (system_data['object_id'][from_row_index] != system_data['object_id'][to_row_index]):
-                    update_space_copy = self.merge_objects(to_object_index=to_row_index, from_object_index=from_row_index, system_data=system_data, update_space=update_space)
-                else:
-                    if object_velocity != 0:
+
+                # define the path of coordinate points on the line where the object will travel
+                if rounded_object_velocity != 0:
+                    object_path = self.define_path(start=[curr_x_coords, curr_y_coords, curr_z_coords],
+                                                   end=[updated_x_coord, updated_y_coord, updated_z_coord])
+                    print(object_path)
+                    objs = []  # a list of object names in the path of descent
+                    for i in object_path:
+                        print('[{}, {}, {}]'.format(i[0], i[1], i[2]))
+                        temp_ind = system_data.index[system_data['coord_index'] == '[{}, {}, {}]'.format(i[0], i[1], i[2])].values[0]
+                        print(temp_ind)
+                        o = system_data['object'][temp_ind]
+                        objs.append(o)
+                    # this if statement covers whether objects of the same time exist in the path of the sinking object
+                    # if there are similar objects in the path, they will merge
+                    if system_data['object'][index] in objs:  # performs intermediate object merging only if the object
+                        # is in the path (aside from the endpoint which is handled elsewhere)
+                        obj = system_data['object'][index]
+                        curr_coord = '[{}, {}, {}]'.format(curr_x_coords, curr_y_coords, curr_z_coords)
+                        curr_index = system_data.index[system_data['coord_index'] == curr_coord].values[0]
+                        for i in object_path:  # get all object names from the object
+                            c = "{}, {}, {}".format(i[0], i[1], i[2])  # format for the currenet coord to be found in column 'coord_index'
+                            path_obj_index = system_data.index[system_data['coord_index'] == c].values[0]
+                            if obj == system_data['object'][path_obj_index]:  # if the two objects in the path are the same, then merge them
+                                self.merge_objects(from_object_index=curr_index, to_object_index=path_obj_index,
+                                                   system_data=system_data, update_space=update_space)
+                                curr_index = c
+                    elif (system_data['object'][from_row_index] == system_data['object'][to_row_index]) and \
+                            (system_data['object_id'][from_row_index] != system_data['object_id'][to_row_index]):
+                        update_space_copy = self.merge_objects(to_object_index=to_row_index, from_object_index=from_row_index, system_data=system_data, update_space=update_space)
+                    else:
                         update_space_copy = self.swap_rows(system_data=system_data, update_space=update_space,
-                                                           from_row_index=from_row_index, to_row_index=to_row_index)
+                                                               from_row_index=from_row_index, to_row_index=to_row_index)
         print("")
         return update_space_copy
 

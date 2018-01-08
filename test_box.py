@@ -32,6 +32,8 @@ model.insert_boundary(temperature=2200, z_range=[5.8,6], boundary_location='bott
 # insert X number of objects into the box, specify their location, will overwrite matrix at that point
 for i in list(range(1)):
     model.insert_object(object='Metal Liquid', object_radius=0.011, x_coord=1.6,
+                        y_coord=1.6, z_coord=0.6, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2200)
+    model.insert_object(object='Metal Liquid', object_radius=0.05, x_coord=1.6,
                         y_coord=1.6, z_coord=0.4, composition={'SiO2': 20, 'FeO': 80}, initial_temperature=2200)
 
 # automatically update the box iteratively to model_time = 0
