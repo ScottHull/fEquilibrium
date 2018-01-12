@@ -4,11 +4,12 @@ import pandas as pd
 import numpy as np
 import ast
 from meta.Console import console
+from decimal import getcontext, Decimal
 
 
 class thermal_eq:
-    def __init__(self):
-        pass
+    def __init__(self, prec):
+        getcontext().prec = prec
 
     @classmethod
     def explicit_nearest_neighboor(self, system_data, x_coord, y_coord, z_coord, space_resolution, minx, maxx, miny,
@@ -16,12 +17,12 @@ class thermal_eq:
                                    minz, maxz, visualize_neighbors, animate_neighbors):
         neighbors = []
 
-        potential_xplus_neighbor = round(x_coord + space_resolution, len(str(space_resolution)))
-        potential_yplus_neighbor = round(y_coord + space_resolution, len(str(space_resolution)))
-        potential_zplus_neighbor = round(z_coord + space_resolution, len(str(space_resolution)))
-        potential_xminus_neighbor = round(x_coord - space_resolution, len(str(space_resolution)))
-        potential_yminus_neighbor = round(y_coord - space_resolution, len(str(space_resolution)))
-        potential_zminus_neighbor = round(z_coord - space_resolution, len(str(space_resolution)))
+        potential_xplus_neighbor = Decimal(x_coord) + Decimal(space_resolution)
+        potential_yplus_neighbor = Decimal(y_coord) + Decimal(space_resolution)
+        potential_zplus_neighbor = Decimal(z_coord) + Decimal(space_resolution)
+        potential_xminus_neighbor = Decimal(x_coord) - Decimal(space_resolution)
+        potential_yminus_neighbor = Decimal(y_coord) - Decimal(space_resolution)
+        potential_zminus_neighbor = Decimal(z_coord) - Decimal(space_resolution)
 
         if minx <= potential_xplus_neighbor <= maxx:
             neighbors.append([potential_xplus_neighbor, y_coord, z_coord])
@@ -53,7 +54,7 @@ class thermal_eq:
         # for i in neighbors:
         #     temp = []
         #     for j in i: # access elements in sub-lists
-        #         rounded_coord = round(j, len(str(space_resolution))) # round the coordinates to the spatial resolution
+        #         rounded_coord = Decimal(j) # Decimal the coordinates to the spatial resolution
         #         temp.append(rounded_coord)
         #     temp_neighbors.append(temp)
         # neighbors.clear() # delete the old list with potential floating point contamination
@@ -98,6 +99,7 @@ class thermal_eq:
     def explicit_classify_neighbors(cls, x_coord, y_coord, z_coord, system_data, neighbors, space_resolution,
                                     minx, maxx, miny, maxy, minz, maxz):
 
+
         # this dictionary will be stored for reference in the dataframe for quick index access
         neighbors_dict = {'x': {'x+': {'coords': [], 'index': []}, 'x': {'coords': [], 'index': []},
                                 'x-': {'coords': [], 'index': []}}, 'y': {'y+': {'coords': [], 'index': []},
@@ -106,82 +108,77 @@ class thermal_eq:
                           'z': {'z+': {'coords': [], 'index': []}, 'z': {'coords': [], 'index': []},
                                 'z-': {'coords': [], 'index': []}}}  # for each dict, x,y,z,index
 
-        # round coordinates to avoid floating point conflictions
-        x_coord = round(x_coord, len(str(space_resolution)))
-        y_coord = round(y_coord, len(str(space_resolution)))
-        z_coord = round(z_coord, len(str(space_resolution)))
+        # Decimal coordinates to avoid floating point conflictions
+        x_coord = Decimal(x_coord)
+        y_coord = Decimal(y_coord)
+        z_coord = Decimal(z_coord)
 
         # add coordinates to the dictionary
-        neighbors_dict['x']['x']['coords'].append(x_coord)
-        neighbors_dict['x']['x']['coords'].append(y_coord)
-        neighbors_dict['x']['x']['coords'].append(z_coord)
-        neighbors_dict['y']['y']['coords'].append(x_coord)
-        neighbors_dict['y']['y']['coords'].append(y_coord)
-        neighbors_dict['y']['y']['coords'].append(z_coord)
-        neighbors_dict['z']['z']['coords'].append(x_coord)
-        neighbors_dict['z']['z']['coords'].append(y_coord)
-        neighbors_dict['z']['z']['coords'].append(z_coord)
+        neighbors_dict['x']['x']['coords'].append(float(x_coord))
+        neighbors_dict['x']['x']['coords'].append(float(y_coord))
+        neighbors_dict['x']['x']['coords'].append(float(z_coord))
+        neighbors_dict['y']['y']['coords'].append(float(x_coord))
+        neighbors_dict['y']['y']['coords'].append(float(y_coord))
+        neighbors_dict['y']['y']['coords'].append(float(z_coord))
+        neighbors_dict['z']['z']['coords'].append(float(x_coord))
+        neighbors_dict['z']['z']['coords'].append(float(y_coord))
+        neighbors_dict['z']['z']['coords'].append(float(z_coord))
 
         # iterate over the neighbors to classify their direction, specifically for directional gradients and laplacians
         for set in neighbors: # neighbors contains sets of coordinates
-            if round(x_coord + space_resolution, len(str(space_resolution))) == round(set[0],
-                                                                                      len(str(space_resolution))) and \
-                            y_coord == round(set[1], len(str(space_resolution))) and \
-                            z_coord == round(set[2], len(str(space_resolution))):
-                neighbors_dict['x']['x+']['coords'].append(
-                    round(x_coord + space_resolution, len(str(space_resolution))))
-                neighbors_dict['x']['x+']['coords'].append(round(y_coord, len(str(space_resolution))))
-                neighbors_dict['x']['x+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if round(x_coord - space_resolution, len(str(space_resolution))) == round(set[0],
-                                                                                      len(str(space_resolution))) and \
-                            y_coord == round(set[1], len(str(space_resolution))) and \
-                            z_coord == round(set[2], len(str(space_resolution))):
-                neighbors_dict['x']['x-']['coords'].append(
-                    round(x_coord - space_resolution, len(str(space_resolution))))
-                neighbors_dict['x']['x-']['coords'].append(round(y_coord, len(str(space_resolution))))
-                neighbors_dict['x']['x-']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and round(y_coord + space_resolution,
-                                                                              len(str(space_resolution))) == \
-                    round(set[1], len(str(space_resolution))) and \
-                            z_coord == round(set[2], len(str(space_resolution))):
-                neighbors_dict['y']['y+']['coords'].append(round(x_coord, len(str(space_resolution))))
-                neighbors_dict['y']['y+']['coords'].append(
-                    round(y_coord + space_resolution, len(str(space_resolution))))
-                neighbors_dict['y']['y+']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and round(y_coord - space_resolution,
-                                                                              len(str(space_resolution))) == \
-                    round(set[1], len(str(space_resolution))) and \
-                            z_coord == round(set[2], len(str(space_resolution))):
-                neighbors_dict['y']['y-']['coords'].append(round(x_coord, len(str(space_resolution))))
-                neighbors_dict['y']['y-']['coords'].append(
-                    round(y_coord - space_resolution, len(str(space_resolution))))
-                neighbors_dict['y']['y-']['coords'].append(round(z_coord, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and y_coord == round(set[1],
-                                                                                         len(str(space_resolution))) and \
-                            round(z_coord + space_resolution, len(str(space_resolution))) == round(set[2], len(
-                        str(space_resolution))):
-                neighbors_dict['z']['z+']['coords'].append(round(x_coord, len(str(space_resolution))))
-                neighbors_dict['z']['z+']['coords'].append(round(y_coord, len(str(space_resolution))))
-                neighbors_dict['z']['z+']['coords'].append(
-                    round(z_coord + space_resolution, len(str(space_resolution))))
-            if x_coord == round(set[0], len(str(space_resolution))) and y_coord == round(set[1],
-                                                                                         len(str(space_resolution))) and \
-                            round(z_coord - space_resolution, len(str(space_resolution))) == round(set[2], len(
-                        str(space_resolution))):
-                neighbors_dict['z']['z-']['coords'].append(round(x_coord, len(str(space_resolution))))
-                neighbors_dict['z']['z-']['coords'].append(round(y_coord, len(str(space_resolution))))
-                neighbors_dict['z']['z-']['coords'].append(
-                    round(z_coord - space_resolution, len(str(space_resolution))))
+            if Decimal(x_coord) + Decimal(space_resolution) == Decimal(set[0]) and \
+                            y_coord == Decimal(set[1]) and \
+                            z_coord == Decimal(set[2]):
+                neighbors_dict['x']['x+']['coords'].append(float(Decimal(x_coord) + Decimal(space_resolution)))
+                neighbors_dict['x']['x+']['coords'].append(float(Decimal(y_coord)))
+                neighbors_dict['x']['x+']['coords'].append(float(Decimal(z_coord)))
+            if Decimal(x_coord) - Decimal(space_resolution) == Decimal(set[0]) and \
+                            y_coord == Decimal(set[1]) and \
+                            z_coord == Decimal(set[2]):
+                neighbors_dict['x']['x-']['coords'].append(float(Decimal(x_coord) - Decimal(space_resolution)))
+                neighbors_dict['x']['x-']['coords'].append(float(Decimal(y_coord)))
+                neighbors_dict['x']['x-']['coords'].append(float(Decimal(z_coord)))
+            if x_coord == Decimal(set[0]) and Decimal(y_coord) + Decimal(space_resolution) == \
+                    Decimal(set[1]) and \
+                            z_coord == Decimal(set[2]):
+                neighbors_dict['y']['y+']['coords'].append(float(Decimal(x_coord)))
+                neighbors_dict['y']['y+']['coords'].append(float(Decimal(y_coord) + Decimal(space_resolution)))
+                neighbors_dict['y']['y+']['coords'].append(float(Decimal(z_coord)))
+            if x_coord == Decimal(set[0]) and Decimal(y_coord) - Decimal(space_resolution) == \
+                    Decimal(set[1]) and \
+                            z_coord == Decimal(set[2]):
+                neighbors_dict['y']['y-']['coords'].append(float(Decimal(x_coord)))
+                neighbors_dict['y']['y-']['coords'].append(float(Decimal(y_coord) - Decimal(space_resolution)))
+                neighbors_dict['y']['y-']['coords'].append(float(Decimal(z_coord)))
+            if x_coord == Decimal(set[0]) and y_coord == Decimal(set[1]) and \
+                            Decimal(z_coord) + Decimal(space_resolution) == Decimal(set[2]):
+                neighbors_dict['z']['z+']['coords'].append(float(Decimal(x_coord)))
+                neighbors_dict['z']['z+']['coords'].append(float(Decimal(y_coord)))
+                neighbors_dict['z']['z+']['coords'].append(float(Decimal(z_coord) + Decimal(space_resolution)))
+            if x_coord == Decimal(set[0]) and y_coord == Decimal(set[1]) and \
+                            Decimal(z_coord) - Decimal(space_resolution) == Decimal(set[2]):
+                neighbors_dict['z']['z-']['coords'].append(float(Decimal(x_coord)))
+                neighbors_dict['z']['z-']['coords'].append(float(Decimal(y_coord)))
+                neighbors_dict['z']['z-']['coords'].append(float(Decimal(z_coord) - Decimal(space_resolution)))
 
+        # Decimal values cause ast to detect malformed string
+        # Convert these values to floats so that they can be stored later
+        x_coord = float(Decimal(x_coord))
+        y_coord = float(Decimal(y_coord))
+        z_coord = float(Decimal(z_coord))
+        minx = float(Decimal(minx))
+        miny = float(Decimal(miny))
+        minz = float(Decimal(minz))
+        maxx = float(Decimal(maxx))
+        maxy = float(Decimal(maxy))
+        maxz = float(Decimal(maxz))
 
-
-
-        # need to multi-index for quick neighbor data scooping
+        # if a coordinate set is not fully defined, assume it along the boundary and classify it as periodic
         # x, y, z coords will be index values. copy the original form quickly
         x_coords_copy = system_data['x_coords'].values.tolist()
         y_coords_copy = system_data['y_coords'].values.tolist()
         z_coords_copy = system_data['z_coords'].values.tolist()
-        system_data['index'] = list(range(len(system_data['x_coords'])))
+        system_data['index'] = list(range(len(system_data.index.tolist())))
         system_data.set_index(['x_coords', 'y_coords', 'z_coords'], inplace=True)  # x, y, z coords now index values
         for i in neighbors_dict:
             for r in neighbors_dict[i]:
@@ -456,9 +453,9 @@ class thermal_eq:
         # calculate & store temperature gradients
         for row in system_data.itertuples():
             index = row.Index
-            sample_xcoord = round(system_data['x_coords'][index], len(str(space_resolution)))
-            sample_ycoord = round(system_data['y_coords'][index], len(str(space_resolution)))
-            sample_zcoord = round(system_data['z_coords'][index], len(str(space_resolution)))
+            sample_xcoord = Decimal(system_data['x_coords'][index])
+            sample_ycoord = Decimal(system_data['y_coords'][index])
+            sample_zcoord = Decimal(system_data['z_coords'][index])
             console.pm_flush("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                           sample_zcoord))
             neighbors = ast.literal_eval(
@@ -550,7 +547,7 @@ class energy:
         pi * (body_radius ** 2))  # F_d = drag (frictional) force, F_d = Cd*0.5*rho*velocity*A (source: NASA)
         # Frictional drag must be converted to energy and added to the body temperature.
         # W = F * d, Units = [J]
-        W = F_d * distance_travelled  # convert joules to degK, Q[J]=M[g] * Cp * T[degK] --> T=Q/(M*Cp)
+        W = F_d * float(distance_travelled)  # convert joules to degK, Q[J]=M[g] * Cp * T[degK] --> T=Q/(M*Cp)
         degK = W / (body_cp * (body_mass * 1000))  # the temperature to be added to the body
         # Checking units for calculation above: K = W / (cp * mass) = J / [(((J / K) / mass) * mass)] = JK / J = K
         return degK, F_g, F_b, F_d

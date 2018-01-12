@@ -25,7 +25,7 @@ class line:
         self.max_time = model_time
         self.model_time = model_time
         self.time_interval = time_interval
-        self.prec = getcontext().prec = len(str(radial_mesh_res)) - 1
+        getcontext().prec = len(str(radial_mesh_res)) - 1
         self.radial_mesh_res = Decimal(radial_mesh_res)
         self.max_r = Decimal(max_r)
         self.min_boundary_range = [Decimal(0), Decimal(0) + Decimal(self.radial_mesh_res)]

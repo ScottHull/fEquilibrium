@@ -18,10 +18,9 @@ import matplotlib.cm as cm
 import matplotlib.colors
 import matplotlib.colorbar
 from math import pi
-from numbers import Number
-import ast
 from collections import Counter
 import ast
+from decimal import getcontext, Decimal
 
 
 # TODO: update some methods to class methods to avoid outside interference
@@ -40,6 +39,7 @@ class box:
         """
         console.pm_header("\n\n\nfEquilibrium\nScott D. Hull, 2017\n\n")
         console.pm_stat("Instantiating box. Please sit tight.")
+        self.prec = getcontext().prec = len(str(space_resolution)) - 1
         self.visualize_neighbors = visualize_neighbors  # option for generating frames of each point's nearest neighbor
         self.animate_neighbors = animate_neighbors  # option to stich together neighbor frames as an animation
         self.length = length  # x values of box
@@ -63,9 +63,9 @@ class box:
             'coord_index': [str(i) for i in self.coords],
             'object_id': np.NAN,  # randomly generated object id tag to identify unique elements in box
             'object': np.NAN,  # name of the object, as defined in self.physical_parameters
-            'x_coords': [float(i[0]) for i in self.coords],
-            'y_coords': [float(i[1]) for i in self.coords],
-            'z_coords': [float(i[2]) for i in self.coords],
+            'x_coords': [float(Decimal(i[0])) for i in self.coords],
+            'y_coords': [float(Decimal(i[1])) for i in self.coords],
+            'z_coords': [float(Decimal(i[2])) for i in self.coords],
             'nearest_neighbors': np.NAN,  # x, y, and z neighbors in each direction
             'object_radius': np.NAN,  # in m
             'density': np.NAN,  # in kg/m^3
@@ -190,26 +190,26 @@ class box:
         console.pm_stat("Generating coordinates...")
         # print("Generating coordinates...")
         coords = []
-        x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))),
+        x_coords_range = np.arange(0, length + space_resolution,
                                    space_resolution)  # generate range of x-coords
-        y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))),
+        y_coords_range = np.arange(0, width + space_resolution,
                                    space_resolution)  # generate range of y-coords
-        z_coords_range = np.arange(0, round((height + space_resolution), len(str(space_resolution))),
+        z_coords_range = np.arange(0, height + space_resolution,
                                    space_resolution)  # generate range of z-coords
         for i in x_coords_range:
             for j in y_coords_range:
                 for q in z_coords_range:
                     temp_coords = []
-                    temp_coords.append(round(i, len(str(space_resolution))))
-                    temp_coords.append(round(j, len(str(space_resolution))))
-                    temp_coords.append(round(q, len(str(space_resolution))))
+                    temp_coords.append(float(Decimal(i)))
+                    temp_coords.append(float(Decimal(j)))
+                    temp_coords.append(float(Decimal(q)))
                     coords.append(temp_coords)
         console.pm_stat("Coordinates generated!")
         return coords
 
     def round_coord_arbitrary(self, coordinate, system_data, coordinate_type):
         """
-        Rounds a calculated coordinate to the nearest one defined by the spatial resolution
+        Round a calculated coordinate to the nearest one defined by the spatial resolution
         :param coordinate:
         :param system_data:
         :param coordinate_type:
@@ -359,15 +359,15 @@ class box:
         fixed_grad_fO2 = initial_fO2  # stores the next fO2 to be added in case the gradient option is added
         z_coords_range = []
         if z_range[1] != 0:
-            z_coords_range = list(np.arange(z_range[0], round((z_range[1] + self.space_resolution), len(str(self.space_resolution))),
+            z_coords_range = list(np.arange(z_range[0], z_range[1] + self.space_resolution,
                                    self.space_resolution))  # generate range of z-coords
         else:
             z_coords_range = list(
-                np.arange(0, round((self.height + self.space_resolution), len(str(self.space_resolution))),
+                np.arange(0, self.height + self.space_resolution,
                           self.space_resolution))  # generate range of z-coords
         z_coords_range_rounded = []
         for i in z_coords_range:
-            rounded_coord = round(i, len(str(self.space_resolution)))
+            rounded_coord = Decimal(i)
             z_coords_range_rounded.append(rounded_coord)
         z_coords_range = z_coords_range_rounded
         t_range = {}
@@ -395,22 +395,21 @@ class box:
                     self.space['object'][index] = matrix_material
                     if initial_pressure is not None:  # makes sure that a pressure is set
                         if pressure_gradient is not None:  # checks if the pressure gradient option is selected
-                            self.space['pressure'][index] = p_range[round(self.space['z_coords'][
-                                                                              index], len(str(
-                                self.space_resolution)))]  # if a gradient is added, applies the pressure gradient
+                            self.space['pressure'][index] = p_range[Decimal(self.space['z_coords'][
+                                                                              index])]  # if a gradient is added, applies the pressure gradient
                         else:  # if no gradient selected, applies a homogeneous pressure
                             self.space['pressure'][index] = initial_pressure
                     if temperature_gradient is None:  # no gradient is selected, homogeneous matrix temperature
                         self.space['temperature'][index] = initial_temperature
                     else:  # if a gradient is added, applies the temperature gradient
-                        self.space['temperature'][index] = t_range[round(self.space['z_coords'][
-                                                                             index], len(str(self.space_resolution)))]
+                        self.space['temperature'][index] = t_range[Decimal(self.space['z_coords'][
+                                                                             index])]
                     if initial_fO2 is not None:  # applies an fO2 if one is selected
                         if fO2_gradient is None:  # no gradient is selected, homogeneous matrix fO2
                             self.space['fO2_{}'.format(self.fO2_buffer)][index] = initial_fO2
                         else:  # if a gradient is added, applies the fO2 gradient
-                            self.space['fO2_{}'.format(self.fO2_buffer)][index] = fO2_range[round(self.space['z_coords'][
-                                                                                 index], len(str(self.space_resolution)))]
+                            self.space['fO2_{}'.format(self.fO2_buffer)][index] = fO2_range[Decimal(self.space['z_coords'][
+                                                                                 index])]
                     self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                   object=matrix_material)
                     console.pm_flush(
@@ -422,30 +421,29 @@ class box:
             else:
                 for row in self.space.itertuples():
                     index = row.Index
-                    if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
-                            z_range[1], len(str(self.space_resolution))):  # inserts only between z gradients
+                    if Decimal(z_range[0]) <= self.space['z_coords'][index] <= Decimal(
+                            z_range[1]):  # inserts only between z gradients
                         self.space['object_id'][index] = self.generate_object_id(matrix=True)  # generates the object id
                         self.space['object'][index] = matrix_material
                         if initial_pressure is not None:  # makes sure that a pressure is set
                             if pressure_gradient is not None:  # checks if the pressure gradient option is selected
-                                self.space['pressure'][index] = p_range[round(self.space['z_coords'][
-                                                                                  index], len(str(
-                                    self.space_resolution)))]  # if a gradient is added, applies the pressure gradient
+                                self.space['pressure'][index] = p_range[Decimal(self.space['z_coords'][
+                                                                                  index])]  # if a gradient is added, applies the pressure gradient
                             else:  # if no gradient selected, applies a homogeneous pressure
                                 self.space['pressure'][index] = initial_pressure
                         if temperature_gradient is None:  # no gradient is selected, homogeneous matrix temperature
                             self.space['temperature'][index] = initial_temperature
                         else:  # if a gradient is added, applies the temperature gradient
-                            self.space['temperature'][index] = t_range[round(self.space['z_coords'][
+                            self.space['temperature'][index] = t_range[Decimal(self.space['z_coords'][
                                                                                  index],
-                                                                             len(str(self.space_resolution)))]
+                                                                             )]
                         if initial_fO2 is not None:  # applies an fO2 if one is selected
                             if fO2_gradient is None:  # no gradient is selected, homogeneous matrix fO2
                                 self.space['fO2_{}'.format(self.fO2_buffer)][index] = initial_fO2
                             else:  # if a gradient is added, applies the fO2 gradient
                                 self.space['fO2_{}'.format(self.fO2_buffer)][index] = fO2_range[
-                                    round(self.space['z_coords'][
-                                              index], len(str(self.space_resolution)))]
+                                    Decimal(self.space['z_coords'][
+                                              index])]
                         self.solution.create_solution(box=self.space, composition=composition, row=index,
                                                       object=matrix_material)
                         console.pm_flush(
@@ -485,8 +483,8 @@ class box:
                     1]  # top of model considered to be the bottom (lowest z-coordinate) of boundary layer
             for row in self.space.itertuples():
                 index = row.Index
-                if round(z_range[0], len(str(self.space_resolution))) <= self.space['z_coords'][index] <= round(
-                        z_range[1], len(str(self.space_resolution))):
+                if Decimal(z_range[0]) <= self.space['z_coords'][index] <= Decimal(
+                        z_range[1]):
                     self.space['object_id'][index] = 'C'
                     self.space['object'][index] = "Boundary"
                     self.space['temperature'][index] = temperature
@@ -574,7 +572,7 @@ class box:
             temperature = []
             for row in self.space.itertuples():
                 index = row.Index
-                surface_zcoord = round((self.model_base - self.space_resolution), len(str(self.space_resolution)))
+                surface_zcoord = Decimal((self.model_base - self.space_resolution))
                 if float(self.space['z_coords'][index]) == surface_zcoord:
                     x_coords.append(self.space['x_coords'][index])
                     y_coords.append(self.space['y_coords'][index])
@@ -671,14 +669,11 @@ class box:
         end_x = end[0]  # the ending x coordinate of the diapir
         end_y = end[1]  # the ending y coordinate of the diapir
         end_z = end[2]  # the ending z coordinate of the diapir
-        range_z = list(np.arange(start_z, round(end_z + self.space_resolution, len(str(self.space_resolution)))))  # generates a list of numbers between the starting & ending z coordinates
+        range_z = list(np.arange(start_z, end_z + self.space_resolution, self.space_resolution))  # generates a list of numbers between the starting & ending z coordinates
         line = []    # a list of lists that define all coordinates on the line of travel
         for i in range_z:
-            coord = [end_x, end_y, i]  # currently only works with changing z, adding changing x and y could be difficult
-            rounded_coord = []
-            for i in coord:
-                rounded_coord.append(round(i, len(str(self.space_resolution))))  # cheap floating point fix
-            line.append(rounded_coord)  # appends the coordinate point on the line to the line list
+            coord = [float(Decimal(end_x)), float(Decimal(end_y)), float(Decimal(i))]  # currently only works with changing z, adding changing x and y could be difficult
+            line.append(coord)  # appends the coordinate point on the line to the line list
         return line
 
 
@@ -783,21 +778,18 @@ class box:
                     matrix_material_temp=matrix_material_temp, matrix_material_pressure=matrix_material_pressure,
                     object_radius=system_data['object_radius'][index])
                 z_dis_obj_travel = object_velocity * deltaTime
-                updated_x_coord = round(system_data['x_coords'][index], len(str(space_resolution)))
-                updated_y_coord = round(system_data['y_coords'][index], len(str(space_resolution)))
-                # round the z-coordinate to the nearest point within the spatial resolution
-                updated_z_coord = round(self.round_coord_arbitrary(
+                updated_x_coord = system_data['x_coords'][index]
+                updated_y_coord = system_data['y_coords'][index]
+                # Decimal the z-coordinate to the nearest point within the spatial resolution
+                updated_z_coord = self.round_coord_arbitrary(
                     coordinate=(z_dis_obj_travel + system_data['z_coords'][index]),
-                    system_data=system_data, coordinate_type='z_coords'), len(str(space_resolution)))
-                rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords, len(str(
-                    space_resolution)))  # use this distance for distance travelled, as it is more self-consistent within the model
+                    system_data=system_data, coordinate_type='z_coords')
+                rounded_z_distance_travelled = Decimal(updated_z_coord) - Decimal(curr_z_coords)  # use this distance for distance travelled, as it is more self-consistent within the model
                 # check to see if object travels into boundary layer.  if so, put it in nearest point within spatial resolution ABOVE boundary layer
-                if round(rounded_z_distance_travelled + curr_z_coords, len(str(space_resolution))) >= self.model_base:
-                    updated_z_coord = round(self.model_base - self.space_resolution,
-                                            len(str(space_resolution)))  # fix the z-coord
-                    rounded_z_distance_travelled = round(updated_z_coord - curr_z_coords,
-                                                         len(str(space_resolution)))  # fix the distance travelled
-                rounded_object_velocity = rounded_z_distance_travelled / deltaTime  # makes object velocity self-consistent with model
+                if Decimal(rounded_z_distance_travelled) + Decimal(curr_z_coords) >= self.model_base:
+                    updated_z_coord = Decimal(self.model_base) - Decimal(self.space_resolution)  # fix the z-coord
+                    rounded_z_distance_travelled = Decimal(updated_z_coord) - Decimal(curr_z_coords)  # fix the distance travelled
+                rounded_object_velocity = Decimal(rounded_z_distance_travelled) / Decimal(deltaTime)  # makes object velocity self-consistent with model
                 system_data['rounded_object_velocity'][index] = rounded_object_velocity  # makes object velocity self-consistent with model
                 # checks to make sure that the space/time resolution was big enough for the object to move.  if not, velocity/distance_travelled = 0
                 if rounded_z_distance_travelled == 0:
@@ -860,13 +852,15 @@ class box:
                 if rounded_object_velocity != 0:
                     object_path = self.define_path(start=[curr_x_coords, curr_y_coords, curr_z_coords],
                                                    end=[updated_x_coord, updated_y_coord, updated_z_coord])
-                    print(object_path)
-                    objs = []  # a list of object names in the path of descent
+                    objs = []  # a list of object names in the path of descent through which the object may travel
+                    inds = []  # all the indices of the points through which the object may travel
                     for i in object_path:
-                        print('[{}, {}, {}]'.format(i[0], i[1], i[2]))
-                        print(system_data['coord_index'])
-                        temp_ind = system_data.index[system_data['coord_index'] == '[{}, {}, {}]'.format(i[0], i[1], i[2])].values[0]
-                        print(temp_ind)
+                        # select the index based on the subdataframe generated by matching coordinate points
+                        sub_df = self.space[(np.isclose(self.space['x_coords'], i[0])) &
+                                            (np.isclose(self.space['y_coords'], i[1])) &
+                                            (np.isclose(self.space['z_coords'], i[2]))]
+                        temp_ind = sub_df.index.values[0]
+                        # find the object at the path point
                         o = system_data['object'][temp_ind]
                         objs.append(o)
                     # this if statement covers whether objects of the same time exist in the path of the sinking object
@@ -874,10 +868,8 @@ class box:
                     if system_data['object'][index] in objs:  # performs intermediate object merging only if the object
                         # is in the path (aside from the endpoint which is handled elsewhere)
                         obj = system_data['object'][index]
-                        curr_coord = '[{}, {}, {}]'.format(curr_x_coords, curr_y_coords, curr_z_coords)
-                        curr_index = system_data.index[system_data['coord_index'] == curr_coord].values[0]
+                        curr_index = index
                         for i in object_path:  # get all object names from the object
-                            c = "{}, {}, {}".format(i[0], i[1], i[2])  # format for the currenet coord to be found in column 'coord_index'
                             path_obj_index = system_data.index[system_data['coord_index'] == c].values[0]
                             if obj == system_data['object'][path_obj_index]:  # if the two objects in the path are the same, then merge them
                                 self.merge_objects(from_object_index=curr_index, to_object_index=path_obj_index,
@@ -960,37 +952,37 @@ class box:
                 # dynamics animation
                 os.chdir(os.getcwd() + '/object_dynamics')
                 animation = mpy.ImageSequenceClip(self.movie_frames1,
-                                                  fps=round((self.initial_time / (self.initial_time / 3))),
+                                                  fps=Decimal((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
                 animation.write_videofile('object_dynamics.mp4',
-                                          fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
+                                          fps=Decimal((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('object_dynamics.gif',
-                                    fps=round((self.initial_time / (self.initial_time / 3))))
+                                    fps=Decimal((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d heatmap animation
                 os.chdir(os.getcwd() + '/thermal_equilibrium_heatmap')
                 animation = mpy.ImageSequenceClip(self.movie_frames2,
-                                                  fps=round((self.initial_time / (self.initial_time / 3))),
+                                                  fps=Decimal((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
                 animation.write_videofile('thermal_equilibrium_heatmap.mp4',
-                                          fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
+                                          fps=Decimal((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('thermal_equilibrium_heatmap.gif',
-                                    fps=round((self.initial_time / (self.initial_time / 3))))
+                                    fps=Decimal((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d model base heat distribution animation
                 os.chdir(os.getcwd() + '/temp_distrib_floor')
                 animation = mpy.ImageSequenceClip(self.movie_frames4,
-                                                  fps=round((self.initial_time / (self.initial_time / 3))),
+                                                  fps=Decimal((self.initial_time / (self.initial_time / 3))),
                                                   load_images=True)
                 os.chdir('..')
                 animation.write_videofile('temp_distrib_floor.mp4',
-                                          fps=round((self.initial_time / (self.initial_time / 3))), audio=False)
+                                          fps=Decimal((self.initial_time / (self.initial_time / 3))), audio=False)
                 animation.write_gif('temp_distrib_floor.gif',
-                                    fps=round((self.initial_time / (self.initial_time / 3))))
+                                    fps=Decimal((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # writes the central pandas dataframe to 'space.csv'.  most critical model info contained here
@@ -1019,13 +1011,15 @@ class box:
             # updates chemical compositions
             update_solution = self.solution.update_solution(deltaTime=deltaTime)
             # models thermal equilibrium
-            therm_eq_update_space = thermal_eq().D3_thermal_eq(system_data=update_space, deltaTime=deltaTime,
-                                                               space_resolution=self.space_resolution)
+            therm_eq_update_space = thermal_eq(prec=self.prec).D3_thermal_eq(
+                system_data=update_space, deltaTime=deltaTime,
+                space_resolution=self.space_resolution)
+            # writes a velocity output file
             for row in update_space.itertuples():
                 index = row.Index
                 if 'A' in update_space['object_id'][index]:
                     self.velocity_output.write("\n{}".format(update_space['object_velocity'][index]))
-            self.visualize_box()
+            self.visualize_box()  # builds plots for the box
             self.space = update_space
             if self.object_history is True:
                 for row in self.space.itertuples():
