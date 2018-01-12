@@ -4,20 +4,24 @@ import math
 import os
 import numpy as np
 
+
+# set the box width (x), length (y), height (z), and the spatial resolution (all in m)
 width = 3.0
 length = 3.0
 height = 6
 space_resolution = 0.2
+
+# use these to generate random coordinates in the specified range, if you wish
 # x_coords_range = np.arange(0, round((length + space_resolution), len(str(space_resolution))), space_resolution) # generate range of x-coords
 # y_coords_range = np.arange(0, round((width + space_resolution), len(str(space_resolution))), space_resolution) # generate range of y-coords
 # z_coords_range = np.arange(0, round((height + space_resolution), len(str(space_resolution))), space_resolution) # generate range of z-coords
 
-
 # instantiate the box
 model = box(length=length, width=width, height=height, model_time=5, space_resolution=space_resolution, fO2_buffer='IW',
-            visualize_system=True, object_history=True, visualize_neighbors=False, animate_neighbors=False)
+            visualize_system=False, object_history=True, visualize_neighbors=False, animate_neighbors=False)
 
 # insert one more more matrix materials into the box, will populate all possible coordinate positions
+# boundary layers do not change in any property, nor can sinking objects penetrate them
 model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 'FeO': 50, '182-Hf': 100},
                     z_range=[0,6], initial_temperature=2000, temperature_gradient=2,
                     initial_pressure=(1 * 10 ** 9), pressure_gradient=2, initial_fO2=(-1.2), fO2_gradient=(-.01))
@@ -25,9 +29,6 @@ model.insert_matrix(matrix_material='Silicate Liquid', composition={'SiO2': 50, 
 # insert boundary with conditions at a specified z range
 model.insert_boundary(temperature=2000, z_range=[0,0.2], boundary_location='top')
 model.insert_boundary(temperature=2200, z_range=[5.8,6], boundary_location='bottom')
-
-
-
 
 # insert X number of objects into the box, specify their location, will overwrite matrix at that point
 for i in list(range(1)):
@@ -38,4 +39,5 @@ for i in list(range(1)):
 
 # automatically update the box iteratively to model_time = 0
 # a time step is automatically calculated if one is not provided with the deltaTime argument
+# (currently just calculates 1 second)
 model.update_system()

@@ -21,6 +21,7 @@ from math import pi
 from numbers import Number
 import ast
 from collections import Counter
+import ast
 
 
 # TODO: update some methods to class methods to avoid outside interference
@@ -863,6 +864,7 @@ class box:
                     objs = []  # a list of object names in the path of descent
                     for i in object_path:
                         print('[{}, {}, {}]'.format(i[0], i[1], i[2]))
+                        print(system_data['coord_index'])
                         temp_ind = system_data.index[system_data['coord_index'] == '[{}, {}, {}]'.format(i[0], i[1], i[2])].values[0]
                         print(temp_ind)
                         o = system_data['object'][temp_ind]

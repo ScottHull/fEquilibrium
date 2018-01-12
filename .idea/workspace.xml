@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="75f2a9d7-c735-40ff-928d-2c1b389c7ac4" name="Default" comment="">
+      <change beforePath="" afterPath="$PROJECT_DIR$/diffusivity_example/line_diffusivity.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/diffusivity_example/line_diffusivity_api.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/diffusivity_example/spherical_diffusivity.py" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/diffusivity_example/spherical_diffusivity_api.py" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/box/Box.py" afterPath="$PROJECT_DIR$/box/Box.py" />
       <change beforePath="$PROJECT_DIR$/test_box.py" afterPath="$PROJECT_DIR$/test_box.py" />
@@ -14,92 +18,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test_box.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test_box.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="540">
-              <caret line="36" column="112" lean-forward="false" selection-start-line="36" selection-start-column="112" selection-end-line="36" selection-end-column="112" />
-              <folding>
-                <element signature="e#0#23#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Box.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/box/Box.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="275">
-              <caret line="678" column="107" lean-forward="false" selection-start-line="678" selection-start-column="107" selection-end-line="678" selection-end-column="107" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Console.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/meta/Console.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Movement.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dynamics/Movement.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="25" column="24" lean-forward="false" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Energy.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5307">
-              <caret line="525" column="53" lean-forward="false" selection-start-line="525" selection-start-column="53" selection-end-line="525" selection-end-column="53" />
-              <folding>
-                <element signature="e#0#25#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Solution.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="55" column="11" lean-forward="false" selection-start-line="55" selection-start-column="11" selection-end-line="55" selection-end-column="11" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Radioactivity.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="410">
-              <caret line="77" column="42" lean-forward="false" selection-start-line="77" selection-start-column="42" selection-end-line="77" selection-end-column="42" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -110,20 +29,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>.value</find>
-      <find>COunter</find>
-      <find>== 'Metal</find>
-      <find>merge_obje</find>
-      <find>== 'A'</find>
-      <find>merge_ob</find>
-      <find>== 'A&quot;</find>
-      <find>client</find>
-      <find>update_space</find>
-      <find>additi</find>
-      <find>visualize</find>
-      <find>round(</find>
-      <find>box integ</find>
-      <find>1.5</find>
       <find>[0]</find>
       <find>T_gradient</find>
       <find>Sinking diapirs</find>
@@ -140,12 +45,22 @@
       <find>boundary</find>
       <find>fO2_({})</find>
       <find>define</find>
+      <find>coord_index</find>
+      <find>ast.li</find>
+      <find>Counter</find>
+      <find>itertupl</find>
+      <find>radial</find>
+      <find>sphere</find>
+      <find>visualize</find>
+      <find>liter</find>
+      <find>writing anim</find>
+      <find>literal</find>
+      <find>writing</find>
+      <find>initial_time</find>
+      <find>object_dynamics</find>
+      <find>Over Ra</find>
     </findStrings>
     <replaceStrings>
-      <replace>matrix_material</replace>
-      <replace>solution</replace>
-      <replace>physical_parameters</replace>
-      <replace>minus</replace>
       <replace>object</replace>
       <replace>space</replace>
       <replace>df</replace>
@@ -172,6 +87,10 @@
       <replace>temperature</replace>
       <replace>z</replace>
       <replace>fO2_{}</replace>
+      <replace>angular</replace>
+      <replace>line</replace>
+      <replace>max_time</replace>
+      <replace>chemical_diffusivity</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -214,7 +133,6 @@
         <option value="$PROJECT_DIR$/stats/regression.py" />
         <option value="$USER_HOME$/SCE_GUI_Project/SIPM_v3_final.py" />
         <option value="$PROJECT_DIR$/box/test_box.py" />
-        <option value="$PROJECT_DIR$/meta/Console.py" />
         <option value="$PROJECT_DIR$/radioactivity/Radioactivity.py" />
         <option value="$PROJECT_DIR$/thermodynamics/Solution.py" />
         <option value="$PROJECT_DIR$/__init__.py" />
@@ -222,18 +140,27 @@
         <option value="$PROJECT_DIR$/dynamics/Energy.py" />
         <option value="$PROJECT_DIR$/test_box.py" />
         <option value="$PROJECT_DIR$/box/Box.py" />
+        <option value="$PROJECT_DIR$/partition_test.py" />
+        <option value="$PROJECT_DIR$/meta/Console.py" />
+        <option value="$PROJECT_DIR$/spherical_diffusivity_api.py" />
+        <option value="$PROJECT_DIR$/spherical_diffusivity.py" />
+        <option value="$PROJECT_DIR$/1D_diffusivity.py" />
+        <option value="$PROJECT_DIR$/diffusivity_example/1D_diffusivity.py" />
+        <option value="$PROJECT_DIR$/diffusivity_example/1D_diffusivity_api.py" />
+        <option value="$PROJECT_DIR$/diffusivity_example/line_diffusivity_api.py" />
+        <option value="$PROJECT_DIR$/diffusivity_example/line_diffusivity.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="19" />
+    <option name="x" value="3" />
     <option name="y" value="23" />
-    <option name="width" value="1389" />
+    <option name="width" value="1323" />
     <option name="height" value="825" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -246,7 +173,41 @@
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+              <item name="box" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+              <item name="diffusivity_example" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+              <item name="dynamics" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fEquilibrium" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fEquilibrium" type="462c0819:PsiDirectoryNode" />
+              <item name="meta" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$USER_HOME$/miniconda3/bin/python3.5" />
@@ -254,10 +215,11 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/scotthull/Documents - Scott’s MacBook Pro/Graduate Research/fEquilibrium/dynamics/Energy.py" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/diffusivity_example" />
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
@@ -273,7 +235,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.partition_extrapolation">
+  <component name="RunManager" selected="Python.line_diffusivity">
     <configuration name="fEquilibrium" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -310,19 +272,37 @@
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
     </configuration>
-    <configuration name="partition_extrapolation" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="line_diffusivity" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/diffusivity_example" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="Graduate Research" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test_box.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/diffusivity_example/line_diffusivity_api.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+    </configuration>
+    <configuration name="test_box.py" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/diffusivity_example" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Graduate Research" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/diffusivity_example/1D_diffusivity_api.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -391,18 +371,19 @@
       <option name="_new_target" value="&quot;.&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.fEquilibrium" />
-      <item index="1" class="java.lang.String" itemvalue="Python.partition_extrapolation" />
+      <item index="1" class="java.lang.String" itemvalue="Python.test_box.py" />
       <item index="2" class="java.lang.String" itemvalue="Python.hurricane_plot" />
+      <item index="3" class="java.lang.String" itemvalue="Python.line_diffusivity" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.partition_extrapolation" />
-        <item index="1" class="java.lang.String" itemvalue="Python.hurricane_plot" />
-        <item index="2" class="java.lang.String" itemvalue="Python.fEquilibrium" />
-        <item index="3" class="java.lang.String" itemvalue="Python.partition_extrapolation" />
-        <item index="4" class="java.lang.String" itemvalue="Python.hurricane_plot" />
+        <item index="0" class="java.lang.String" itemvalue="Python.line_diffusivity" />
+        <item index="1" class="java.lang.String" itemvalue="Python.test_box.py" />
+        <item index="2" class="java.lang.String" itemvalue="Python.hurricane_plot" />
+        <item index="3" class="java.lang.String" itemvalue="Python.fEquilibrium" />
+        <item index="4" class="java.lang.String" itemvalue="Python.test_box.py" />
       </list>
     </recent_temporary>
   </component>
@@ -419,13 +400,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1502999199498</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Replaced index iteration with tuple iteration.  Much faster.">
-      <created>1510338124092</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1510338124092</updated>
     </task>
     <task id="LOCAL-00033" summary="Replaced index iteration with tuple iteration.  Much faster.">
       <created>1510588933356</created>
@@ -763,23 +737,29 @@
       <option name="project" value="LOCAL" />
       <updated>1515183587834</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="Working on adding path defining.">
+      <created>1515448276780</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1515448276781</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="19" y="23" width="1389" height="825" extended-state="0" />
-    <editor active="true" />
+    <frame x="3" y="23" width="1323" height="825" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17291667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26199263" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41208792" sideWeight="0.50677085" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35325366" sideWeight="0.49322918" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2735724" sideWeight="0.49322918" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -789,12 +769,31 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.41208792" sideWeight="0.50677085" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2735724" sideWeight="0.49322918" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32891247" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26199263" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32934928" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="(More) realistic velocity calculations." />
     <MESSAGE value="Test" />
     <MESSAGE value="Fixed some typos." />
     <MESSAGE value="Updated column swapping error." />
@@ -819,23 +818,22 @@
     <MESSAGE value="Rounded object velocity to make the model self-consistent" />
     <MESSAGE value="Added the ability to impose temperature and pressure gradients." />
     <MESSAGE value="Added ability to add fO2 and fO2 gradients." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added ability to add fO2 and fO2 gradients." />
+    <MESSAGE value="Working on adding path defining." />
+    <option name="LAST_COMMIT_MESSAGE" value="Working on adding path defining." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="12" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/box/Box.py</url>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="13" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/Southern Company Project/SIPM_v4_local_canvas.py" />
-    <entry file="file://$USER_HOME$/Southern Company Project/Southern_GUI.py" />
-    <entry file="file://$PROJECT_DIR$/toybox.py" />
-    <entry file="file://$PROJECT_DIR$/disribution.py" />
-    <entry file="file://$PROJECT_DIR$/toybox.py" />
-    <entry file="file://$PROJECT_DIR$/toybox.py" />
-    <entry file="file://$PROJECT_DIR$/disribution.py" />
-    <entry file="file://$PROJECT_DIR$/toybox.py" />
     <entry file="file://$PROJECT_DIR$/chem.csv" />
     <entry file="file://$PROJECT_DIR$/thermodynamics/partition.py" />
     <entry file="file://$PROJECT_DIR$/distribution.py" />
@@ -977,34 +975,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="55" column="11" lean-forward="false" selection-start-line="55" selection-start-column="11" selection-end-line="55" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/SCE_GUI_Project/SIPM_v3_final.py" />
+    <entry file="file://$PROJECT_DIR$/partition_test.py" />
     <entry file="file://$PROJECT_DIR$/test_box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="112" lean-forward="false" selection-start-line="36" selection-start-column="112" selection-end-line="36" selection-end-column="112" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/meta/Console.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="9" column="0" lean-forward="false" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="570">
+          <caret line="42" column="21" lean-forward="false" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -1012,38 +988,86 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
           <caret line="25" column="24" lean-forward="false" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
+    <entry file="file://$PROJECT_DIR$/thermodynamics/Solution.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5307">
-          <caret line="525" column="53" lean-forward="false" selection-start-line="525" selection-start-column="53" selection-end-line="525" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="765">
+          <caret line="55" column="11" lean-forward="false" selection-start-line="55" selection-start-column="11" selection-end-line="55" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/radioactivity/Radioactivity.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
+        <state relative-caret-position="1095">
           <caret line="77" column="42" lean-forward="false" selection-start-line="77" selection-start-column="42" selection-end-line="77" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/meta/Console.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="9" lean-forward="false" selection-start-line="0" selection-start-column="9" selection-end-line="0" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/diffusivity_example/1D_diffusivity.py" />
+    <entry file="file://$PROJECT_DIR$/diffusivity_example/1D_diffusivity_api.py" />
+    <entry file="file://$PROJECT_DIR$/diffusivity_example/spherical_diffusivity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-130">
+          <caret line="99" column="96" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="135" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/diffusivity_example/spherical_diffusivity_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" column="64" lean-forward="true" selection-start-line="15" selection-start-column="64" selection-end-line="15" selection-end-column="64" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/box/Box.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="678" column="107" lean-forward="false" selection-start-line="678" selection-start-column="107" selection-end-line="678" selection-end-column="107" />
+        <state relative-caret-position="277">
+          <caret line="965" column="16" lean-forward="true" selection-start-line="965" selection-start-column="16" selection-end-line="968" selection-end-column="93" />
+          <folding>
+            <element signature="e#0#9#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/miniconda3/lib/python3.5/ast.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="174">
+          <caret line="82" column="0" lean-forward="false" selection-start-line="82" selection-start-column="0" selection-end-line="82" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/dynamics/Energy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="713">
+          <caret line="463" column="30" lean-forward="false" selection-start-line="463" selection-start-column="24" selection-end-line="463" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/diffusivity_example/line_diffusivity.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2625">
+          <caret line="180" column="41" lean-forward="false" selection-start-line="180" selection-start-column="41" selection-end-line="180" selection-end-column="41" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/diffusivity_example/line_diffusivity_api.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="13" column="16" lean-forward="true" selection-start-line="13" selection-start-column="16" selection-end-line="13" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
