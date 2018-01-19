@@ -102,9 +102,9 @@ class thermal_eq:
 
         # this dictionary will be stored for reference in the dataframe for quick index access
         neighbors_dict = {'x': {'x+': {'coords': [], 'index': []}, 'x': {'coords': [], 'index': []},
-                                'x-': {'coords': [], 'index': []}}, 'y': {'y+': {'coords': [], 'index': []},
-                                                                          'y': {'coords': [], 'index': []},
-                                                                          'y-': {'coords': [], 'index': []}},
+                                'x-': {'coords': [], 'index': []}},
+                          'y': {'y+': {'coords': [], 'index': []}, 'y': {'coords': [], 'index': []},
+                                'y-': {'coords': [], 'index': []}},
                           'z': {'z+': {'coords': [], 'index': []}, 'z': {'coords': [], 'index': []},
                                 'z-': {'coords': [], 'index': []}}}  # for each dict, x,y,z,index
 
@@ -183,9 +183,9 @@ class thermal_eq:
         for i in neighbors_dict:
             for r in neighbors_dict[i]:
                 if len(neighbors_dict[i][r]['coords']) == 3:
-                    x = neighbors_dict[i][r]['coords'][0]  # neighbor x-coord
-                    y = neighbors_dict[i][r]['coords'][1]  # neighbor y-coord
-                    z = neighbors_dict[i][r]['coords'][2]  # neighbor z-coord
+                    x = round(neighbors_dict[i][r]['coords'][0], len(str(space_resolution)))  # neighbor x-coord
+                    y = round(neighbors_dict[i][r]['coords'][1], len(str(space_resolution)))  # neighbor y-coord
+                    z = round(neighbors_dict[i][r]['coords'][2], len(str(space_resolution)))  # neighbor z-coord
                     row = (system_data['index'].loc[[(x, y, z)]]).values[
                         0]  # get the original index value of the coords
                     neighbors_dict[i][r]['index'].append(row)  # append that value to the neighbors dictionary
@@ -193,54 +193,54 @@ class thermal_eq:
                     if r == 'x+':
                         coords = [minx, y_coord, z_coord]
                         neighbors_dict[i][r]['coords'] = coords
-                        x = neighbors_dict[i][r]['coords'][0]  # neighbor x-coord
-                        y = neighbors_dict[i][r]['coords'][1]  # neighbor y-coord
-                        z = neighbors_dict[i][r]['coords'][2]  # neighbor z-coord
+                        x = round(neighbors_dict[i][r]['coords'][0], len(str(space_resolution)))  # neighbor x-coord
+                        y = round(neighbors_dict[i][r]['coords'][1], len(str(space_resolution)))  # neighbor y-coord
+                        z = round(neighbors_dict[i][r]['coords'][2], len(str(space_resolution)))  # neighbor z-coord
                         row = (system_data['index'].loc[[(x, y, z)]]).values[
                             0]  # get the original index value of the coords
                         neighbors_dict[i][r]['index'].append(row)  # append that value to the neighbors dictionary
                     elif r == 'x-':
                         coords = [maxx, y_coord, z_coord]
                         neighbors_dict[i][r]['coords'] = coords
-                        x = neighbors_dict[i][r]['coords'][0]  # neighbor x-coord
-                        y = neighbors_dict[i][r]['coords'][1]  # neighbor y-coord
-                        z = neighbors_dict[i][r]['coords'][2]  # neighbor z-coord
+                        x = round(neighbors_dict[i][r]['coords'][0], len(str(space_resolution)))  # neighbor x-coord
+                        y = round(neighbors_dict[i][r]['coords'][1], len(str(space_resolution)))  # neighbor y-coord
+                        z = round(neighbors_dict[i][r]['coords'][2], len(str(space_resolution)))  # neighbor z-coord
                         row = (system_data['index'].loc[[(x, y, z)]]).values[
                             0]  # get the original index value of the coords
                         neighbors_dict[i][r]['index'].append(row)  # append that value to the neighbors dictionary
                     elif r == 'y+':
                         coords = [x_coord, miny, z_coord]
                         neighbors_dict[i][r]['coords'] = coords
-                        x = neighbors_dict[i][r]['coords'][0]  # neighbor x-coord
-                        y = neighbors_dict[i][r]['coords'][1]  # neighbor y-coord
-                        z = neighbors_dict[i][r]['coords'][2]  # neighbor z-coord
+                        x = round(neighbors_dict[i][r]['coords'][0], len(str(space_resolution)))  # neighbor x-coord
+                        y = round(neighbors_dict[i][r]['coords'][1], len(str(space_resolution)))  # neighbor y-coord
+                        z = round(neighbors_dict[i][r]['coords'][2], len(str(space_resolution)))  # neighbor z-coord
                         row = (system_data['index'].loc[[(x, y, z)]]).values[
                             0]  # get the original index value of the coords
                         neighbors_dict[i][r]['index'].append(row)  # append that value to the neighbors dictionary
                     elif r == 'y-':
                         coords = [x_coord, maxy, z_coord]
                         neighbors_dict[i][r]['coords'] = coords
-                        x = neighbors_dict[i][r]['coords'][0]  # neighbor x-coord
-                        y = neighbors_dict[i][r]['coords'][1]  # neighbor y-coord
-                        z = neighbors_dict[i][r]['coords'][2]  # neighbor z-coord
+                        x = round(neighbors_dict[i][r]['coords'][0], len(str(space_resolution)))  # neighbor x-coord
+                        y = round(neighbors_dict[i][r]['coords'][1], len(str(space_resolution)))  # neighbor y-coord
+                        z = round(neighbors_dict[i][r]['coords'][2], len(str(space_resolution)))  # neighbor z-coord
                         row = (system_data['index'].loc[[(x, y, z)]]).values[
                             0]  # get the original index value of the coords
                         neighbors_dict[i][r]['index'].append(row)  # append that value to the neighbors dictionary=
                     elif r == 'z+':
                         coords = [x_coord, y_coord, minz]
                         neighbors_dict[i][r]['coords'] = coords
-                        x = neighbors_dict[i][r]['coords'][0]  # neighbor x-coord
-                        y = neighbors_dict[i][r]['coords'][1]  # neighbor y-coord
-                        z = neighbors_dict[i][r]['coords'][2]  # neighbor z-coord
+                        x = round(neighbors_dict[i][r]['coords'][0], len(str(space_resolution)))  # neighbor x-coord
+                        y = round(neighbors_dict[i][r]['coords'][1], len(str(space_resolution)))  # neighbor y-coord
+                        z = round(neighbors_dict[i][r]['coords'][2], len(str(space_resolution)))  # neighbor z-coord
                         row = (system_data['index'].loc[[(x, y, z)]]).values[
                             0]  # get the original index value of the coords
                         neighbors_dict[i][r]['index'].append(row)  # append that value to the neighbors dictionary
                     elif r == 'z-':
                         coords = [x_coord, y_coord, maxz]
                         neighbors_dict[i][r]['coords'] = coords
-                        x = neighbors_dict[i][r]['coords'][0]  # neighbor x-coord
-                        y = neighbors_dict[i][r]['coords'][1]  # neighbor y-coord
-                        z = neighbors_dict[i][r]['coords'][2]  # neighbor z-coord
+                        x = round(neighbors_dict[i][r]['coords'][0], len(str(space_resolution)))  # neighbor x-coord
+                        y = round(neighbors_dict[i][r]['coords'][1], len(str(space_resolution)))  # neighbor y-coord
+                        z = round(neighbors_dict[i][r]['coords'][2], len(str(space_resolution)))  # neighbor z-coord
                         row = (system_data['index'].loc[[(x, y, z)]]).values[
                             0]  # get the original index value of the coords
                         neighbors_dict[i][r]['index'].append(row)  # append that value to the neighbors dictionary
@@ -453,9 +453,9 @@ class thermal_eq:
         # calculate & store temperature gradients
         for row in system_data.itertuples():
             index = row.Index
-            sample_xcoord = Decimal(system_data['x_coords'][index])
-            sample_ycoord = Decimal(system_data['y_coords'][index])
-            sample_zcoord = Decimal(system_data['z_coords'][index])
+            sample_xcoord = system_data['x_coords'][index]
+            sample_ycoord = system_data['y_coords'][index]
+            sample_zcoord = system_data['z_coords'][index]
             console.pm_flush("Calculating temperature gradient for x:{} y:{} z:{}".format(sample_xcoord, sample_ycoord,
                                                                                           sample_zcoord))
             neighbors = ast.literal_eval(
@@ -468,6 +468,7 @@ class thermal_eq:
                         neighbors[i][z].update({'temperature': temperature})
             system_data['nearest_neighbors'][index] = str(neighbors)
             # gradient = self.gradient(classified_neighbors=neighbors)
+            # system_data['T_gradient'][index] = gradient
             # system_data['T_gradient'][index] = gradient
         print("")
         # calculate & store temperature laplacians

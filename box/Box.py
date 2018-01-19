@@ -63,9 +63,9 @@ class box:
             'coord_index': [str(i) for i in self.coords],
             'object_id': np.NAN,  # randomly generated object id tag to identify unique elements in box
             'object': np.NAN,  # name of the object, as defined in self.physical_parameters
-            'x_coords': [float(Decimal(i[0])) for i in self.coords],
-            'y_coords': [float(Decimal(i[1])) for i in self.coords],
-            'z_coords': [float(Decimal(i[2])) for i in self.coords],
+            'x_coords': [round(float(Decimal(i[0])), len(str(self.space_resolution))) for i in self.coords],
+            'y_coords': [round(float(Decimal(i[1])), len(str(self.space_resolution))) for i in self.coords],
+            'z_coords': [round(float(Decimal(i[2])), len(str(self.space_resolution))) for i in self.coords],
             'nearest_neighbors': np.NAN,  # x, y, and z neighbors in each direction
             'object_radius': np.NAN,  # in m
             'density': np.NAN,  # in kg/m^3
@@ -167,7 +167,6 @@ class box:
                                                                      self.space['z_coords'][index]))
         print("")
         if animate_neighbors is True:
-            # self.space.to_csv("space2_coords_check.csv")
             import moviepy.editor as mpy
             import os
             os.chdir(os.getcwd() + "/nearest_neighbors")
@@ -196,13 +195,13 @@ class box:
                                    space_resolution)  # generate range of y-coords
         z_coords_range = np.arange(0, height + space_resolution,
                                    space_resolution)  # generate range of z-coords
-        for i in x_coords_range:
-            for j in y_coords_range:
-                for q in z_coords_range:
+        for i in x_coords_range:  # i = x
+            for j in y_coords_range:  # j = y
+                for k in z_coords_range:  # k = z
                     temp_coords = []
-                    temp_coords.append(float(Decimal(i)))
-                    temp_coords.append(float(Decimal(j)))
-                    temp_coords.append(float(Decimal(q)))
+                    temp_coords.append(round(float(Decimal(i)), len(str(self.space_resolution))))
+                    temp_coords.append(round(float(Decimal(j)), len(str(self.space_resolution))))
+                    temp_coords.append(round(float(Decimal(k)), len(str(self.space_resolution))))
                     coords.append(temp_coords)
         console.pm_stat("Coordinates generated!")
         return coords
@@ -367,7 +366,7 @@ class box:
                           self.space_resolution))  # generate range of z-coords
         z_coords_range_rounded = []
         for i in z_coords_range:
-            rounded_coord = Decimal(i)
+            rounded_coord = round(float(i), len(str(self.space_resolution)))
             z_coords_range_rounded.append(rounded_coord)
         z_coords_range = z_coords_range_rounded
         t_range = {}
@@ -427,8 +426,8 @@ class box:
                         self.space['object'][index] = matrix_material
                         if initial_pressure is not None:  # makes sure that a pressure is set
                             if pressure_gradient is not None:  # checks if the pressure gradient option is selected
-                                self.space['pressure'][index] = p_range[Decimal(self.space['z_coords'][
-                                                                                  index])]  # if a gradient is added, applies the pressure gradient
+                                self.space['pressure'][index] = p_range[self.space['z_coords'][
+                                                                                  index]]  # if a gradient is added, applies the pressure gradient
                             else:  # if no gradient selected, applies a homogeneous pressure
                                 self.space['pressure'][index] = initial_pressure
                         if temperature_gradient is None:  # no gradient is selected, homogeneous matrix temperature
@@ -591,7 +590,7 @@ class box:
         return None
 
     @staticmethod
-    def grab_row_index_by_coord(system_data, x_coord, y_coord, z_coord):
+    def grab_row_index_by_coord(system_data, space_resolution, x_coord, y_coord, z_coord):
         """
         Returns the index of the row in the instance's Pandas dataframe by associating with x, y, and z coordinates stored
             in the dataframe.
@@ -601,12 +600,14 @@ class box:
         :param z_coord:
         :return: row, the index
         """
-        for row in system_data.itertuples():
-            index = row.Index
-            if system_data['x_coords'][index] == x_coord:
-                if system_data['y_coords'][index] == y_coord:
-                    if system_data['z_coords'][index] == z_coord:
-                        return index
+        x_coord = round(float(x_coord), len(str(space_resolution)))
+        y_coord = round(float(y_coord), len(str(space_resolution)))
+        z_coord = round(float(z_coord), len(str(space_resolution)))
+        sub_df = system_data[(np.isclose(system_data['x_coords'], x_coord)) &
+                            (np.isclose(system_data['y_coords'], y_coord)) &
+                            (np.isclose(system_data['z_coords'], z_coord))]
+        index = sub_df.index.values[0]
+        return index
 
     @staticmethod
     def swap_rows(system_data, update_space, from_row_index, to_row_index):
@@ -669,7 +670,7 @@ class box:
         end_x = end[0]  # the ending x coordinate of the diapir
         end_y = end[1]  # the ending y coordinate of the diapir
         end_z = end[2]  # the ending z coordinate of the diapir
-        range_z = list(np.arange(start_z, end_z + self.space_resolution, self.space_resolution))  # generates a list of numbers between the starting & ending z coordinates
+        range_z = list(np.arange(float(Decimal(start_z)), float(Decimal(end_z) + Decimal(self.space_resolution)), self.space_resolution))  # generates a list of numbers between the starting & ending z coordinates
         line = []    # a list of lists that define all coordinates on the line of travel
         for i in range_z:
             coord = [float(Decimal(end_x)), float(Decimal(end_y)), float(Decimal(i))]  # currently only works with changing z, adding changing x and y could be difficult
@@ -800,11 +801,13 @@ class box:
 
                 # get the index of the coordinate point where the object will travel to
                 to_row_index = self.grab_row_index_by_coord(system_data=system_data,
+                                                            space_resolution=self.space_resolution,
                                                             x_coord=updated_x_coord,
                                                             y_coord=updated_y_coord,
                                                             z_coord=updated_z_coord)
                 from_row_index = self.grab_row_index_by_coord(system_data=system_data,
                                                               x_coord=system_data['x_coords'][index],
+                                                              space_resolution=self.space_resolution,
                                                               y_coord=system_data['y_coords'][index],
                                                               z_coord=system_data['z_coords'][index])
                 # update the copy of the dataframe with the appropriate changes
@@ -852,35 +855,37 @@ class box:
                 if rounded_object_velocity != 0:
                     object_path = self.define_path(start=[curr_x_coords, curr_y_coords, curr_z_coords],
                                                    end=[updated_x_coord, updated_y_coord, updated_z_coord])
-                    objs = []  # a list of object names in the path of descent through which the object may travel
-                    inds = []  # all the indices of the points through which the object may travel
+                    # a dictionary that stores the object names and corresponding index values in the path of descent through which the object may travel
+                    objs = {}
                     for i in object_path:
                         # select the index based on the subdataframe generated by matching coordinate points
                         sub_df = self.space[(np.isclose(self.space['x_coords'], i[0])) &
                                             (np.isclose(self.space['y_coords'], i[1])) &
                                             (np.isclose(self.space['z_coords'], i[2]))]
+                        # there should only be one valid row, so extract the index value from it
                         temp_ind = sub_df.index.values[0]
-                        # find the object at the path point
-                        o = system_data['object'][temp_ind]
-                        objs.append(o)
+                        o = system_data['object'][temp_ind]  # find the object at the path point
+                        # stores the object name and index value in the dictionary, with the index value as the indexer
+                        objs.update({temp_ind: o})
                     # this if statement covers whether objects of the same time exist in the path of the sinking object
                     # if there are similar objects in the path, they will merge
-                    if system_data['object'][index] in objs:  # performs intermediate object merging only if the object
-                        # is in the path (aside from the endpoint which is handled elsewhere)
-                        obj = system_data['object'][index]
-                        curr_index = index
-                        for i in object_path:  # get all object names from the object
-                            path_obj_index = system_data.index[system_data['coord_index'] == c].values[0]
-                            if obj == system_data['object'][path_obj_index]:  # if the two objects in the path are the same, then merge them
-                                self.merge_objects(from_object_index=curr_index, to_object_index=path_obj_index,
-                                                   system_data=system_data, update_space=update_space)
-                                curr_index = c
-                    elif (system_data['object'][from_row_index] == system_data['object'][to_row_index]) and \
-                            (system_data['object_id'][from_row_index] != system_data['object_id'][to_row_index]):
-                        update_space_copy = self.merge_objects(to_object_index=to_row_index, from_object_index=from_row_index, system_data=system_data, update_space=update_space)
-                    else:
-                        update_space_copy = self.swap_rows(system_data=system_data, update_space=update_space,
-                                                               from_row_index=from_row_index, to_row_index=to_row_index)
+                    obj_in_path = False  # is there a relevant object in the path?
+                    curr_index = index
+                    for i in objs:
+                        queried_index = i
+                        for d in objs[i]: # performs intermediate object merging only if the object
+                            if system_data['object'][index] == d:  # if the object in question matches that in the dictionary
+                                self.merge_objects(from_object_index=curr_index, to_object_index=queried_index,
+                                                        system_data=system_data, update_space=update_space)
+                                curr_index = queried_index  # replaces the former working inded with the queried index
+                                obj_in_path = True  # sets this varible to true
+                    if obj_in_path is False:
+                        if (system_data['object'][from_row_index] == system_data['object'][to_row_index]) and \
+                                (system_data['object_id'][from_row_index] != system_data['object_id'][to_row_index]):
+                            update_space_copy = self.merge_objects(to_object_index=to_row_index, from_object_index=from_row_index, system_data=system_data, update_space=update_space)
+                        else:
+                            update_space_copy = self.swap_rows(system_data=system_data, update_space=update_space,
+                                                                   from_row_index=from_row_index, to_row_index=to_row_index)
         print("")
         return update_space_copy
 
@@ -946,6 +951,10 @@ class box:
         elif self.model_time <= 0:
             self.visualize_box()
             console.pm_stat("Model at minimum time!")
+            # writes the central pandas dataframe to 'space.csv'.  most critical model info contained here
+            self.space.to_csv("space.csv")
+            # writes the chemical compositions to 'solution.csv'
+            self.solution.get_solution().to_csv("solution.csv")
             if self.visualize_system is True:
                 console.pm_stat("Writing animations...")
 
@@ -984,25 +993,20 @@ class box:
                 animation.write_gif('temp_distrib_floor.gif',
                                     fps=Decimal((self.initial_time / (self.initial_time / 3))))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
-
-                # writes the central pandas dataframe to 'space.csv'.  most critical model info contained here
-                self.space.to_csv("space.csv")
-                # writes the chemical compositions to 'solution.csv'
-                self.solution.get_solution().to_csv("solution.csv")
                 # writes the object history output file
-                if self.object_history is True:
-                    for row in self.space.itertuples():
-                        index = row.Index
-                        if 'A' in self.space['object_id'][index]:
-                            contents = []
-                            contents.append(str(self.model_time))
-                            for i in self.space:
-                                contents.append(str(self.space[i][index]))
-                            formatted_contents = ",".join(i.replace(",", ":") for i in contents)
-                            self.object_output.write("{}\n".format(formatted_contents))
-                if self.object_output is True:
-                    self.object_output.close()
-                return self.model_time, self.space
+            if self.object_history is True:
+                for row in self.space.itertuples():
+                    index = row.Index
+                    if 'A' in self.space['object_id'][index]:
+                        contents = []
+                        contents.append(str(self.model_time))
+                        for i in self.space:
+                            contents.append(str(self.space[i][index]))
+                        formatted_contents = ",".join(i.replace(",", ":") for i in contents)
+                        self.object_output.write("{}\n".format(formatted_contents))
+            if self.object_output is True:
+                self.object_output.close()
+            return self.model_time, self.space
         else:
             # models the object movement
             self.move_systems(system_data=self.space, update_space=None, deltaTime=deltaTime,
