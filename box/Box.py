@@ -571,7 +571,7 @@ class box:
             temperature = []
             for row in self.space.itertuples():
                 index = row.Index
-                surface_zcoord = Decimal((self.model_base - self.space_resolution))
+                surface_zcoord = round(float(self.model_base - self.space_resolution), len(str(self.space_resolution)))
                 if float(self.space['z_coords'][index]) == surface_zcoord:
                     x_coords.append(self.space['x_coords'][index])
                     y_coords.append(self.space['y_coords'][index])
@@ -670,7 +670,7 @@ class box:
         end_x = end[0]  # the ending x coordinate of the diapir
         end_y = end[1]  # the ending y coordinate of the diapir
         end_z = end[2]  # the ending z coordinate of the diapir
-        range_z = list(np.arange(float(Decimal(start_z)), float(Decimal(end_z) + Decimal(self.space_resolution)), self.space_resolution))  # generates a list of numbers between the starting & ending z coordinates
+        range_z = list(np.arange(float(Decimal(start_z) + Decimal(self.space_resolution)), float(Decimal(end_z) + Decimal(self.space_resolution)), self.space_resolution))  # generates a list of numbers between the starting & ending z coordinates
         line = []    # a list of lists that define all coordinates on the line of travel
         for i in range_z:
             coord = [float(Decimal(end_x)), float(Decimal(end_y)), float(Decimal(i))]  # currently only works with changing z, adding changing x and y could be difficult
@@ -871,10 +871,12 @@ class box:
                     # if there are similar objects in the path, they will merge
                     obj_in_path = False  # is there a relevant object in the path?
                     curr_index = index
+                    console.pm_stat(objs)
                     for i in objs:
                         queried_index = i
                         for d in objs[i]: # performs intermediate object merging only if the object
                             if system_data['object'][index] == d:  # if the object in question matches that in the dictionary
+                                console.pm_stat('here')
                                 self.merge_objects(from_object_index=curr_index, to_object_index=queried_index,
                                                         system_data=system_data, update_space=update_space)
                                 curr_index = queried_index  # replaces the former working inded with the queried index
@@ -961,37 +963,37 @@ class box:
                 # dynamics animation
                 os.chdir(os.getcwd() + '/object_dynamics')
                 animation = mpy.ImageSequenceClip(self.movie_frames1,
-                                                  fps=Decimal((self.initial_time / (self.initial_time / 3))),
+                                                  fps=(self.initial_time / (self.initial_time / 3)),
                                                   load_images=True)
                 os.chdir('..')
                 animation.write_videofile('object_dynamics.mp4',
-                                          fps=Decimal((self.initial_time / (self.initial_time / 3))), audio=False)
+                                          fps=(self.initial_time / (self.initial_time / 3)), audio=False)
                 animation.write_gif('object_dynamics.gif',
-                                    fps=Decimal((self.initial_time / (self.initial_time / 3))))
+                                    fps=(self.initial_time / (self.initial_time / 3)))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d heatmap animation
                 os.chdir(os.getcwd() + '/thermal_equilibrium_heatmap')
                 animation = mpy.ImageSequenceClip(self.movie_frames2,
-                                                  fps=Decimal((self.initial_time / (self.initial_time / 3))),
+                                                  fps=(self.initial_time / (self.initial_time / 3)),
                                                   load_images=True)
                 os.chdir('..')
                 animation.write_videofile('thermal_equilibrium_heatmap.mp4',
-                                          fps=Decimal((self.initial_time / (self.initial_time / 3))), audio=False)
+                                          fps=(self.initial_time / (self.initial_time / 3)), audio=False)
                 animation.write_gif('thermal_equilibrium_heatmap.gif',
-                                    fps=Decimal((self.initial_time / (self.initial_time / 3))))
+                                    fps=(self.initial_time / (self.initial_time / 3)))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
 
                 # 3d model base heat distribution animation
                 os.chdir(os.getcwd() + '/temp_distrib_floor')
                 animation = mpy.ImageSequenceClip(self.movie_frames4,
-                                                  fps=Decimal((self.initial_time / (self.initial_time / 3))),
+                                                  fps=(self.initial_time / (self.initial_time / 3)),
                                                   load_images=True)
                 os.chdir('..')
                 animation.write_videofile('temp_distrib_floor.mp4',
-                                          fps=Decimal((self.initial_time / (self.initial_time / 3))), audio=False)
+                                          fps=(self.initial_time / (self.initial_time / 3)), audio=False)
                 animation.write_gif('temp_distrib_floor.gif',
-                                    fps=Decimal((self.initial_time / (self.initial_time / 3))))
+                                    fps=(self.initial_time / (self.initial_time / 3)))
                 console.pm_stat("Animation created & available in {}!".format(os.getcwd()))
                 # writes the object history output file
             if self.object_history is True:
